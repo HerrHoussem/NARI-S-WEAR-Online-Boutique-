@@ -962,12 +962,37 @@ document.addEventListener('DOMContentLoaded', () => {
 
     btn.disabled=true;btn.textContent='Préparation…';
     let saved=false;
-    if(db&&!String(currentProduct.id).startsWith('demo-')){
-      const {error}=await db.from('orders').insert({
-        product_id:currentProduct.id,product_name:currentProduct.name,price:Number(currentProduct.price),
-        size,color,quantity:1,customer_name:name,customer_phone:phone,wilaya
-      });
-      if(error){console.error(error);toast('WhatsApp va s’ouvrir, mais l’enregistrement a échoué.','error')}else saved=true;
+    let saveError=null;
+
+    if(db){
+      const orderPayload={
+        product_id:String(currentProduct.id).startsWith('demo-') ? null : currentProduct.id,
+        product_name:currentProduct.name,
+        price:Number(currentProduct.price),
+        size,
+        color,
+        quantity:1,
+        customer_name:name,
+        customer_phone:phone,
+        wilaya,
+        status:'nouvelle'
+      };
+
+      const {error}=await db
+        .from('orders')
+        .insert(orderPayload);
+
+      if(error){
+        saveError=error;
+        console.error('Order insert failed:',error);
+        toast(`Commande WhatsApp prête, mais Supabase a refusé l’enregistrement : ${error.message}`,'error');
+      }else{
+        saved=true;
+        console.log('Order saved successfully');
+        toast('Commande enregistrée avec succès.');
+      }
+    }else{
+      toast('Supabase n’est pas configuré : la commande sera envoyée uniquement sur WhatsApp.','error');
     }
     const message=`Bonjour Nari's Wear,
 
@@ -983,7 +1008,7 @@ Informations client :
 • Téléphone : ${phone}
 • Wilaya : ${wilaya}
 
-${saved?'Commande enregistrée dans la boutique.':''}
+${saved?'Commande enregistrée dans la boutique.':saveError?'Enregistrement Supabase non effectué.':''}
 Merci de confirmer la disponibilité et le tarif de livraison.`;
     window.open(`https://wa.me/${WHATSAPP}?text=${encodeURIComponent(message)}`,'_blank','noopener');
     btn.disabled=false;btn.textContent='Commander';closeModal();
