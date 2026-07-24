@@ -293,15 +293,48 @@
 
     section{position:relative;padding:7.5rem 0}
     .marquee{
-      overflow:hidden;border-block:1px solid var(--line);background:linear-gradient(180deg,#241d18,#1d1714);
+      width:100%;
+      overflow:hidden;
+      border-block:1px solid var(--line);
+      background:linear-gradient(180deg,#241d18,#1d1714);
       padding:1rem 0;
+      position:relative;
     }
     .marquee-track{
-      width:max-content;display:flex;gap:3rem;animation:marquee 28s linear infinite;
-      font-family:'Cormorant Garamond',serif;font-size:1.25rem;color:var(--gold-bright);
+      display:flex;
+      align-items:center;
+      width:max-content;
+      min-width:max-content;
+      gap:0;
+      will-change:transform;
+      animation:narisTicker 26s linear infinite;
     }
-    .marquee-track span::after{content:"✦";margin-left:3rem;color:var(--gold)}
-    @keyframes marquee{to{transform:translateX(-50%)}}
+    .marquee-group{
+      display:flex;
+      align-items:center;
+      flex-shrink:0;
+      white-space:nowrap;
+    }
+    .marquee-track span{
+      flex-shrink:0;
+      padding-left:3rem;
+      font-family:'Cormorant Garamond',serif;
+      font-size:1.25rem;
+      color:var(--gold-bright);
+      white-space:nowrap;
+    }
+    .marquee-track span::after{
+      content:"✦";
+      margin-left:3rem;
+      color:var(--gold);
+    }
+    .marquee:hover .marquee-track{
+      animation-play-state:paused;
+    }
+    @keyframes narisTicker{
+      from{transform:translate3d(0,0,0)}
+      to{transform:translate3d(-50%,0,0)}
+    }
 
 
     .catalog-tools{display:grid;grid-template-columns:1fr auto;gap:1rem;max-width:900px;margin:0 auto 1.4rem}
@@ -570,8 +603,9 @@
     }
 
     @media (prefers-reduced-motion:reduce){
-      *{scroll-behavior:auto!important;animation:none!important;transition:none!important}
+      *{scroll-behavior:auto!important;transition:none!important}
       .reveal{opacity:1;transform:none}
+      .marquee-track{animation:narisTicker 32s linear infinite!important}
     }
   </style>
 </head>
@@ -592,9 +626,7 @@
 
     <nav aria-label="Navigation principale">
       <a href="#collection"><span data-i18n="collection">Collection</span></a>
-      <a href="#story"><span data-i18n="story"><span data-i18n="story">Notre histoire</span></span></a>
-      <a href="#lookbook"><span data-i18n="lookbook">Lookbook</span></a>
-        <a href="./admin.html">Administration</a>
+      <a href="./admin.html">Administration</a>
       <a href="#contact"><span data-i18n="contact">Contact</span></a>
     </nav>
 
@@ -618,8 +650,6 @@
     <div class="drawer-links">
       <a href="#home">Accueil</a>
       <a href="#collection"><span data-i18n="collection">Collection</span></a>
-      <a href="#story"><span data-i18n="story"><span data-i18n="story">Notre histoire</span></span></a>
-      <a href="#lookbook"><span data-i18n="lookbook">Lookbook</span></a>
       <a href="#contact"><span data-i18n="contact">Contact</span></a>
     </div>
     <a href="https://wa.me/213552080462" target="_blank" rel="noopener" class="wa-btn" style="margin-top:2rem;width:100%">
@@ -663,16 +693,20 @@
     </div>
   </section>
 
-  <div class="marquee" aria-hidden="true">
+  <div class="marquee" aria-label="Informations boutique">
     <div class="marquee-track">
-      <span>Nouveautés chaque semaine</span>
-      <span>Élégance contemporaine</span>
-      <span>Livraison partout en Algérie</span>
-      <span>Conseil taille sur WhatsApp</span>
-      <span>Nouveautés chaque semaine</span>
-      <span>Élégance contemporaine</span>
-      <span>Livraison partout en Algérie</span>
-      <span>Conseil taille sur WhatsApp</span>
+      <div class="marquee-group">
+        <span>Nouveautés chaque semaine</span>
+        <span>Élégance contemporaine</span>
+        <span>Livraison partout en Algérie</span>
+        <span>Conseil taille sur WhatsApp</span>
+      </div>
+      <div class="marquee-group">
+        <span>Nouveautés chaque semaine</span>
+        <span>Élégance contemporaine</span>
+        <span>Livraison partout en Algérie</span>
+        <span>Conseil taille sur WhatsApp</span>
+      </div>
     </div>
   </div>
 
@@ -703,19 +737,7 @@
     </div>
   </section>
 
-  <section id="story" style="background:linear-gradient(180deg,#31271f,#241c18)">
-    <div class="container story-grid">
-      <div class="story-visual reveal"></div>
-      <div class="story-copy reveal">
-        <div class="eyebrow"><span data-i18n="story">Notre histoire</span></div>
-        <h2><span data-i18n="madeInAlgiers">Fait à Alger, pensé pour vous</span></h2>
-        <p>Nari's Wear est née d'une passion pour la mode et d'un regard exigeant sur la qualité. Chaque collection est pensée pour la femme algérienne qui souhaite rester élégante sans sacrifier son confort.</p>
-        <p>Nous sélectionnons nos tissus avec soin et travaillons en petites séries afin que chaque pièce conserve son caractère.</p>
-        <a class="btn-outline" href="#contact">Nous rendre visite</a>
-        <div class="signature">Nari's Wear</div>
-      </div>
-    </div>
-  </section>
+  
 
   <section>
     <div class="container">
@@ -728,23 +750,7 @@
     </div>
   </section>
 
-  <section id="lookbook">
-    <div class="container">
-      <div class="section-head reveal">
-        <div class="eyebrow">Lookbook</div>
-        <h2>Portées avec style</h2>
-        <p>Remplacez ces espaces par des photos clientes, des shootings ou des images Instagram.</p>
-      </div>
-
-      <div class="lookbook">
-        <div class="look reveal"><span>Élégance du soir</span></div>
-        <div class="look reveal"><span>Minimal chic</span></div>
-        <div class="look reveal"><span>Douceur naturelle</span></div>
-        <div class="look reveal"><span>Style urbain</span></div>
-        <div class="look reveal"><span>Collection Alger</span></div>
-      </div>
-    </div>
-  </section>
+  
 
 
   <section class="campaign-art" id="campaign">
@@ -791,9 +797,7 @@
       <div class="foot-block">
         <h4>Navigation</h4>
         <a href="#collection"><span data-i18n="collection">Collection</span></a>
-        <a href="#story"><span data-i18n="story"><span data-i18n="story">Notre histoire</span></span></a>
-        <a href="#lookbook"><span data-i18n="lookbook">Lookbook</span></a>
-      </div>
+        </div>
 
       <div class="foot-block">
         <h4>Horaires</h4>
