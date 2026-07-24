@@ -200,7 +200,7 @@
       width:100%;
       height:100%;
       object-fit:cover;
-      object-position:58% 18%;
+      object-position:50% 12%;
       display:block;
     }
     .fashion-frame::before{
@@ -245,8 +245,6 @@
     .catalog-tools input,.catalog-tools select{min-height:48px;background:var(--panel);border:1px solid var(--line);color:var(--cream);padding:.8rem 1rem;outline:none}
     .catalog-tools input:focus,.catalog-tools select:focus{border-color:var(--gold)}
     .result-count{text-align:center;color:var(--muted);font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:1.2rem}
-    .config-notice{display:none;max-width:900px;margin:0 auto 1.3rem;padding:1rem;border:1px solid var(--gold);background:rgba(201,161,90,.07);color:var(--gold-bright);text-align:center}
-    .config-notice.show{display:block}
     .stock-note{font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-top:.5rem}
     .stock-note.low{color:var(--gold-bright)} .stock-note.out{color:#f0a0a0}
     .quick-btn:disabled{opacity:.55;cursor:not-allowed;transform:none!important}
@@ -490,6 +488,7 @@
       .hero h1 span{letter-spacing:.4em}
       .hero-visual{min-height:430px}
       .fashion-frame{inset:0 8%}
+      .fashion-frame img{object-position:50% 10%}
       .visual-card.two{right:0;top:12%}
       .visual-card.one{left:0;bottom:6%}
       .product-grid{gap:.65rem}
@@ -583,7 +582,7 @@
       </div>
 
       <div class="hero-visual" aria-label="Visuel principal de la collection">
-        <div class="fashion-frame"><img src="./assets/images/hero-naris.webp?v=2" alt="Nari’s Wear bridal and evening collection" width="900" height="1343" fetchpriority="high"></div>
+        <div class="fashion-frame"><img src="./assets/images/hero-naris.webp?v=3" alt="Nari’s Wear bridal and evening collection" width="900" height="1343" fetchpriority="high"></div>
         <div class="visual-card one">
           <strong>Nouvelle collection</strong>
           <span>Édition limitée</span>
@@ -616,11 +615,7 @@
         <h2>Nouveautés de la semaine</h2>
         <p>Des pièces élégantes en quantités limitées. Choisissez votre modèle, votre taille et commandez directement.</p>
       </div>
-
-      <div class="config-notice" id="configNotice">
-        Mode démonstration actif. Ajoutez vos identifiants Supabase dans <strong>config.js</strong>.
-      </div>
-      <div class="catalog-tools reveal">
+<div class="catalog-tools reveal">
         <input id="productSearch" type="search" placeholder="Rechercher un article…" aria-label="Rechercher un article">
         <select id="productSort" aria-label="Trier les produits">
           <option value="newest">Plus récents</option>
@@ -913,15 +908,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
   async function loadProducts(){
     if(!configured){
-      $('#configNotice').classList.add('show'); products=DEMO; renderFilters(); renderProducts(); return;
+      products=DEMO; renderFilters(); renderProducts(); return;
     }
     const {data,error}=await db.from('products')
       .select('id,name,category,price,description,sizes,colors,images,stock,featured,created_at')
       .eq('is_active',true).order('created_at',{ascending:false});
     if(error){
-      console.error(error); products=DEMO; $('#configNotice').classList.add('show');
-      $('#configNotice').textContent='Connexion Supabase impossible. Produits de démonstration affichés.';
-      toast('Connexion à la boutique impossible. Mode démonstration activé.','error');
+      console.error(error); products=DEMO;
     }else products=data||[];
     renderFilters(); renderProducts();
   }
