@@ -212,30 +212,30 @@
     document.getElementById('configWarning').style.display = 'block';
   }
 
-  const supabase = configured ? window.supabase.createClient(CONFIG.supabaseUrl, CONFIG.supabaseAnonKey) : null;
+  const db = configured ? window.supabase.createClient(CONFIG.supabaseUrl, CONFIG.supabaseAnonKey) : null;
 
   const loginScreen = document.getElementById('loginScreen');
   const app = document.getElementById('app');
 
   document.getElementById('loginBtn').addEventListener('click', async () => {
-    if(!supabase) return;
+    if(!db) return;
     const email = document.getElementById('loginEmail').value.trim();
     const password = document.getElementById('loginPassword').value;
     const errEl = document.getElementById('loginError');
     errEl.textContent = '';
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { error } = await db.auth.signInWithPassword({ email, password });
     if(error){ errEl.textContent = "Email ou mot de passe incorrect."; return; }
     showApp();
   });
 
   document.getElementById('logoutBtn').addEventListener('click', async () => {
-    await supabase.auth.signOut();
+    await db.auth.signOut();
     location.reload();
   });
 
   async function checkSession(){
-    if(!supabase) return;
-    const { data } = await supabase.auth.getSession();
+    if(!db) return;
+    const { data } = await db.auth.getSession();
     if(data.session) showApp(); else { loginScreen.style.display='grid'; app.style.display='none'; }
   }
 
@@ -259,8 +259,8 @@
   function money(n){ return Number(n).toLocaleString('fr-FR') + ' DA'; }
 
   async function loadOverview(){
-    const { data: orders } = await supabase.from('orders').select('*');
-    const { data: products } = await supabase.from('products').select('id, stock, is_active');
+    const { data: orders } = await db.from('orders').select('*');
+    const { data: products } = await db.from('products').select('id, stock, is_active');
     const list = orders || [];
     const revenue = list.filter(o => o.status !== 'annulee')
       .reduce((s,o) => s + Number(o.price) * (o.quantity || 1), 0);
@@ -277,7 +277,7 @@
 
   async function loadProducts(){
     const tbody = document.getElementById('productsTableBody');
-    const { data, error } = await supabase.from('products').select('*').order('created_at', {ascending:false});
+    const { data, error } = await db.from('products').select('*').order('created_at', {ascending:false});
     if(error){ tbody.innerHTML = `<tr><td colspan="7" class="empty">Erreur de chargement</td></tr>`; return; }
     if(!data.length){ tbody.innerHTML = `<tr><td colspan="7" class="empty">Aucun produit. Cliquez sur "Ajouter un produit".</td></tr>`; return; }
 
@@ -326,13 +326,13 @@
   }
 
   window.editProduct = async function(id){
-    const { data } = await supabase.from('products').select('*').eq('id', id).single();
+    const { data } = await db.from('products').select('*').eq('id', id).single();
     openProductModal(data);
   };
 
   window.deleteProduct = async function(id){
     if(!confirm('Supprimer ce produit définitivement ?')) return;
-    const { error } = await supabase.from('products').delete().eq('id', id);
+    const { error } = await db.from('products').delete().eq('id', id);
     if(error){ alert('Erreur: ' + error.message); return; }
     loadProducts();
     loadOverview();
@@ -348,13 +348,13 @@
 
     if(file){
       const path = `${Date.now()}-${file.name}`;
-      const { error: uploadError } = await supabase.storage.from('product-images').upload(path, file);
+      const { error: uploadError } = await db.storage.from('product-images').upload(path, file);
       if(uploadError){
         alert('Erreur upload photo: ' + uploadError.message);
         saveBtn.disabled = false; saveBtn.textContent = 'Enregistrer';
         return;
       }
-      const { data: urlData } = supabase.storage.from('product-images').getPublicUrl(path);
+      const { data: urlData } = db.storage.from('product-images').getPublicUrl(path);
       editingImages.unshift(urlData.publicUrl);
     }
 
@@ -371,8 +371,8 @@
     };
 
     const { error } = id
-      ? await supabase.from('products').update(payload).eq('id', id)
-      : await supabase.from('products').insert(payload);
+      ? await db.from('products').update(payload).eq('id', id)
+      : await db.from('products').insert(payload);
 
     saveBtn.disabled = false;
     saveBtn.textContent = 'Enregistrer';
@@ -388,7 +388,7 @@
 
   async function loadOrders(){
     const tbody = document.getElementById('ordersTableBody');
-    const { data, error } = await supabase.from('orders').select('*').order('created_at', {ascending:false});
+    const { data, error } = await db.from('orders').select('*').order('created_at', {ascending:false});
     if(error){ tbody.innerHTML = `<tr><td colspan="9" class="empty">Erreur de chargement</td></tr>`; return; }
     if(!data.length){ tbody.innerHTML = `<tr><td colspan="9" class="empty">Aucune commande pour le moment.</td></tr>`; return; }
 
@@ -412,7 +412,7 @@
 
     tbody.querySelectorAll('.status-select').forEach(sel => {
       sel.addEventListener('change', async () => {
-        const { error } = await supabase.from('orders').update({ status: sel.value }).eq('id', sel.dataset.id);
+        const { error } = await db.from('orders').update({ status: sel.value }).eq('id', sel.dataset.id);
         if(error) alert('Erreur: ' + error.message);
         loadOverview();
       });
