@@ -579,17 +579,24 @@
       display:flex;justify-content:space-between;gap:1rem;
     }
     .delivery-list span:last-child{color:var(--gold-bright)}
+
     .delivery-visual{
       min-height:460px;
-      background:
-        radial-gradient(circle at 50% 35%,rgba(201,161,90,.18),transparent 20%),
-        linear-gradient(145deg,#3d2f26,#18120f);
-      display:grid;place-items:center;
-      color:rgba(255,255,255,.26);
-      letter-spacing:.18em;text-transform:uppercase;font-size:.7rem;
+      overflow:hidden;
+      background:#efe3d3;
+      border-left:1px solid var(--line);
+      display:flex;
+      align-items:stretch;
     }
-
-    .instagram-grid{
+    .delivery-visual img{
+      width:100%;
+      height:100%;
+      min-height:460px;
+      display:block;
+      object-fit:cover;
+      object-position:center;
+    }
+.instagram-grid{
       display:grid;
       grid-template-columns:repeat(3,1fr);
       gap:.8rem;
@@ -697,6 +704,8 @@
       .why-grid{grid-template-columns:1fr}
       .reviews-grid{grid-template-columns:1fr}
       .delivery-copy{padding:1.5rem}
+      .delivery-visual{min-height:320px;border-left:0;border-top:1px solid var(--line)}
+      .delivery-visual img{min-height:320px;object-position:center}
       .instagram-grid{grid-template-columns:repeat(2,1fr)}
     }
 
@@ -1118,7 +1127,15 @@
             <div><span data-i18n="orderConfirmation">Confirmation</span><span>WhatsApp</span></div>
           </div>
         </div>
-        <div class="delivery-visual" data-i18n="deliveryVisual">Livraison nationale</div>
+        <div class="delivery-visual">
+          <img
+            src="./assets/images/delivery-banner.png?v=5"
+            alt="Livraison Nari's Wear dans les 58 wilayas"
+            loading="lazy"
+            decoding="async"
+            width="1536"
+            height="1024">
+        </div>
       </div>
     </div>
   </section>
