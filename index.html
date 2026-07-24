@@ -763,7 +763,39 @@
       object-position:center;
     }
 
-    .order-cta{
+    
+    @media(max-width:700px){
+      .delivery-panel{
+        display:flex;
+        flex-direction:column;
+      }
+      .delivery-copy{
+        padding:1.25rem;
+      }
+      .delivery-copy h2{
+        font-size:2.2rem;
+        line-height:1.05;
+      }
+      .delivery-cards{
+        grid-template-columns:1fr;
+      }
+      .delivery-card{
+        min-height:auto;
+      }
+      .delivery-visual{
+        order:-1;
+        min-height:auto;
+        padding:.75rem;
+        border-left:none;
+        border-bottom:1px solid var(--line);
+      }
+      .delivery-visual img{
+        width:100%;
+        height:auto;
+        max-height:none;
+      }
+    }
+.order-cta{
       text-align:center;border-block:1px solid var(--line);
       background:
         radial-gradient(circle at 50% 50%,rgba(201,161,90,.11),transparent 40%),
