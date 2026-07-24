@@ -15,24 +15,24 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500;600&family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="config.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 
   <style>
     :root{
-      --black:#0a0908;
-      --panel:#131110;
-      --panel-soft:#191614;
+      --black:#171310;
+      --panel:#211b17;
+      --panel-soft:#2b231d;
       --gold:#c9a15a;
       --gold-bright:#ead29d;
       --wine:#5c2430;
-      --cream:#f4ecdc;
-      --muted:#a89e94;
-      --line:rgba(201,161,90,.18);
+      --cream:#fff8ea;
+      --muted:#c9bcae;
+      --line:rgba(218,180,109,.28);
       --white:#fff;
       --success:#25d366;
-      --shadow:0 24px 70px rgba(0,0,0,.36);
+      --shadow:0 24px 70px rgba(0,0,0,.24);
       --radius:22px;
       --header-h:82px;
     }
@@ -40,7 +40,7 @@
     *{box-sizing:border-box;margin:0;padding:0}
     html{scroll-behavior:smooth;scroll-padding-top:100px}
     body{
-      background:var(--black);
+      background:linear-gradient(180deg,#171310 0%,#211a16 48%,#171310 100%);
       color:var(--cream);
       font-family:'Jost',sans-serif;
       font-weight:300;
@@ -85,7 +85,7 @@
     header{
       position:sticky;top:0;z-index:50;
       min-height:var(--header-h);
-      background:rgba(10,9,8,.84);
+      background:rgba(23,19,16,.90);
       backdrop-filter:blur(15px);
       border-bottom:1px solid var(--line);
     }
@@ -136,6 +136,69 @@
     .btn-solid,.wa-btn{background:var(--gold);color:var(--black)}
     .btn-solid:hover,.wa-btn:hover{background:var(--gold-bright);transform:translateY(-2px)}
 
+
+    .utility-controls{
+      display:flex;align-items:center;gap:.55rem;
+    }
+    .utility-btn{
+      min-width:42px;height:42px;padding:0 .75rem;
+      border:1px solid var(--line);background:rgba(255,255,255,.03);
+      color:var(--cream);cursor:pointer;
+      font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;
+      transition:.25s ease;
+    }
+    .utility-btn:hover,.utility-btn.active{
+      background:var(--gold);color:var(--black);border-color:var(--gold);
+    }
+    body.light-theme{
+      --black:#f7efe3;
+      --panel:#fffaf3;
+      --panel-soft:#f1e3d3;
+      --cream:#2a211b;
+      --muted:#6f6257;
+      --line:rgba(132,95,45,.22);
+      --shadow:0 24px 70px rgba(70,47,25,.14);
+      background:linear-gradient(180deg,#fffaf3 0%,#f6eadb 52%,#fffaf3 100%);
+      color:var(--cream);
+    }
+    body.light-theme header{background:rgba(255,250,243,.92)}
+    body.light-theme .announcement{background:#b9853e;color:white}
+    body.light-theme .hero{
+      background:
+        radial-gradient(circle at 20% 10%,rgba(185,133,62,.14),transparent 32%),
+        radial-gradient(circle at 90% 70%,rgba(92,36,48,.10),transparent 35%);
+    }
+    body.light-theme .product-card,
+    body.light-theme .benefit,
+    body.light-theme .modal-card,
+    body.light-theme footer{
+      background:rgba(255,250,243,.92);
+    }
+    body.light-theme .form-control,
+    body.light-theme .catalog-tools input,
+    body.light-theme .catalog-tools select{
+      background:#fffdf8;color:#2a211b;
+    }
+    body.light-theme .mobile-drawer{background:#fffaf3}
+    body[dir="rtl"]{
+      font-family:'Cairo','Jost',sans-serif;
+    }
+    body[dir="rtl"] .hero-copy,
+    body[dir="rtl"] .story-copy,
+    body[dir="rtl"] .footer-grid,
+    body[dir="rtl"] .modal-content{
+      text-align:right;
+    }
+    body[dir="rtl"] .nav-wrap,
+    body[dir="rtl"] .product-row,
+    body[dir="rtl"] .footer-bottom{
+      direction:rtl;
+    }
+    body[dir="rtl"] .hero-note span::before{
+      margin-right:0;margin-left:.6rem;
+    }
+    .lang-label{font-weight:600}
+
     .mobile-panel{
       position:fixed;inset:0;z-index:100;
       visibility:hidden;opacity:0;transition:.25s ease;
@@ -144,7 +207,7 @@
     .mobile-panel.active{visibility:visible;opacity:1}
     .mobile-drawer{
       margin-left:auto;width:min(86vw,360px);height:100%;
-      background:var(--panel);padding:1.5rem;
+      background:linear-gradient(180deg,#241d18,#1d1714);padding:1.5rem;
       transform:translateX(100%);transition:.3s ease;
       border-left:1px solid var(--line);
     }
@@ -230,7 +293,7 @@
 
     section{position:relative;padding:7.5rem 0}
     .marquee{
-      overflow:hidden;border-block:1px solid var(--line);background:var(--panel);
+      overflow:hidden;border-block:1px solid var(--line);background:linear-gradient(180deg,#241d18,#1d1714);
       padding:1rem 0;
     }
     .marquee-track{
@@ -242,7 +305,7 @@
 
 
     .catalog-tools{display:grid;grid-template-columns:1fr auto;gap:1rem;max-width:900px;margin:0 auto 1.4rem}
-    .catalog-tools input,.catalog-tools select{min-height:48px;background:var(--panel);border:1px solid var(--line);color:var(--cream);padding:.8rem 1rem;outline:none}
+    .catalog-tools input,.catalog-tools select{min-height:48px;background:linear-gradient(180deg,#241d18,#1d1714);border:1px solid var(--line);color:var(--cream);padding:.8rem 1rem;outline:none}
     .catalog-tools input:focus,.catalog-tools select:focus{border-color:var(--gold)}
     .result-count{text-align:center;color:var(--muted);font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:1.2rem}
     .stock-note{font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-top:.5rem}
@@ -265,7 +328,7 @@
       display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;
     }
     .product-card{
-      position:relative;background:var(--panel);border:1px solid transparent;
+      position:relative;background:linear-gradient(180deg,#241d18,#1d1714);border:1px solid transparent;
       transition:.3s ease;overflow:hidden;
     }
     .product-card:hover{transform:translateY(-7px);border-color:var(--line);box-shadow:var(--shadow)}
@@ -333,7 +396,7 @@
     .signature{font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--gold);font-style:italic;margin-top:1.6rem}
 
     .benefits{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
-    .benefit{background:var(--panel);padding:2rem 1.5rem;text-align:center}
+    .benefit{background:linear-gradient(180deg,#241d18,#1d1714);padding:2rem 1.5rem;text-align:center}
     .benefit-icon{font-size:1.65rem;color:var(--gold);margin-bottom:.7rem}
     .benefit h3{font-size:1.35rem}
     .benefit p{font-size:.85rem;color:var(--muted);margin-top:.35rem}
@@ -361,7 +424,7 @@
       position:relative;
       overflow:hidden;
       border:1px solid var(--line);
-      background:var(--panel);
+      background:linear-gradient(180deg,#241d18,#1d1714);
       box-shadow:var(--shadow);
     }
     .campaign-art-card img{
@@ -407,7 +470,7 @@
     }
     .floating-wa{bottom:1.2rem;background:var(--success);color:#061d0e;font-size:1.15rem}
     .to-top{
-      bottom:4.8rem;background:var(--panel);border:1px solid var(--line);color:var(--gold);
+      bottom:4.8rem;background:linear-gradient(180deg,#241d18,#1d1714);border:1px solid var(--line);color:var(--gold);
       cursor:pointer;opacity:0;visibility:hidden;transform:translateY(10px);
     }
     .to-top.visible{opacity:1;visibility:visible;transform:translateY(0)}
@@ -420,7 +483,7 @@
     .modal.active{opacity:1;visibility:visible}
     .modal-card{
       width:min(920px,96vw);max-height:92vh;overflow:auto;
-      background:var(--panel);border:1px solid var(--line);box-shadow:var(--shadow);
+      background:linear-gradient(180deg,#241d18,#1d1714);border:1px solid var(--line);box-shadow:var(--shadow);
       transform:translateY(18px);transition:.25s ease;
     }
     .modal.active .modal-card{transform:translateY(0)}
@@ -513,7 +576,7 @@
   </style>
 </head>
 
-<body>
+<body class="light-theme">
 <a href="#main" class="skip-link">Aller au contenu</a>
 
 <div class="announcement">
@@ -528,15 +591,19 @@
     </a>
 
     <nav aria-label="Navigation principale">
-      <a href="#collection">Collection</a>
-      <a href="#story">Notre histoire</a>
-      <a href="#lookbook">Lookbook</a>
+      <a href="#collection"><span data-i18n="collection">Collection</span></a>
+      <a href="#story"><span data-i18n="story"><span data-i18n="story">Notre histoire</span></span></a>
+      <a href="#lookbook"><span data-i18n="lookbook">Lookbook</span></a>
         <a href="./admin.html">Administration</a>
-      <a href="#contact">Contact</a>
+      <a href="#contact"><span data-i18n="contact">Contact</span></a>
     </nav>
 
     <div class="nav-actions">
-      <a class="nav-cta" href="#collection">Acheter</a>
+      <div class="utility-controls">
+        <button class="utility-btn" id="themeToggle" aria-label="Changer le thème">☀</button>
+        <button class="utility-btn lang-label" id="langToggle" aria-label="Changer la langue">AR</button>
+      </div>
+      <a class="nav-cta" href="#collection" data-i18n="shop">Acheter</a>
       <button class="menu-btn" id="menuBtn" aria-label="Ouvrir le menu" aria-expanded="false">☰</button>
     </div>
   </div>
@@ -550,10 +617,10 @@
     </div>
     <div class="drawer-links">
       <a href="#home">Accueil</a>
-      <a href="#collection">Collection</a>
-      <a href="#story">Notre histoire</a>
-      <a href="#lookbook">Lookbook</a>
-      <a href="#contact">Contact</a>
+      <a href="#collection"><span data-i18n="collection">Collection</span></a>
+      <a href="#story"><span data-i18n="story"><span data-i18n="story">Notre histoire</span></span></a>
+      <a href="#lookbook"><span data-i18n="lookbook">Lookbook</span></a>
+      <a href="#contact"><span data-i18n="contact">Contact</span></a>
     </div>
     <a href="https://wa.me/213552080462" target="_blank" rel="noopener" class="wa-btn" style="margin-top:2rem;width:100%">
       WhatsApp
@@ -572,13 +639,13 @@
           confort au quotidien et détails qui font la différence.
         </p>
         <div class="hero-ctas">
-          <a class="btn-solid" href="#collection">Découvrir la collection</a>
-          <a class="btn-outline" href="https://wa.me/213552080462" target="_blank" rel="noopener">Commander sur WhatsApp</a>
+          <a class="btn-solid" href="#collection"><span data-i18n="discover">Découvrir la collection</span></a>
+          <a class="btn-outline" href="https://wa.me/213552080462" target="_blank" rel="noopener"><span data-i18n="whatsappOrder">Commander sur WhatsApp</span></a>
         </div>
         <div class="hero-note">
-          <span>Petites quantités</span>
-          <span>Livraison nationale</span>
-          <span>Conseil personnalisé</span>
+          <span><span data-i18n="limited">Petites quantités</span></span>
+          <span><span data-i18n="delivery">Livraison nationale</span></span>
+          <span><span data-i18n="advice">Conseil personnalisé</span></span>
         </div>
       </div>
 
@@ -612,9 +679,9 @@
   <section id="collection">
     <div class="container">
       <div class="section-head reveal">
-        <div class="eyebrow">La sélection</div>
-        <h2>Nouveautés de la semaine</h2>
-        <p>Des pièces élégantes en quantités limitées. Choisissez votre modèle, votre taille et commandez directement.</p>
+        <div class="eyebrow"><span data-i18n="selection">La sélection</span></div>
+        <h2><span data-i18n="newThisWeek">Nouveautés de la semaine</span></h2>
+        <p><span data-i18n="collectionDesc">Des pièces élégantes en quantités limitées. Choisissez votre modèle, votre taille et commandez directement.</span></p>
       </div>
 <div class="catalog-tools reveal">
         <input id="productSearch" type="search" placeholder="Rechercher un article…" aria-label="Rechercher un article">
@@ -636,12 +703,12 @@
     </div>
   </section>
 
-  <section id="story" style="background:var(--panel-soft)">
+  <section id="story" style="background:linear-gradient(180deg,#31271f,#241c18)">
     <div class="container story-grid">
       <div class="story-visual reveal"></div>
       <div class="story-copy reveal">
-        <div class="eyebrow">Notre histoire</div>
-        <h2>Fait à Alger, pensé pour vous</h2>
+        <div class="eyebrow"><span data-i18n="story">Notre histoire</span></div>
+        <h2><span data-i18n="madeInAlgiers">Fait à Alger, pensé pour vous</span></h2>
         <p>Nari's Wear est née d'une passion pour la mode et d'un regard exigeant sur la qualité. Chaque collection est pensée pour la femme algérienne qui souhaite rester élégante sans sacrifier son confort.</p>
         <p>Nous sélectionnons nos tissus avec soin et travaillons en petites séries afin que chaque pièce conserve son caractère.</p>
         <a class="btn-outline" href="#contact">Nous rendre visite</a>
@@ -700,7 +767,7 @@
       <h2>Votre prochain look vous attend.</h2>
       <p>Choisissez votre article et envoyez-nous votre taille sur WhatsApp. Nous confirmons la disponibilité et la livraison avec vous.</p>
       <a class="wa-btn" href="https://wa.me/213552080462?text=Bonjour%20Nari's%20Wear%2C%20je%20souhaite%20passer%20une%20commande." target="_blank" rel="noopener">
-        Commander sur WhatsApp
+        <span data-i18n="whatsappOrder">Commander sur WhatsApp</span>
       </a>
     </div>
   </section>
@@ -723,9 +790,9 @@
 
       <div class="foot-block">
         <h4>Navigation</h4>
-        <a href="#collection">Collection</a>
-        <a href="#story">Notre histoire</a>
-        <a href="#lookbook">Lookbook</a>
+        <a href="#collection"><span data-i18n="collection">Collection</span></a>
+        <a href="#story"><span data-i18n="story"><span data-i18n="story">Notre histoire</span></span></a>
+        <a href="#lookbook"><span data-i18n="lookbook">Lookbook</span></a>
       </div>
 
       <div class="foot-block">
@@ -1022,6 +1089,57 @@ Merci de confirmer la disponibilité et le tarif de livraison.`;
   window.addEventListener('scroll',()=>$('#toTop').classList.toggle('visible',window.scrollY>700),{passive:true});
   $('#toTop').addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
   document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModal();setMenu(false)}});
+
+  const translations = {
+    fr:{
+      shop:'Acheter',collection:'Collection',story:'Notre histoire',lookbook:'Lookbook',contact:'Contact',
+      heroEyebrow:'Alger · Bridal & Evening Boutique',
+      heroText:'Des créations pensées pour les cérémonies, les soirées et les moments inoubliables — élégance, raffinement et confiance.',
+      discover:'Découvrir la collection',whatsappOrder:'Commander sur WhatsApp',
+      limited:'Petites quantités',delivery:'Livraison nationale',advice:'Conseil personnalisé',
+      selection:'La sélection',newThisWeek:'Nouveautés de la semaine',
+      collectionDesc:'Des pièces élégantes en quantités limitées. Choisissez votre modèle, votre taille et commandez directement.',
+      madeInAlgiers:'Fait à Alger, pensé pour vous',readyOrder:'Prête à commander ?'
+    },
+    ar:{
+      shop:'تسوّقي',collection:'المجموعة',story:'قصتنا',lookbook:'إطلالات',contact:'اتصال',
+      heroEyebrow:'الجزائر · أزياء الزفاف والسهرات',
+      heroText:'تصاميم مختارة للحفلات والسهرات واللحظات التي لا تُنسى — أناقة، رقي وثقة.',
+      discover:'اكتشفي المجموعة',whatsappOrder:'اطلبي عبر واتساب',
+      limited:'كميات محدودة',delivery:'توصيل لكل الولايات',advice:'مرافقة ونصيحة شخصية',
+      selection:'مختاراتنا',newThisWeek:'جديد هذا الأسبوع',
+      collectionDesc:'قطع أنيقة بكميات محدودة. اختاري الموديل والمقاس واطلبي مباشرة.',
+      madeInAlgiers:'من الجزائر، صُممت من أجلك',readyOrder:'جاهزة للطلب؟'
+    }
+  };
+
+  let currentLang = localStorage.getItem('naris-lang') || 'fr';
+  function applyLanguage(lang){
+    currentLang = lang;
+    document.documentElement.lang = lang;
+    document.body.dir = lang === 'ar' ? 'rtl' : 'ltr';
+    document.querySelectorAll('[data-i18n]').forEach(el=>{
+      const key = el.dataset.i18n;
+      if(translations[lang][key]) el.textContent = translations[lang][key];
+    });
+    $('#langToggle').textContent = lang === 'ar' ? 'FR' : 'AR';
+    localStorage.setItem('naris-lang',lang);
+  }
+
+  $('#langToggle').addEventListener('click',()=>applyLanguage(currentLang === 'ar' ? 'fr' : 'ar'));
+
+  const savedTheme = localStorage.getItem('naris-theme') || 'light';
+  if(savedTheme === 'light') document.body.classList.add('light-theme');
+  $('#themeToggle').textContent = document.body.classList.contains('light-theme') ? '☾' : '☀';
+  $('#themeToggle').addEventListener('click',()=>{
+    document.body.classList.toggle('light-theme');
+    const light = document.body.classList.contains('light-theme');
+    $('#themeToggle').textContent = light ? '☾' : '☀';
+    localStorage.setItem('naris-theme', light ? 'light' : 'dark');
+  });
+
+  applyLanguage(currentLang);
+
   $('#year').textContent=new Date().getFullYear();
   loadProducts();
 });
