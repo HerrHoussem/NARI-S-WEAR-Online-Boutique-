@@ -795,6 +795,26 @@
         max-height:none;
       }
     }
+
+    .shipping-calculator{margin-top:1.4rem;padding:1.2rem;border:1px solid var(--line);background:rgba(255,255,255,.025)}
+    .shipping-methods{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin-top:.65rem}
+    .shipping-choice{border:1px solid var(--line);padding:.9rem;cursor:pointer;background:rgba(255,255,255,.025);text-align:left;color:var(--cream);transition:.2s ease}
+    .shipping-choice.active{border-color:var(--gold);background:rgba(201,161,90,.09)}
+    .shipping-choice strong,.shipping-choice span{display:block}.shipping-choice span{font-size:.74rem;color:var(--muted);margin-top:.25rem}
+    .shipping-summary{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin-top:.8rem}
+    .shipping-summary div{border:1px solid var(--line);padding:.8rem}.shipping-summary span{display:block;color:var(--muted);font-size:.68rem;text-transform:uppercase;letter-spacing:.09em}.shipping-summary strong{display:block;color:var(--gold-bright);margin-top:.25rem}
+    .faq-grid{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:1.2rem;align-items:start}
+    .faq-intro{position:sticky;top:110px;padding:2rem;border:1px solid var(--line);background:linear-gradient(145deg,rgba(201,161,90,.09),transparent)}
+    .faq-intro h2{font-size:clamp(2.6rem,5vw,4.6rem);line-height:.98;margin:.7rem 0 1rem}.faq-intro p{color:var(--muted)}
+    .faq-list{display:grid;gap:.75rem}.faq-item{border:1px solid var(--line);background:var(--panel)}
+    .faq-question{width:100%;display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.15rem 1.25rem;color:var(--cream);background:none;border:0;text-align:left;cursor:pointer;font:inherit}
+    .faq-question strong{font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:500}.faq-plus{color:var(--gold);font-size:1.4rem;transition:.25s ease}
+    .faq-item.active .faq-plus{transform:rotate(45deg)}.faq-answer{display:grid;grid-template-rows:0fr;transition:grid-template-rows .3s ease}.faq-answer>div{overflow:hidden}.faq-answer-content{padding:0 1.25rem;color:var(--muted);line-height:1.8}.faq-item.active .faq-answer{grid-template-rows:1fr}.faq-item.active .faq-answer-content{padding-bottom:1.25rem}
+    .store-map{margin-top:1rem;border:1px solid var(--line);overflow:hidden}.store-map iframe{display:block;width:100%;height:340px;border:0}.map-actions{display:flex;gap:.7rem;flex-wrap:wrap;margin-top:1rem}
+    .floating-wa svg{width:25px;height:25px;fill:#fff}.floating-wa{color:#fff;animation:waPulse 2.8s infinite}.floating-wa:hover{transform:translateY(-3px) scale(1.04)}
+    @keyframes waPulse{0%,70%,100%{box-shadow:0 14px 35px rgba(0,0,0,.35)}80%{box-shadow:0 0 0 10px rgba(37,211,102,0),0 14px 35px rgba(0,0,0,.35)}}
+    @media(max-width:700px){.shipping-methods,.shipping-summary,.faq-grid{grid-template-columns:1fr}.faq-intro{position:static;padding:1.35rem}.store-map iframe{height:280px}}
+
 .order-cta{
       text-align:center;border-block:1px solid var(--line);
       background:
@@ -1297,6 +1317,27 @@
     </div>
   </div>
 
+  <section id="faq">
+    <div class="container faq-grid">
+      <div class="faq-intro reveal">
+        <div class="eyebrow">Informations utiles</div>
+        <h2>Questions fréquentes</h2>
+        <p>Tout ce qu’il faut savoir avant de commander chez NARI’S WEAR.</p>
+        <div class="store-map">
+          <iframe title="Localisation NARI'S WEAR" loading="lazy" src="https://www.google.com/maps?q=36.695965,2.971272&z=15&output=embed"></iframe>
+        </div>
+        <div class="map-actions"><a class="btn-outline" href="https://www.google.com/maps?q=36.695965,2.971272" target="_blank" rel="noopener">Ouvrir dans Google Maps</a></div>
+      </div>
+      <div class="faq-list reveal">
+        <article class="faq-item active"><button class="faq-question" type="button" aria-expanded="true"><strong>Livraison & délais</strong><span class="faq-plus">+</span></button><div class="faq-answer"><div><div class="faq-answer-content">Nous livrons dans les 58 wilayas avec Yalidine. À Alger, la livraison peut prendre 24 à 48 heures. Pour les autres wilayas, comptez généralement 2 à 5 jours ouvrables. Chaque commande est confirmée sur WhatsApp avant l’expédition.</div></div></div></article>
+        <article class="faq-item"><button class="faq-question" type="button" aria-expanded="false"><strong>Paiement</strong><span class="faq-plus">+</span></button><div class="faq-answer"><div><div class="faq-answer-content">Le paiement s’effectue à la livraison. Aucun paiement bancaire n’est demandé sur le site.</div></div></div></article>
+        <article class="faq-item"><button class="faq-question" type="button" aria-expanded="false"><strong>Retours & échanges</strong><span class="faq-plus">+</span></button><div class="faq-answer"><div><div class="faq-answer-content">Toute demande d’échange doit être signalée dans les 24 heures suivant la réception. L’article doit être non porté, intact et conservé dans son emballage d’origine. En cas d’erreur de notre part, NARI’S WEAR prend en charge les frais liés à l’échange.</div></div></div></article>
+        <article class="faq-item"><button class="faq-question" type="button" aria-expanded="false"><strong>Où se trouve la boutique ?</strong><span class="faq-plus">+</span></button><div class="faq-answer"><div><div class="faq-answer-content">Notre boutique se trouve à Alger, aux coordonnées 36.695965, 2.971272. Utilisez la carte ou le bouton Google Maps pour obtenir l’itinéraire exact.</div></div></div></article>
+        <article class="faq-item"><button class="faq-question" type="button" aria-expanded="false"><strong>Besoin d’aide ?</strong><span class="faq-plus">+</span></button><div class="faq-answer"><div><div class="faq-answer-content">Notre équipe vous accompagne pour le choix de la taille, la disponibilité et la livraison. Contactez-nous directement sur WhatsApp.</div></div></div></article>
+      </div>
+    </div>
+  </section>
+
   <section class="order-cta" id="order">
     <div class="container reveal">
       <div class="eyebrow">Commande simple</div>
@@ -1344,7 +1385,9 @@
   </div>
 </footer>
 
-<a class="floating-wa" href="https://wa.me/213552080462" target="_blank" rel="noopener" aria-label="Contacter Nari's Wear sur WhatsApp">WA</a>
+<a class="floating-wa" href="https://wa.me/213552080462" target="_blank" rel="noopener" aria-label="Contacter Nari's Wear sur WhatsApp" title="WhatsApp">
+  <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M19.11 17.46c-.29-.15-1.71-.84-1.97-.94-.26-.1-.45-.15-.64.15-.19.29-.74.94-.91 1.13-.17.19-.34.22-.63.07-.29-.15-1.23-.45-2.34-1.44-.86-.77-1.45-1.72-1.62-2.01-.17-.29-.02-.45.13-.59.13-.13.29-.34.44-.51.15-.17.19-.29.29-.49.1-.19.05-.37-.02-.51-.07-.15-.64-1.55-.88-2.12-.23-.56-.47-.48-.64-.49h-.55c-.19 0-.51.07-.77.37-.26.29-1.01.99-1.01 2.41s1.04 2.8 1.18 2.99c.15.19 2.04 3.12 4.95 4.37.69.3 1.23.48 1.65.61.69.22 1.32.19 1.82.12.56-.08 1.71-.7 1.95-1.38.24-.68.24-1.26.17-1.38-.07-.12-.26-.19-.55-.34zM16.05 3.2c-7.06 0-12.8 5.73-12.8 12.79 0 2.25.59 4.45 1.71 6.38L3.14 29l6.79-1.78a12.75 12.75 0 0 0 6.11 1.56h.01c7.05 0 12.79-5.74 12.79-12.8 0-3.42-1.33-6.63-3.75-9.05A12.69 12.69 0 0 0 16.05 3.2zm0 23.42h-.01a10.6 10.6 0 0 1-5.4-1.48l-.39-.23-4.03 1.06 1.08-3.93-.25-.4a10.62 10.62 0 1 1 9 4.98z"/></svg>
+</a>
 <button class="to-top" id="toTop" aria-label="Revenir en haut">↑</button>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -1400,6 +1443,19 @@
           </select>
         </div>
 
+        <div class="form-group">
+          <label>Mode de livraison</label>
+          <div class="shipping-methods" id="shippingMethods">
+            <button class="shipping-choice active" type="button" data-method="home"><strong>Livraison à domicile</strong><span>Livrée à votre adresse</span></button>
+            <button class="shipping-choice" type="button" data-method="stopdesk"><strong>Bureau Yalidine</strong><span>Retrait au bureau sélectionné</span></button>
+          </div>
+          <div class="shipping-summary" aria-live="polite">
+            <div><span>Frais de livraison</span><strong id="shippingPrice">Choisissez une wilaya</strong></div>
+            <div><span>Total estimé</span><strong id="orderTotal">—</strong></div>
+          </div>
+          <small class="small-note" id="shippingNote">Le bureau Yalidine pourra être confirmé avec vous sur WhatsApp.</small>
+        </div>
+
         <div class="modal-actions">
           <button class="btn-outline" id="continueShopping">Continuer</button>
           <button class="wa-btn" id="confirmWhatsApp">Commander</button>
@@ -1429,6 +1485,24 @@ document.addEventListener('DOMContentLoaded', () => {
     '47 Ghardaïa','48 Relizane','49 Timimoun','50 Bordj Badji Mokhtar','51 Ouled Djellal','52 Béni Abbès',
     '53 In Salah','54 In Guezzam','55 Touggourt','56 Djanet','57 El M’Ghair','58 El Meniaa'
   ];
+
+  const DELIVERY_PRICES = {
+    '01':{home:1050,stopdesk:750},'02':{home:900,stopdesk:550},'03':{home:1050,stopdesk:700},'04':{home:900,stopdesk:550},
+    '05':{home:900,stopdesk:550},'06':{home:900,stopdesk:550},'07':{home:1050,stopdesk:700},'08':{home:1050,stopdesk:750},
+    '09':{home:700,stopdesk:400},'10':{home:900,stopdesk:550},'11':{home:1450,stopdesk:1200},'12':{home:1050,stopdesk:700},
+    '13':{home:900,stopdesk:550},'14':{home:900,stopdesk:550},'15':{home:900,stopdesk:550},'16':{home:500,stopdesk:400},
+    '17':{home:1050,stopdesk:700},'18':{home:900,stopdesk:550},'19':{home:900,stopdesk:550},'20':{home:900,stopdesk:550},
+    '21':{home:900,stopdesk:550},'22':{home:900,stopdesk:550},'23':{home:900,stopdesk:550},'24':{home:900,stopdesk:550},
+    '25':{home:900,stopdesk:550},'26':{home:900,stopdesk:550},'27':{home:900,stopdesk:550},'28':{home:900,stopdesk:550},
+    '29':{home:900,stopdesk:550},'30':{home:1050,stopdesk:700},'31':{home:900,stopdesk:550},'32':{home:1050,stopdesk:750},
+    '33':{home:1050,stopdesk:1200},'34':{home:900,stopdesk:550},'35':{home:700,stopdesk:400},'36':{home:900,stopdesk:550},
+    '37':{home:1450,stopdesk:1200},'38':{home:900,stopdesk:550},'39':{home:1050,stopdesk:700},'40':{home:900,stopdesk:550},
+    '41':{home:900,stopdesk:550},'42':{home:700,stopdesk:400},'43':{home:900,stopdesk:550},'44':{home:900,stopdesk:550},
+    '45':{home:1050,stopdesk:750},'46':{home:900,stopdesk:550},'47':{home:1050,stopdesk:700},'48':{home:900,stopdesk:550},
+    '49':{home:1050,stopdesk:750},'51':{home:1050,stopdesk:700},'53':{home:1450,stopdesk:1200},'55':{home:1050,stopdesk:700},
+    '56':{home:1450,stopdesk:1200},'57':{home:1050,stopdesk:700},'58':{home:1050,stopdesk:700}
+  };
+  let deliveryMethod='home';
 
   const DEMO = [
     {id:'demo-1',name:'Robe Ambre',category:'robe',price:4500,sizes:['S','M','L'],colors:['Noir','Beige'],images:[],featured:true,stock:8,created_at:'2026-07-20'},
@@ -1542,7 +1616,7 @@ document.addEventListener('DOMContentLoaded', () => {
     buildOptions('#sizeOptions',p.sizes,['S','M','L','XL']); buildOptions('#colorOptions',p.colors,['Noir']);
     const image=Array.isArray(p.images)?p.images[0]:'';
     $('.modal-media').innerHTML=/^https?:\/\//i.test(image||'')?`<img src="${esc(image)}" alt="${esc(p.name)}" style="width:100%;height:100%;object-fit:cover">`:'Photo du produit';
-    $('#orderModal').classList.add('active'); document.body.classList.add('modal-open'); setTimeout(()=>$('#modalClose').focus(),50);
+    $('#orderModal').classList.add('active'); document.body.classList.add('modal-open'); refreshShipping(); setTimeout(()=>$('#modalClose').focus(),50);
   }
   function closeModal(){$('#orderModal').classList.remove('active');document.body.classList.remove('modal-open')}
   $('#productGrid').addEventListener('click',e=>{
@@ -1570,12 +1644,38 @@ document.addEventListener('DOMContentLoaded', () => {
     const phone=normalizeAlgerianPhone(value);
     return /^\+213[567]\d{8}$/.test(phone);
   }
+  function selectedDeliveryPrice(){
+    const code=($('#customerWilaya').value||'').slice(0,2);
+    const row=DELIVERY_PRICES[code];
+    return row ? row[deliveryMethod] : null;
+  }
+  function refreshShipping(){
+    const price=selectedDeliveryPrice();
+    $('#shippingPrice').textContent=price==null?'Tarif à confirmer':money(price);
+    $('#orderTotal').textContent=currentProduct&&price!=null?money(Number(currentProduct.price)+price):'—';
+    $('#shippingNote').textContent=deliveryMethod==='stopdesk'
+      ? 'Le bureau Yalidine exact sera confirmé avec vous sur WhatsApp.'
+      : 'Livraison directement à votre adresse.';
+  }
+  $('#customerWilaya').addEventListener('change',refreshShipping);
+  $('#shippingMethods').addEventListener('click',e=>{
+    const choice=e.target.closest('.shipping-choice');if(!choice)return;
+    deliveryMethod=choice.dataset.method;
+    $$('#shippingMethods .shipping-choice').forEach(x=>x.classList.toggle('active',x===choice));
+    refreshShipping();
+  });
+  $$('.faq-question').forEach(button=>button.addEventListener('click',()=>{
+    const item=button.closest('.faq-item');
+    const open=item.classList.toggle('active');
+    button.setAttribute('aria-expanded',String(open));
+  }));
+
   $('#confirmWhatsApp').addEventListener('click',async()=>{
     if(!currentProduct)return;
     const btn=$('#confirmWhatsApp'),size=$('#sizeOptions .option.active')?.dataset.value||'Non précisée',
       color=$('#colorOptions .option.active')?.dataset.value||'Non précisée',
       name=$('#customerName').value.trim(),rawPhone=$('#customerPhone').value.trim(),
-      phone=normalizeAlgerianPhone(rawPhone),wilaya=$('#customerWilaya').value;
+      phone=normalizeAlgerianPhone(rawPhone),wilaya=$('#customerWilaya').value,deliveryPrice=selectedDeliveryPrice(),deliveryLabel=deliveryMethod==='stopdesk'?'Bureau Yalidine':'À domicile';
     if(name.length<2){toast('Merci de renseigner votre nom complet.','error');$('#customerName').focus();return}
     if(!validPhone(rawPhone)){
       const message=currentLang==='ar'
@@ -1635,6 +1735,9 @@ Informations client :
 • Nom : ${name}
 • Téléphone : ${phone}
 • Wilaya : ${wilaya}
+• Mode de livraison : ${deliveryLabel}
+• Frais de livraison : ${deliveryPrice==null?'À confirmer':money(deliveryPrice)}
+• Total estimé : ${deliveryPrice==null?'À confirmer':money(Number(currentProduct.price)+deliveryPrice)}
 
 ${saved?'Commande enregistrée dans la boutique.':saveError?'Enregistrement Supabase non effectué.':''}
 Merci de confirmer la disponibilité et le tarif de livraison.`;
