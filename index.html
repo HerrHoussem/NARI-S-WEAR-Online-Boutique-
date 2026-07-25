@@ -894,6 +894,21 @@
       display:grid;place-items:center;color:rgba(244,236,220,.28);
       font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;
     }
+    .modal-gallery{min-width:0}
+    .modal-media{position:relative;overflow:hidden}
+    .modal-media img{width:100%;height:100%;object-fit:cover;display:block}
+    .gallery-nav{position:absolute;inset:50% .7rem auto;display:flex;justify-content:space-between;transform:translateY(-50%);pointer-events:none}
+    .gallery-nav button{pointer-events:auto;width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,.35);background:rgba(10,9,8,.68);color:white;cursor:pointer}
+    .gallery-thumbs{display:flex;gap:.55rem;padding:.7rem;background:#151210;overflow-x:auto}
+    .gallery-thumb{flex:0 0 58px;width:58px;height:72px;padding:0;border:1px solid var(--line);background:#211b17;cursor:pointer}
+    .gallery-thumb.active{border-color:var(--gold)}
+    .gallery-thumb img{width:100%;height:100%;object-fit:cover}
+    .color-option{display:inline-flex;align-items:center;gap:.5rem}
+    .color-dot{width:16px;height:16px;border-radius:50%;border:1px solid rgba(255,255,255,.45);box-shadow:0 0 0 1px rgba(0,0,0,.25)}
+    .option.disabled{opacity:.42;text-decoration:line-through;cursor:not-allowed}
+    .variant-stock{font-size:.75rem;color:var(--muted);margin-top:.55rem}
+    .variant-stock.low{color:var(--gold-bright)}
+    .variant-stock.out{color:#e87575}
     .modal-content{padding:2rem;position:relative}
     .modal-close{
       position:absolute;right:1rem;top:1rem;width:38px;height:38px;
@@ -1453,7 +1468,10 @@
 <div class="modal" id="orderModal" role="dialog" aria-modal="true" aria-labelledby="modalProductTitle">
   <div class="modal-card">
     <div class="modal-grid">
-      <div class="modal-media">Photo du produit</div>
+      <div class="modal-gallery">
+        <div class="modal-media" id="modalMedia">Photo du produit</div>
+        <div class="gallery-thumbs" id="galleryThumbs" aria-label="Photos du produit"></div>
+      </div>
 
       <div class="modal-content">
         <button class="modal-close" id="modalClose" aria-label="Fermer">✕</button>
@@ -1473,11 +1491,8 @@
 
         <div class="form-group">
           <label>Couleur</label>
-          <div class="option-row" id="colorOptions">
-            <button class="option active" data-value="Noir">Noir</button>
-            <button class="option" data-value="Beige">Beige</button>
-            <button class="option" data-value="Bordeaux">Bordeaux</button>
-          </div>
+          <div class="option-row" id="colorOptions"></div>
+          <div class="variant-stock" id="variantStock"></div>
         </div>
 
         <div class="form-group">
@@ -1563,7 +1578,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let deliveryMethod='home';
 
   const DEMO = [
-    {id:'demo-1',name:'Robe Ambre',category:'robe',price:4500,sizes:['S','M','L'],colors:['Noir','Beige'],images:[],featured:true,stock:8,created_at:'2026-07-20'},
+    {id:'demo-1',name:'Robe Ambre',category:'robe',price:4500,sizes:['S','M','L'],colors:['Noir','Blanc','Jaune'],images:[],variants:[{name:'Noir',hex:'#000000',stock:4,images:[],is_default:true},{name:'Blanc',hex:'#ffffff',stock:2,images:[]},{name:'Jaune',hex:'#e9c94c',stock:2,images:[]}],featured:true,stock:8,created_at:'2026-07-20'},
     {id:'demo-2',name:'Tailleur Nuit',category:'ensemble',price:6200,sizes:['S','M','L','XL'],colors:['Noir'],images:[],featured:false,stock:5,created_at:'2026-07-19'},
     {id:'demo-3',name:'Abaya Lueur',category:'abaya',price:5800,sizes:['S','M','L','XL'],colors:['Noir','Bordeaux'],images:[],featured:true,stock:6,created_at:'2026-07-18'},
     {id:'demo-4',name:'Soie Dorée',category:'chemisier',price:2900,sizes:['S','M','L'],colors:['Beige','Bordeaux'],images:[],featured:false,stock:10,created_at:'2026-07-17'},
@@ -1578,7 +1593,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const esc = v => String(v ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
   const money = v => Number(v || 0).toLocaleString('fr-FR') + ' DA';
 
-  let products = [], category = 'all', currentProduct = null, toastTimer;
+  let products = [], category = 'all', currentProduct = null, currentVariant = null, currentImageIndex = 0, toastTimer;
 
   function toast(message,type=''){
     const el=$('#toast'); el.textContent=message; el.className=`toast show ${type}`.trim();
@@ -1623,7 +1638,9 @@ document.addEventListener('DOMContentLoaded', () => {
     $('#resultCount').textContent=`${list.length} article${list.length>1?'s':''}`;
     if(!list.length){$('#productGrid').innerHTML='<p class="grid-status">Aucun article ne correspond à votre recherche.</p>';return}
     $('#productGrid').innerHTML=list.map(p=>{
-      const image=Array.isArray(p.images)?p.images[0]:'';
+      const variants=normalizeProductVariants(p);
+      const defaultVariant=variants.find(v=>v.is_default)||variants[0];
+      const image=defaultVariant?.images?.[0]||(Array.isArray(p.images)?p.images[0]:'');
       const safeImage=/^https?:\/\//i.test(image||'')?image:'';
       const sold=Number(p.stock||0)<=0;
       const stock=sold?'<p class="stock-note out">Rupture de stock</p>':
@@ -1638,7 +1655,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="product-meta">${esc(CATEGORY[p.category]||p.category)}</div>
           <h3>${esc(p.name)}</h3>
           <div class="product-row"><span class="price">${money(p.price)}</span>
-            <div class="colors">${(p.colors||[]).map(c=>`<i class="swatch ${esc(SWATCH[c]||'beige')}" title="${esc(c)}"></i>`).join('')}</div>
+            <div class="colors">${variants.map(v=>`<i class="swatch" style="background:${esc(v.hex||'#c9a15a')}" title="${esc(v.name)}"></i>`).join('')}</div>
           </div>${stock}
         </div></article>`;
     }).join('');
@@ -1649,7 +1666,7 @@ document.addEventListener('DOMContentLoaded', () => {
       products=DEMO; renderFilters(); renderProducts(); return;
     }
     const {data,error}=await db.from('products')
-      .select('id,name,category,price,description,sizes,colors,images,stock,featured,created_at')
+      .select('id,name,category,price,description,sizes,colors,images,variants,stock,featured,created_at')
       .eq('is_active',true).order('created_at',{ascending:false});
     if(error){
       console.error(error); products=DEMO;
@@ -1669,11 +1686,35 @@ document.addEventListener('DOMContentLoaded', () => {
     const list=Array.isArray(values)&&values.length?values:fallback;
     $(id).innerHTML=list.map((v,i)=>`<button type="button" class="option${i===0?' active':''}" data-value="${esc(v)}">${esc(v)}</button>`).join('');
   }
+  function normalizeProductVariants(p){
+    if(Array.isArray(p?.variants)&&p.variants.length) return p.variants.map((v,i)=>({name:v.name||`Couleur ${i+1}`,hex:v.hex||'#c9a15a',stock:Number(v.stock)||0,images:Array.isArray(v.images)?v.images:[],is_default:!!v.is_default}));
+    const colors=Array.isArray(p?.colors)&&p.colors.length?p.colors:['Noir'];
+    return colors.map((name,i)=>({name,hex:({Noir:'#000000',Blanc:'#ffffff',Beige:'#d8c3a5',Bordeaux:'#6e1f31',Jaune:'#e9c94c'})[name]||'#c9a15a',stock:i===0?Number(p?.stock||0):0,images:i===0&&Array.isArray(p?.images)?p.images:[],is_default:i===0}));
+  }
+  function renderVariantGallery(){
+    const images=(currentVariant?.images||[]).filter(url=>/^https?:\/\//i.test(url||''));
+    if(currentImageIndex>=images.length)currentImageIndex=0;
+    const image=images[currentImageIndex];
+    $('#modalMedia').innerHTML=image?`<img src="${esc(image)}" alt="${esc(currentProduct.name)} — ${esc(currentVariant.name)}"><div class="gallery-nav"><button type="button" id="galleryPrev" aria-label="Photo précédente">‹</button><button type="button" id="galleryNext" aria-label="Photo suivante">›</button></div>`:'Photo du produit';
+    $('#galleryThumbs').innerHTML=images.map((url,i)=>`<button type="button" class="gallery-thumb${i===currentImageIndex?' active':''}" data-image-index="${i}"><img src="${esc(url)}" alt=""></button>`).join('');
+    $('#galleryThumbs').style.display=images.length>1?'flex':'none';
+    const stock=Number(currentVariant?.stock||0),el=$('#variantStock');
+    el.textContent=stock<=0?'Cette couleur est épuisée':stock<=3?`Plus que ${stock} en stock pour cette couleur`:`${stock} article${stock>1?'s':''} disponible${stock>1?'s':''} dans cette couleur`;
+    el.className='variant-stock '+(stock<=0?'out':stock<=3?'low':'');
+    $('#confirmWhatsApp').disabled=stock<=0;
+  }
+  function selectVariant(name){
+    const variants=normalizeProductVariants(currentProduct);
+    currentVariant=variants.find(v=>v.name===name)||variants[0]; currentImageIndex=0;
+    $$('#colorOptions .option').forEach(b=>b.classList.toggle('active',b.dataset.value===currentVariant.name));
+    renderVariantGallery();
+  }
   function openModal(p){
     currentProduct=p; $('#modalProductTitle').textContent=p.name; $('#modalProductPrice').textContent=money(p.price);
-    buildOptions('#sizeOptions',p.sizes,['S','M','L','XL']); buildOptions('#colorOptions',p.colors,['Noir']);
-    const image=Array.isArray(p.images)?p.images[0]:'';
-    $('.modal-media').innerHTML=/^https?:\/\//i.test(image||'')?`<img src="${esc(image)}" alt="${esc(p.name)}" style="width:100%;height:100%;object-fit:cover">`:'Photo du produit';
+    buildOptions('#sizeOptions',p.sizes,['S','M','L','XL']);
+    const variants=normalizeProductVariants(p),def=variants.find(v=>v.is_default)||variants[0];
+    $('#colorOptions').innerHTML=variants.map(v=>`<button type="button" class="option color-option${v.name===def.name?' active':''}${Number(v.stock)<=0?' disabled':''}" data-value="${esc(v.name)}" ${Number(v.stock)<=0?'aria-disabled="true"':''}><span class="color-dot" style="background:${esc(v.hex||'#c9a15a')}"></span>${esc(v.name)}</button>`).join('');
+    currentVariant=def;currentImageIndex=0;renderVariantGallery();
     $('#orderModal').classList.add('active'); document.body.classList.add('modal-open'); refreshShipping(); setTimeout(()=>$('#modalClose').focus(),50);
   }
   function closeModal(){$('#orderModal').classList.remove('active');document.body.classList.remove('modal-open')}
@@ -1684,9 +1725,17 @@ document.addEventListener('DOMContentLoaded', () => {
   $('#modalClose').addEventListener('click',closeModal); $('#continueShopping').addEventListener('click',closeModal);
   $('#orderModal').addEventListener('click',e=>{if(e.target===$('#orderModal'))closeModal()});
   $$('.option-row').forEach(row=>row.addEventListener('click',e=>{
-    const o=e.target.closest('.option');if(!o)return;
+    const o=e.target.closest('.option');if(!o||o.classList.contains('disabled'))return;
+    if(row.id==='colorOptions'){selectVariant(o.dataset.value);return}
     row.querySelectorAll('.option').forEach(x=>x.classList.remove('active'));o.classList.add('active');
   }));
+  $('#galleryThumbs').addEventListener('click',e=>{const b=e.target.closest('[data-image-index]');if(!b)return;currentImageIndex=Number(b.dataset.imageIndex);renderVariantGallery()});
+  $('#modalMedia').addEventListener('click',e=>{
+    const images=(currentVariant?.images||[]).filter(url=>/^https?:\/\//i.test(url||''));if(images.length<2)return;
+    if(e.target.closest('#galleryPrev'))currentImageIndex=(currentImageIndex-1+images.length)%images.length;
+    if(e.target.closest('#galleryNext'))currentImageIndex=(currentImageIndex+1)%images.length;
+    renderVariantGallery();
+  });
 
   function normalizeAlgerianPhone(value){
     let phone=String(value||'').replace(/[^\d+]/g,'').trim();
@@ -1731,7 +1780,7 @@ document.addEventListener('DOMContentLoaded', () => {
   $('#confirmWhatsApp').addEventListener('click',async()=>{
     if(!currentProduct)return;
     const btn=$('#confirmWhatsApp'),size=$('#sizeOptions .option.active')?.dataset.value||'Non précisée',
-      color=$('#colorOptions .option.active')?.dataset.value||'Non précisée',
+      color=currentVariant?.name||$('#colorOptions .option.active')?.dataset.value||'Non précisée',
       name=$('#customerName').value.trim(),rawPhone=$('#customerPhone').value.trim(),
       phone=normalizeAlgerianPhone(rawPhone),wilaya=$('#customerWilaya').value,deliveryPrice=selectedDeliveryPrice(),deliveryLabel=deliveryMethod==='stopdesk'?'Bureau Yalidine':'À domicile';
     if(name.length<2){toast('Merci de renseigner votre nom complet.','error');$('#customerName').focus();return}

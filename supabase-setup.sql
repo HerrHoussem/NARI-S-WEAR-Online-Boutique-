@@ -9,6 +9,7 @@ create table if not exists public.products (
   description text,
   sizes text[] not null default array['S','M','L','XL'],
   colors text[] not null default array['Noir'],
+  variants jsonb not null default '[]'::jsonb,
   images text[] not null default array[]::text[],
   stock integer not null default 0 check (stock >= 0),
   featured boolean not null default false,
@@ -33,6 +34,7 @@ create table if not exists public.orders (
   created_at timestamptz not null default now()
 );
 
+alter table public.products add column if not exists variants jsonb not null default '[]'::jsonb;
 alter table public.products add column if not exists updated_at timestamptz not null default now();
 alter table public.orders add column if not exists quantity integer not null default 1;
 

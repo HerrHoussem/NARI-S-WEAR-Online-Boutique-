@@ -91,6 +91,17 @@
   .modal-actions button{flex:1;padding:.8rem}
   #imagePreviewRow{display:flex;gap:.5rem;margin-top:.6rem;flex-wrap:wrap}
   #imagePreviewRow img{width:56px;height:70px;object-fit:cover;border:1px solid var(--line)}
+  .variant-editor{border:1px solid var(--line);background:var(--black);padding:1rem;margin:.8rem 0}
+  .variant-head{display:flex;justify-content:space-between;align-items:center;gap:.8rem;margin-bottom:.8rem}
+  .variant-head strong{color:var(--gold-bright);font-size:.9rem}
+  .variant-grid{display:grid;grid-template-columns:1.2fr .7fr .7fr;gap:.7rem}
+  .variant-images{display:flex;gap:.5rem;flex-wrap:wrap;margin-top:.7rem}
+  .variant-image{position:relative}
+  .variant-image img{width:64px;height:82px;object-fit:cover;border:1px solid var(--line)}
+  .variant-image button{position:absolute;right:-5px;top:-5px;width:20px;height:20px;border-radius:50%;background:var(--danger);color:white}
+  .mini-btn{border:1px solid var(--line);background:transparent;color:var(--muted);padding:.45rem .65rem;font-size:.72rem}
+  .mini-btn:hover{border-color:var(--gold);color:var(--gold)}
+  @media(max-width:620px){.form-row,.variant-grid{grid-template-columns:1fr}.modal-box{padding:1.2rem}}
   .empty{color:var(--muted);text-align:center;padding:2rem;font-size:.85rem}
 </style>
 </head>
@@ -170,27 +181,15 @@
         <input type="number" id="pPrice" placeholder="4500">
       </div>
     </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label>Tailles (séparées par virgule)</label>
-        <input type="text" id="pSizes" placeholder="S,M,L,XL">
-      </div>
-      <div class="form-group">
-        <label>Couleurs (séparées par virgule)</label>
-        <input type="text" id="pColors" placeholder="Noir,Beige">
-      </div>
+    <div class="form-group">
+      <label>Tailles (séparées par virgule)</label>
+      <input type="text" id="pSizes" placeholder="S,M,L,XL">
     </div>
-    <div class="form-row">
-      <div class="form-group">
-        <label>Stock</label>
-        <input type="number" id="pStock" placeholder="8">
-      </div>
-      <div class="form-group">
-        <label>Photo</label>
-        <input type="file" id="pImageFile" accept="image/*">
-      </div>
+    <div class="form-group">
+      <div class="variant-head"><label style="margin:0">Couleurs, stock et photos</label><button type="button" class="mini-btn" id="addVariantBtn">+ Ajouter une couleur</button></div>
+      <div id="variantsEditor"></div>
+      <small style="color:var(--muted)">Chaque couleur peut avoir plusieurs photos. La première photo sera affichée par défaut.</small>
     </div>
-    <div id="imagePreviewRow"></div>
     <div class="checkbox-row">
       <label><input type="checkbox" id="pFeatured"> Mettre en avant (badge "Nouveau")</label>
       <label><input type="checkbox" id="pActive" checked> Visible sur le site</label>
@@ -301,29 +300,45 @@
   document.getElementById('addProductBtn').addEventListener('click', () => openProductModal());
   document.getElementById('cancelProductBtn').addEventListener('click', () => productModal.classList.remove('active'));
 
-  let editingImages = [];
+  let editingVariants = [];
 
-  function openProductModal(product){
-    document.getElementById('productModalTitle').textContent = product ? 'Modifier le produit' : 'Ajouter un produit';
-    document.getElementById('productId').value = product?.id || '';
-    document.getElementById('pName').value = product?.name || '';
-    document.getElementById('pCategory').value = product?.category || '';
-    document.getElementById('pPrice').value = product?.price || '';
-    document.getElementById('pSizes').value = (product?.sizes || []).join(',');
-    document.getElementById('pColors').value = (product?.colors || []).join(',');
-    document.getElementById('pStock').value = product?.stock ?? '';
-    document.getElementById('pFeatured').checked = !!product?.featured;
-    document.getElementById('pActive').checked = product ? !!product.is_active : true;
-    document.getElementById('pImageFile').value = '';
-    editingImages = product?.images ? [...product.images] : [];
-    renderImagePreview();
-    productModal.classList.add('active');
+  function normalizeVariants(product){
+    if(Array.isArray(product?.variants) && product.variants.length){
+      return product.variants.map(v=>({id:v.id||crypto.randomUUID(),name:v.name||'Couleur',hex:v.hex||'#c9a15a',stock:Number(v.stock)||0,images:Array.isArray(v.images)?[...v.images]:[],is_default:!!v.is_default}));
+    }
+    const colors=Array.isArray(product?.colors)&&product.colors.length?product.colors:['Noir'];
+    return colors.map((name,i)=>({id:crypto.randomUUID(),name,hex:name.toLowerCase()==='noir'?'#000000':'#c9a15a',stock:i===0?Number(product?.stock||0):0,images:i===0&&Array.isArray(product?.images)?[...product.images]:[],is_default:i===0}));
   }
 
-  function renderImagePreview(){
-    document.getElementById('imagePreviewRow').innerHTML =
-      editingImages.map(url => `<img src="${url}">`).join('');
+  function renderVariantsEditor(){
+    document.getElementById('variantsEditor').innerHTML=editingVariants.map((v,i)=>`<div class="variant-editor" data-index="${i}">
+      <div class="variant-head"><strong>Couleur ${i+1}</strong><button type="button" class="mini-btn remove-variant" ${editingVariants.length===1?'disabled':''}>Supprimer</button></div>
+      <div class="variant-grid">
+        <div class="form-group"><label>Nom de la couleur</label><input class="v-name" value="${escapeHtml(v.name)}" placeholder="Noir"></div>
+        <div class="form-group"><label>Code couleur</label><input class="v-hex" type="color" value="${v.hex||'#c9a15a'}"></div>
+        <div class="form-group"><label>Stock</label><input class="v-stock" type="number" min="0" value="${Number(v.stock)||0}"></div>
+      </div>
+      <label style="display:flex;gap:.5rem;align-items:center;font-size:.8rem;color:var(--muted)"><input class="v-default" type="radio" name="defaultVariant" ${v.is_default?'checked':''}> Couleur affichée par défaut</label>
+      <div class="form-group" style="margin-top:.7rem"><label>Photos de cette couleur</label><input class="v-files" type="file" accept="image/*" multiple></div>
+      <div class="variant-images">${v.images.map((url,j)=>`<span class="variant-image"><img src="${url}"><button type="button" class="remove-image" data-image="${j}">×</button></span>`).join('')}</div>
+    </div>`).join('');
   }
+  function escapeHtml(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
+  function syncVariantsFromForm(){
+    document.querySelectorAll('.variant-editor').forEach((card,i)=>{
+      editingVariants[i].name=card.querySelector('.v-name').value.trim()||`Couleur ${i+1}`;
+      editingVariants[i].hex=card.querySelector('.v-hex').value;
+      editingVariants[i].stock=Math.max(0,Number(card.querySelector('.v-stock').value)||0);
+      editingVariants[i].is_default=card.querySelector('.v-default').checked;
+    });
+    if(!editingVariants.some(v=>v.is_default) && editingVariants[0]) editingVariants[0].is_default=true;
+  }
+  document.getElementById('addVariantBtn').addEventListener('click',()=>{syncVariantsFromForm();editingVariants.push({id:crypto.randomUUID(),name:'',hex:'#c9a15a',stock:0,images:[],is_default:editingVariants.length===0});renderVariantsEditor()});
+  document.getElementById('variantsEditor').addEventListener('click',e=>{
+    const card=e.target.closest('.variant-editor'); if(!card)return; const i=Number(card.dataset.index);
+    if(e.target.closest('.remove-variant')){syncVariantsFromForm();editingVariants.splice(i,1);if(editingVariants[0]&&!editingVariants.some(v=>v.is_default))editingVariants[0].is_default=true;renderVariantsEditor()}
+    const rm=e.target.closest('.remove-image'); if(rm){syncVariantsFromForm();editingVariants[i].images.splice(Number(rm.dataset.image),1);renderVariantsEditor()}
+  });
 
   window.editProduct = async function(id){
     const { data } = await db.from('products').select('*').eq('id', id).single();
@@ -344,30 +359,36 @@
     saveBtn.textContent = 'Enregistrement...';
 
     const id = document.getElementById('productId').value;
-    const file = document.getElementById('pImageFile').files[0];
+    syncVariantsFromForm();
+    if(!editingVariants.length){alert('Ajoutez au moins une couleur.');saveBtn.disabled=false;saveBtn.textContent='Enregistrer';return;}
 
-    if(file){
-      const path = `${Date.now()}-${file.name}`;
-      const { error: uploadError } = await db.storage.from('product-images').upload(path, file);
-      if(uploadError){
-        alert('Erreur upload photo: ' + uploadError.message);
-        saveBtn.disabled = false; saveBtn.textContent = 'Enregistrer';
-        return;
+    const cards=[...document.querySelectorAll('.variant-editor')];
+    for(let i=0;i<cards.length;i++){
+      const files=[...cards[i].querySelector('.v-files').files];
+      for(const file of files){
+        const safeName=file.name.replace(/[^a-zA-Z0-9._-]/g,'-');
+        const path=`${Date.now()}-${i}-${crypto.randomUUID()}-${safeName}`;
+        const { error: uploadError } = await db.storage.from('product-images').upload(path, file);
+        if(uploadError){alert('Erreur upload photo: '+uploadError.message);saveBtn.disabled=false;saveBtn.textContent='Enregistrer';return;}
+        const { data: urlData } = db.storage.from('product-images').getPublicUrl(path);
+        editingVariants[i].images.push(urlData.publicUrl);
       }
-      const { data: urlData } = db.storage.from('product-images').getPublicUrl(path);
-      editingImages.unshift(urlData.publicUrl);
     }
+    const defaultVariant=editingVariants.find(v=>v.is_default)||editingVariants[0];
+    const totalStock=editingVariants.reduce((sum,v)=>sum+Number(v.stock||0),0);
+    const allImages=editingVariants.flatMap(v=>v.images||[]);
 
     const payload = {
       name: document.getElementById('pName').value.trim(),
       category: document.getElementById('pCategory').value.trim().toLowerCase(),
       price: Number(document.getElementById('pPrice').value),
       sizes: document.getElementById('pSizes').value.split(',').map(s=>s.trim()).filter(Boolean),
-      colors: document.getElementById('pColors').value.split(',').map(s=>s.trim()).filter(Boolean),
-      stock: Number(document.getElementById('pStock').value) || 0,
+      colors: editingVariants.map(v=>v.name),
+      stock: totalStock,
       featured: document.getElementById('pFeatured').checked,
       is_active: document.getElementById('pActive').checked,
-      images: editingImages
+      images: defaultVariant.images.length?defaultVariant.images:allImages,
+      variants: editingVariants.map(v=>({id:v.id,name:v.name,hex:v.hex,stock:Number(v.stock)||0,images:v.images||[],is_default:!!v.is_default}))
     };
 
     const { error } = id

@@ -19,3 +19,7 @@
 - Safer database text rendering
 
 Replace the placeholder hero, story and lookbook areas with real boutique photos before launch.
+
+## Product colors and galleries
+Before using the new color-variant editor, run `product-variants-migration.sql` in the Supabase SQL Editor.
+The admin can then add several colors, set stock per color, and upload multiple photos for each color. Selecting a color on the storefront changes the product gallery automatically.
