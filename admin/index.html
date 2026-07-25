@@ -313,6 +313,30 @@
   }
 
   const productModal = document.getElementById('productModal');
+
+  function openProductModal(product = null){
+    const isEditing = !!product;
+
+    document.getElementById('productModalTitle').textContent = isEditing
+      ? 'Modifier le produit'
+      : 'Ajouter un produit';
+
+    document.getElementById('productId').value = product?.id || '';
+    document.getElementById('pName').value = product?.name || '';
+    document.getElementById('pCategory').value = product?.category || '';
+    document.getElementById('pPrice').value = product?.price ?? '';
+    document.getElementById('pSizes').value = Array.isArray(product?.sizes)
+      ? product.sizes.join(',')
+      : '';
+    document.getElementById('pFeatured').checked = !!product?.featured;
+    document.getElementById('pActive').checked = product ? product.is_active !== false : true;
+
+    editingVariants = normalizeVariants(product || {});
+    renderVariantsEditor();
+
+    productModal.classList.add('active');
+  }
+
   document.getElementById('addProductBtn').addEventListener('click', () => openProductModal());
   document.getElementById('cancelProductBtn').addEventListener('click', () => productModal.classList.remove('active'));
 
