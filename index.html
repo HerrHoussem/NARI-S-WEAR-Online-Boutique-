@@ -218,6 +218,14 @@
       padding:1rem 0;border-bottom:1px solid var(--line);
       font-family:'Cormorant Garamond',serif;font-size:1.65rem;
     }
+    .drawer-admin-link{display:flex!important;align-items:center;justify-content:space-between;gap:1rem;color:var(--gold-bright)}
+    .drawer-admin-link small{font-family:'Jost',sans-serif;font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+    body[dir="rtl"] header .nav-wrap{direction:ltr}
+    body[dir="rtl"] header .logo{direction:ltr}
+    body[dir="rtl"] .mobile-drawer{direction:rtl;margin-left:0;margin-right:auto;transform:translateX(-100%);border-left:0;border-right:1px solid var(--line)}
+    body[dir="rtl"] .mobile-panel.active .mobile-drawer{transform:translateX(0)}
+    body[dir="rtl"] .drawer-admin-link{flex-direction:row-reverse}
+    body[dir="rtl"] .section-head,body[dir="rtl"] .announcement{text-align:center}
 
     .hero{
       position:relative;min-height:calc(100vh - 116px);
@@ -811,8 +819,22 @@
     .faq-question strong{font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:500}.faq-plus{color:var(--gold);font-size:1.4rem;transition:.25s ease}
     .faq-item.active .faq-plus{transform:rotate(45deg)}.faq-answer{display:grid;grid-template-rows:0fr;transition:grid-template-rows .3s ease}.faq-answer>div{overflow:hidden}.faq-answer-content{padding:0 1.25rem;color:var(--muted);line-height:1.8}.faq-item.active .faq-answer{grid-template-rows:1fr}.faq-item.active .faq-answer-content{padding-bottom:1.25rem}
     .store-map{margin-top:1rem;border:1px solid var(--line);overflow:hidden}.store-map iframe{display:block;width:100%;height:340px;border:0}.map-actions{display:flex;gap:.7rem;flex-wrap:wrap;margin-top:1rem}
-    .floating-wa svg{width:25px;height:25px;fill:#fff}.floating-wa{color:#fff;animation:waPulse 2.8s infinite}.floating-wa:hover{transform:translateY(-3px) scale(1.04)}
-    @keyframes waPulse{0%,70%,100%{box-shadow:0 14px 35px rgba(0,0,0,.35)}80%{box-shadow:0 0 0 10px rgba(37,211,102,0),0 14px 35px rgba(0,0,0,.35)}}
+    .floating-wa svg{width:27px;height:27px;fill:#fff;position:relative;z-index:2}
+    .floating-wa{color:#fff;animation:waAttentionMove 6.5s ease-in-out infinite,waPulse 2.6s infinite;transform-origin:50% 100%}
+    .floating-wa::before{content:"";position:absolute;inset:-7px;border:2px solid rgba(37,211,102,.48);border-radius:50%;animation:waRing 2.8s ease-out infinite}
+    .floating-wa:hover{animation-play-state:paused;transform:translateY(-4px) scale(1.08)}
+    .wa-attention{position:absolute;right:58px;bottom:7px;width:max-content;max-width:190px;padding:.48rem .7rem;border-radius:999px;background:var(--panel);border:1px solid var(--line);color:var(--cream);font-size:.7rem;font-weight:500;letter-spacing:.02em;box-shadow:0 10px 28px rgba(0,0,0,.22);opacity:0;transform:translateX(10px);pointer-events:none;animation:waBubble 10s ease-in-out infinite}
+    .wa-attention::after{content:"";position:absolute;right:-6px;top:50%;width:10px;height:10px;background:var(--panel);border-top:1px solid var(--line);border-right:1px solid var(--line);transform:translateY(-50%) rotate(45deg)}
+    @keyframes waPulse{0%,70%,100%{box-shadow:0 14px 35px rgba(0,0,0,.35)}80%{box-shadow:0 0 0 12px rgba(37,211,102,0),0 14px 35px rgba(0,0,0,.35)}}
+    @keyframes waRing{0%{opacity:.8;transform:scale(.82)}72%,100%{opacity:0;transform:scale(1.38)}}
+    @keyframes waAttentionMove{
+      0%,68%,100%{transform:translateY(0) rotate(0) scale(1)}
+      72%{transform:translateY(-9px) rotate(-7deg) scale(1.05)}
+      76%{transform:translateY(0) rotate(7deg) scale(1.02)}
+      80%{transform:translateY(-5px) rotate(-4deg) scale(1.04)}
+      84%{transform:translateY(0) rotate(0) scale(1)}
+    }
+    @keyframes waBubble{0%,12%,48%,100%{opacity:0;transform:translateX(10px)}16%,42%{opacity:1;transform:translateX(0)}}
     @media(max-width:700px){.shipping-methods,.shipping-summary,.faq-grid{grid-template-columns:1fr}.faq-intro{position:static;padding:1.35rem}.store-map iframe{height:280px}}
 
 .order-cta{
@@ -921,6 +943,28 @@
     @media (max-width:700px){
       :root{--header-h:72px}
       .announcement{font-size:.62rem}
+      header .container.nav-wrap{
+        width:min(94vw,1180px);
+        display:grid;
+        grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);
+        align-items:center;
+        gap:.4rem;
+        direction:ltr!important;
+      }
+      header .logo{
+        grid-column:2;
+        justify-self:center;
+        font-size:.78rem;
+        letter-spacing:.1em;
+        gap:.45rem;
+        direction:ltr!important;
+      }
+      header .logo-mark{width:34px;height:34px;font-size:1.05rem}
+      header .nav-actions{grid-column:3;justify-self:end;direction:ltr!important}
+      header .utility-controls{gap:.3rem}
+      header .utility-btn,header .menu-btn{width:36px;min-width:36px;height:36px;padding:0}
+      body[dir="rtl"] header .nav-actions{direction:ltr!important}
+      .wa-attention{font-size:.66rem;right:56px;max-width:165px}
       .container{width:min(92vw,1180px)}
       section{padding:5rem 0}
       .hero{padding:3rem 0}
@@ -952,10 +996,22 @@
       .modal-actions{grid-template-columns:1fr}
     }
 
+
+    @media (max-width:430px){
+      header .container.nav-wrap{width:96vw}
+      header .logo{font-size:.72rem;letter-spacing:.08em;gap:.38rem}
+      header .logo-mark{width:32px;height:32px}
+      header .utility-btn,header .menu-btn{width:34px;min-width:34px;height:34px}
+      header .utility-controls{gap:.22rem}
+      header .nav-actions{gap:.28rem}
+    }
+
     @media (prefers-reduced-motion:reduce){
       *{scroll-behavior:auto!important;transition:none!important}
       .reveal{opacity:1;transform:none}
       .marquee-track{animation:narisTicker 32s linear infinite!important}
+      .floating-wa,.floating-wa::before,.wa-attention{animation:none!important}
+      .wa-attention{opacity:1;transform:none}
     }
   </style>
 </head>
@@ -976,7 +1032,7 @@
 
     <nav aria-label="Navigation principale">
       <a href="#collection"><span data-i18n="collection">Collection</span></a>
-      <a href="./admin.html">Administration</a>
+      <a href="./admin.html"><span data-i18n="administration">Administration</span></a>
       <a href="#contact"><span data-i18n="contact">Contact</span></a>
     </nav>
 
@@ -1000,6 +1056,7 @@
     <div class="drawer-links">
       <a href="#home">Accueil</a>
       <a href="#collection"><span data-i18n="collection">Collection</span></a>
+      <a href="./admin.html" class="drawer-admin-link"><span data-i18n="administration">Administration</span><small data-i18n="adminLogin">Connexion sécurisée</small></a>
       <a href="#contact"><span data-i18n="contact">Contact</span></a>
     </div>
     <a href="https://wa.me/213552080462" target="_blank" rel="noopener" class="wa-btn" style="margin-top:2rem;width:100%">
@@ -1386,6 +1443,7 @@
 </footer>
 
 <a class="floating-wa" href="https://wa.me/213552080462" target="_blank" rel="noopener" aria-label="Contacter Nari's Wear sur WhatsApp" title="WhatsApp">
+  <span class="wa-attention" data-i18n="waAttention">Besoin d’aide ?</span>
   <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M19.11 17.46c-.29-.15-1.71-.84-1.97-.94-.26-.1-.45-.15-.64.15-.19.29-.74.94-.91 1.13-.17.19-.34.22-.63.07-.29-.15-1.23-.45-2.34-1.44-.86-.77-1.45-1.72-1.62-2.01-.17-.29-.02-.45.13-.59.13-.13.29-.34.44-.51.15-.17.19-.29.29-.49.1-.19.05-.37-.02-.51-.07-.15-.64-1.55-.88-2.12-.23-.56-.47-.48-.64-.49h-.55c-.19 0-.51.07-.77.37-.26.29-1.01.99-1.01 2.41s1.04 2.8 1.18 2.99c.15.19 2.04 3.12 4.95 4.37.69.3 1.23.48 1.65.61.69.22 1.32.19 1.82.12.56-.08 1.71-.7 1.95-1.38.24-.68.24-1.26.17-1.38-.07-.12-.26-.19-.55-.34zM16.05 3.2c-7.06 0-12.8 5.73-12.8 12.79 0 2.25.59 4.45 1.71 6.38L3.14 29l6.79-1.78a12.75 12.75 0 0 0 6.11 1.56h.01c7.05 0 12.79-5.74 12.79-12.8 0-3.42-1.33-6.63-3.75-9.05A12.69 12.69 0 0 0 16.05 3.2zm0 23.42h-.01a10.6 10.6 0 0 1-5.4-1.48l-.39-.23-4.03 1.06 1.08-3.93-.25-.4a10.62 10.62 0 1 1 9 4.98z"/></svg>
 </a>
 <button class="to-top" id="toTop" aria-label="Revenir en haut">↑</button>
@@ -1779,7 +1837,7 @@ Merci de confirmer la disponibilité et le tarif de livraison.`;
       instagramTitle:'Suivez nos dernières créations',
       instagramDesc:'Découvrez l’univers Nari’s Wear et nos inspirations les plus récentes.',
       followInstagram:'Voir Instagram',
-      shop:'Acheter',collection:'Collection',story:'Notre histoire',lookbook:'Lookbook',contact:'Contact',
+      shop:'Acheter',collection:'Collection',story:'Notre histoire',lookbook:'Lookbook',contact:'Contact',administration:'Administration',adminLogin:'Connexion sécurisée',waAttention:'Besoin d’aide ?',
       heroEyebrow:'Alger · Bridal & Evening Boutique',
       heroText:'Des créations pensées pour les cérémonies, les soirées et les moments inoubliables — élégance, raffinement et confiance.',
       discover:'Découvrir la collection',whatsappOrder:'Commander sur WhatsApp',
@@ -1813,7 +1871,7 @@ Merci de confirmer la disponibilité et le tarif de livraison.`;
       instagramTitle:'تابعي أحدث تصاميمنا',
       instagramDesc:'اكتشفي عالم ناريز وير وأحدث الإطلالات والإلهام.',
       followInstagram:'مشاهدة إنستغرام',
-      shop:'تسوّقي',collection:'المجموعة',story:'قصتنا',lookbook:'إطلالات',contact:'اتصال',
+      shop:'تسوّقي',collection:'المجموعة',story:'قصتنا',lookbook:'إطلالات',contact:'اتصال',administration:'الإدارة',adminLogin:'دخول آمن',waAttention:'هل تحتاجين مساعدة؟',
       heroEyebrow:'الجزائر · أزياء الزفاف والسهرات',
       heroText:'تصاميم مختارة للحفلات والسهرات واللحظات التي لا تُنسى — أناقة، رقي وثقة.',
       discover:'اكتشفي المجموعة',whatsappOrder:'اطلبي عبر واتساب',
