@@ -909,6 +909,7 @@
     .variant-stock{font-size:.75rem;color:var(--muted);margin-top:.55rem}
     .variant-stock.low{color:var(--gold-bright)}
     .variant-stock.out{color:#e87575}
+    .option.disabled{opacity:.38;cursor:not-allowed;text-decoration:line-through}.size-stock-note{font-size:.7rem;color:var(--muted);margin-top:.45rem}
     .modal-content{padding:2rem;position:relative}
     .modal-close{
       position:absolute;right:1rem;top:1rem;width:38px;height:38px;
@@ -1487,6 +1488,7 @@
             <button class="option" data-value="L">L</button>
             <button class="option" data-value="XL">XL</button>
           </div>
+          <div class="size-stock-note" id="sizeStockNote"></div>
         </div>
 
         <div class="form-group">
@@ -1687,9 +1689,18 @@ document.addEventListener('DOMContentLoaded', () => {
     $(id).innerHTML=list.map((v,i)=>`<button type="button" class="option${i===0?' active':''}" data-value="${esc(v)}">${esc(v)}</button>`).join('');
   }
   function normalizeProductVariants(p){
-    if(Array.isArray(p?.variants)&&p.variants.length) return p.variants.map((v,i)=>({name:v.name||`Couleur ${i+1}`,hex:v.hex||'#c9a15a',stock:Number(v.stock)||0,images:Array.isArray(v.images)?v.images:[],is_default:!!v.is_default}));
+    if(Array.isArray(p?.variants)&&p.variants.length) return p.variants.map((v,i)=>({name:v.name||`Couleur ${i+1}`,hex:v.hex||'#c9a15a',stock:Number(v.stock)||0,images:Array.isArray(v.images)?v.images:[],sizes:Array.isArray(v.sizes)?v.sizes.map(x=>({name:x.name||'',stock:x.stock==null?null:Number(x.stock)||0})):[],is_default:!!v.is_default}));
     const colors=Array.isArray(p?.colors)&&p.colors.length?p.colors:['Noir'];
-    return colors.map((name,i)=>({name,hex:({Noir:'#000000',Blanc:'#ffffff',Beige:'#d8c3a5',Bordeaux:'#6e1f31',Jaune:'#e9c94c'})[name]||'#c9a15a',stock:i===0?Number(p?.stock||0):0,images:i===0&&Array.isArray(p?.images)?p.images:[],is_default:i===0}));
+    return colors.map((name,i)=>({name,hex:({Noir:'#000000',Blanc:'#ffffff',Beige:'#d8c3a5',Bordeaux:'#6e1f31',Jaune:'#e9c94c'})[name]||'#c9a15a',stock:i===0?Number(p?.stock||0):0,images:i===0&&Array.isArray(p?.images)?p.images:[],sizes:[],is_default:i===0}));
+  }
+  function renderVariantSizes(){
+    const configuredSizes=Array.isArray(currentVariant?.sizes)&&currentVariant.sizes.length?currentVariant.sizes:[];
+    const list=configuredSizes.length?configuredSizes:(Array.isArray(currentProduct?.sizes)&&currentProduct.sizes.length?currentProduct.sizes.map(name=>({name,stock:null})):['S','M','L','XL'].map(name=>({name,stock:null})));
+    const firstAvailable=list.find(x=>x.stock==null||Number(x.stock)>0);
+    $('#sizeOptions').innerHTML=list.map(x=>`<button type="button" class="option${firstAvailable&&x.name===firstAvailable.name?' active':''}${x.stock!=null&&Number(x.stock)<=0?' disabled':''}" data-value="${esc(x.name)}" ${x.stock!=null&&Number(x.stock)<=0?'aria-disabled="true"':''}>${esc(x.name)}</button>`).join('');
+    const selected=firstAvailable;
+    $('#sizeStockNote').textContent=!selected?'Aucune taille disponible':selected.stock==null?'Stock géré par couleur':selected.stock<=3?`Plus que ${selected.stock} pour la taille ${selected.name}`:`${selected.stock} disponible${selected.stock>1?'s':''} en taille ${selected.name}`;
+    return !!firstAvailable;
   }
   function renderVariantGallery(){
     const images=(currentVariant?.images||[]).filter(url=>/^https?:\/\//i.test(url||''));
@@ -1701,7 +1712,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const stock=Number(currentVariant?.stock||0),el=$('#variantStock');
     el.textContent=stock<=0?'Cette couleur est épuisée':stock<=3?`Plus que ${stock} en stock pour cette couleur`:`${stock} article${stock>1?'s':''} disponible${stock>1?'s':''} dans cette couleur`;
     el.className='variant-stock '+(stock<=0?'out':stock<=3?'low':'');
-    $('#confirmWhatsApp').disabled=stock<=0;
+    const hasSize=renderVariantSizes();
+    $('#confirmWhatsApp').disabled=stock<=0||!hasSize;
   }
   function selectVariant(name){
     const variants=normalizeProductVariants(currentProduct);
@@ -1711,7 +1723,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   function openModal(p){
     currentProduct=p; $('#modalProductTitle').textContent=p.name; $('#modalProductPrice').textContent=money(p.price);
-    buildOptions('#sizeOptions',p.sizes,['S','M','L','XL']);
     const variants=normalizeProductVariants(p),def=variants.find(v=>v.is_default)||variants[0];
     $('#colorOptions').innerHTML=variants.map(v=>`<button type="button" class="option color-option${v.name===def.name?' active':''}${Number(v.stock)<=0?' disabled':''}" data-value="${esc(v.name)}" ${Number(v.stock)<=0?'aria-disabled="true"':''}><span class="color-dot" style="background:${esc(v.hex||'#c9a15a')}"></span>${esc(v.name)}</button>`).join('');
     currentVariant=def;currentImageIndex=0;renderVariantGallery();
@@ -1728,6 +1739,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const o=e.target.closest('.option');if(!o||o.classList.contains('disabled'))return;
     if(row.id==='colorOptions'){selectVariant(o.dataset.value);return}
     row.querySelectorAll('.option').forEach(x=>x.classList.remove('active'));o.classList.add('active');
+    if(row.id==='sizeOptions'){const entry=(currentVariant?.sizes||[]).find(x=>x.name===o.dataset.value);$('#sizeStockNote').textContent=!entry||entry.stock==null?'Stock géré par couleur':entry.stock<=3?`Plus que ${entry.stock} pour la taille ${entry.name}`:`${entry.stock} disponible${entry.stock>1?'s':''} en taille ${entry.name}`;}
   }));
   $('#galleryThumbs').addEventListener('click',e=>{const b=e.target.closest('[data-image-index]');if(!b)return;currentImageIndex=Number(b.dataset.imageIndex);renderVariantGallery()});
   $('#modalMedia').addEventListener('click',e=>{
@@ -1779,6 +1791,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   $('#confirmWhatsApp').addEventListener('click',async()=>{
     if(!currentProduct)return;
+    const selectedSizeButton=$('#sizeOptions .option.active');
+    if(!selectedSizeButton){toast('Veuillez choisir une taille disponible.','error');return}
     const btn=$('#confirmWhatsApp'),size=$('#sizeOptions .option.active')?.dataset.value||'Non précisée',
       color=currentVariant?.name||$('#colorOptions .option.active')?.dataset.value||'Non précisée',
       name=$('#customerName').value.trim(),rawPhone=$('#customerPhone').value.trim(),

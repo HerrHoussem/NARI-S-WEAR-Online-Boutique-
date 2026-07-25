@@ -100,6 +100,7 @@
   .variant-image img{width:64px;height:82px;object-fit:cover;border:1px solid var(--line)}
   .variant-image button{position:absolute;right:-5px;top:-5px;width:20px;height:20px;border-radius:50%;background:var(--danger);color:white}
   .mini-btn{border:1px solid var(--line);background:transparent;color:var(--muted);padding:.45rem .65rem;font-size:.72rem}
+  .size-stock-editor{margin-top:.8rem;border-top:1px solid var(--line);padding-top:.8rem}.size-stock-head{display:flex;justify-content:space-between;align-items:center;gap:.6rem;margin-bottom:.55rem}.size-row{display:grid;grid-template-columns:1fr 1fr auto;gap:.5rem;margin:.45rem 0}.size-row input{min-width:0}.size-help{display:block;color:var(--muted);font-size:.68rem;line-height:1.45;margin-top:.45rem}
   .mini-btn:hover{border-color:var(--gold);color:var(--gold)}
   @media(max-width:620px){.form-row,.variant-grid{grid-template-columns:1fr}.modal-box{padding:1.2rem}}
   .empty{color:var(--muted);text-align:center;padding:2rem;font-size:.85rem}
@@ -182,8 +183,9 @@
       </div>
     </div>
     <div class="form-group">
-      <label>Tailles (séparées par virgule)</label>
+      <label>Tailles par défaut (séparées par virgule)</label>
       <input type="text" id="pSizes" placeholder="S,M,L,XL">
+      <small class="size-help">Ces tailles servent de modèle. Vous pouvez ensuite définir le stock exact de chaque taille pour chaque couleur.</small>
     </div>
     <div class="form-group">
       <div class="variant-head"><label style="margin:0">Couleurs, stock et photos</label><button type="button" class="mini-btn" id="addVariantBtn">+ Ajouter une couleur</button></div>
@@ -304,10 +306,10 @@
 
   function normalizeVariants(product){
     if(Array.isArray(product?.variants) && product.variants.length){
-      return product.variants.map(v=>({id:v.id||crypto.randomUUID(),name:v.name||'Couleur',hex:v.hex||'#c9a15a',stock:Number(v.stock)||0,images:Array.isArray(v.images)?[...v.images]:[],is_default:!!v.is_default}));
+      return product.variants.map(v=>({id:v.id||crypto.randomUUID(),name:v.name||'Couleur',hex:v.hex||'#c9a15a',stock:Number(v.stock)||0,images:Array.isArray(v.images)?[...v.images]:[],sizes:Array.isArray(v.sizes)?v.sizes.map(x=>({name:x.name||'',stock:x.stock==null?'':Math.max(0,Number(x.stock)||0)})):[],is_default:!!v.is_default}));
     }
     const colors=Array.isArray(product?.colors)&&product.colors.length?product.colors:['Noir'];
-    return colors.map((name,i)=>({id:crypto.randomUUID(),name,hex:name.toLowerCase()==='noir'?'#000000':'#c9a15a',stock:i===0?Number(product?.stock||0):0,images:i===0&&Array.isArray(product?.images)?[...product.images]:[],is_default:i===0}));
+    return colors.map((name,i)=>({id:crypto.randomUUID(),name,hex:name.toLowerCase()==='noir'?'#000000':'#c9a15a',stock:i===0?Number(product?.stock||0):0,images:i===0&&Array.isArray(product?.images)?[...product.images]:[],sizes:[],is_default:i===0}));
   }
 
   function renderVariantsEditor(){
@@ -319,6 +321,11 @@
         <div class="form-group"><label>Stock</label><input class="v-stock" type="number" min="0" value="${Number(v.stock)||0}"></div>
       </div>
       <label style="display:flex;gap:.5rem;align-items:center;font-size:.8rem;color:var(--muted)"><input class="v-default" type="radio" name="defaultVariant" ${v.is_default?'checked':''}> Couleur affichée par défaut</label>
+      <div class="size-stock-editor">
+        <div class="size-stock-head"><strong>Stock par taille</strong><button type="button" class="mini-btn add-size">+ Ajouter une taille</button></div>
+        <div class="size-rows">${(v.sizes||[]).map((sz,j)=>`<div class="size-row" data-size-index="${j}"><input class="s-name" value="${escapeHtml(sz.name)}" placeholder="M"><input class="s-stock" type="number" min="0" value="${sz.stock==null?'':sz.stock}" placeholder="Stock"><button type="button" class="mini-btn remove-size">×</button></div>`).join('')}</div>
+        <small class="size-help">Laissez cette liste vide pour utiliser uniquement le stock global de la couleur.</small>
+      </div>
       <div class="form-group" style="margin-top:.7rem"><label>Photos de cette couleur</label><input class="v-files" type="file" accept="image/*" multiple></div>
       <div class="variant-images">${v.images.map((url,j)=>`<span class="variant-image"><img src="${url}"><button type="button" class="remove-image" data-image="${j}">×</button></span>`).join('')}</div>
     </div>`).join('');
@@ -329,14 +336,17 @@
       editingVariants[i].name=card.querySelector('.v-name').value.trim()||`Couleur ${i+1}`;
       editingVariants[i].hex=card.querySelector('.v-hex').value;
       editingVariants[i].stock=Math.max(0,Number(card.querySelector('.v-stock').value)||0);
+      editingVariants[i].sizes=[...card.querySelectorAll('.size-row')].map(row=>({name:row.querySelector('.s-name').value.trim(),stock:row.querySelector('.s-stock').value===''?null:Math.max(0,Number(row.querySelector('.s-stock').value)||0)})).filter(x=>x.name);
       editingVariants[i].is_default=card.querySelector('.v-default').checked;
     });
     if(!editingVariants.some(v=>v.is_default) && editingVariants[0]) editingVariants[0].is_default=true;
   }
-  document.getElementById('addVariantBtn').addEventListener('click',()=>{syncVariantsFromForm();editingVariants.push({id:crypto.randomUUID(),name:'',hex:'#c9a15a',stock:0,images:[],is_default:editingVariants.length===0});renderVariantsEditor()});
+  document.getElementById('addVariantBtn').addEventListener('click',()=>{syncVariantsFromForm();editingVariants.push({id:crypto.randomUUID(),name:'',hex:'#c9a15a',stock:0,images:[],sizes:document.getElementById('pSizes').value.split(',').map(x=>x.trim()).filter(Boolean).map(name=>({name,stock:null})),is_default:editingVariants.length===0});renderVariantsEditor()});
   document.getElementById('variantsEditor').addEventListener('click',e=>{
     const card=e.target.closest('.variant-editor'); if(!card)return; const i=Number(card.dataset.index);
-    if(e.target.closest('.remove-variant')){syncVariantsFromForm();editingVariants.splice(i,1);if(editingVariants[0]&&!editingVariants.some(v=>v.is_default))editingVariants[0].is_default=true;renderVariantsEditor()}
+    if(e.target.closest('.remove-variant')){syncVariantsFromForm();editingVariants.splice(i,1);if(editingVariants[0]&&!editingVariants.some(v=>v.is_default))editingVariants[0].is_default=true;renderVariantsEditor();return}
+    if(e.target.closest('.add-size')){syncVariantsFromForm();editingVariants[i].sizes.push({name:'',stock:null});renderVariantsEditor();return}
+    if(e.target.closest('.remove-size')){const j=Number(e.target.closest('.size-row').dataset.sizeIndex);syncVariantsFromForm();editingVariants[i].sizes.splice(j,1);renderVariantsEditor();return}
     const rm=e.target.closest('.remove-image'); if(rm){syncVariantsFromForm();editingVariants[i].images.splice(Number(rm.dataset.image),1);renderVariantsEditor()}
   });
 
@@ -375,7 +385,7 @@
       }
     }
     const defaultVariant=editingVariants.find(v=>v.is_default)||editingVariants[0];
-    const totalStock=editingVariants.reduce((sum,v)=>sum+Number(v.stock||0),0);
+    const totalStock=editingVariants.reduce((sum,v)=>sum+(Array.isArray(v.sizes)&&v.sizes.length&&v.sizes.every(x=>x.stock!=null)?v.sizes.reduce((a,x)=>a+Number(x.stock||0),0):Number(v.stock||0)),0);
     const allImages=editingVariants.flatMap(v=>v.images||[]);
 
     const payload = {
@@ -388,7 +398,7 @@
       featured: document.getElementById('pFeatured').checked,
       is_active: document.getElementById('pActive').checked,
       images: defaultVariant.images.length?defaultVariant.images:allImages,
-      variants: editingVariants.map(v=>({id:v.id,name:v.name,hex:v.hex,stock:Number(v.stock)||0,images:v.images||[],is_default:!!v.is_default}))
+      variants: editingVariants.map(v=>({id:v.id,name:v.name,hex:v.hex,stock:Array.isArray(v.sizes)&&v.sizes.length&&v.sizes.every(x=>x.stock!=null)?v.sizes.reduce((sum,x)=>sum+Number(x.stock||0),0):Number(v.stock)||0,images:v.images||[],sizes:(v.sizes||[]).map(x=>({name:x.name,stock:x.stock==null?null:Number(x.stock)||0})),is_default:!!v.is_default}))
     };
 
     const { error } = id
