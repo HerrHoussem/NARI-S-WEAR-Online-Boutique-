@@ -1212,10 +1212,130 @@
       .wishlist-item img{width:78px;height:100px}
     }
 
+
+    /* NARI'S WEAR V2 professional polish */
+    :root{
+      --content-max:1240px;
+      --radius-card:18px;
+      --radius-soft:12px;
+    }
+    .container{width:min(var(--content-max),92vw)}
+    .product-card,
+    .review-card,
+    .benefit,
+    .instagram-reel{
+      border-radius:var(--radius-card);
+      overflow:hidden;
+    }
+    .product-card{
+      transform:translateZ(0);
+      transition:transform .28s ease,box-shadow .28s ease,border-color .28s ease;
+    }
+    .product-card:hover{
+      transform:translateY(-6px);
+      border-color:rgba(201,161,90,.52);
+      box-shadow:0 24px 55px rgba(0,0,0,.28);
+    }
+    .product-media img{
+      transition:transform .55s cubic-bezier(.2,.7,.2,1);
+    }
+    .product-card:hover .product-media img{transform:scale(1.035)}
+    .quick-btn,.btn-primary,.btn-outline{
+      border-radius:999px;
+    }
+    .trust-strip{
+      border-top:1px solid var(--line);
+      border-bottom:1px solid var(--line);
+      background:linear-gradient(90deg,rgba(201,161,90,.06),rgba(255,255,255,.015),rgba(201,161,90,.06));
+    }
+    .trust-strip-grid{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:0;
+    }
+    .trust-item{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:.75rem;
+      min-height:88px;
+      padding:1rem;
+      text-align:left;
+      border-right:1px solid var(--line);
+    }
+    .trust-item:last-child{border-right:0}
+    .trust-icon{
+      width:38px;
+      height:38px;
+      display:grid;
+      place-items:center;
+      flex:0 0 38px;
+      border:1px solid rgba(201,161,90,.45);
+      border-radius:50%;
+      color:var(--gold-bright);
+      font-size:1rem;
+    }
+    .trust-item strong{
+      display:block;
+      color:var(--text);
+      font-size:.82rem;
+      letter-spacing:.04em;
+    }
+    .trust-item span{
+      display:block;
+      margin-top:.2rem;
+      color:var(--muted);
+      font-size:.68rem;
+      line-height:1.4;
+    }
+    .skip-link{
+      position:fixed;
+      left:1rem;
+      top:-80px;
+      z-index:9999;
+      padding:.7rem 1rem;
+      background:var(--gold);
+      color:#111;
+      border-radius:999px;
+      font-weight:700;
+      transition:top .2s ease;
+    }
+    .skip-link:focus{top:1rem}
+    @media(prefers-reduced-motion:reduce){
+      *,*::before,*::after{
+        scroll-behavior:auto!important;
+        animation-duration:.01ms!important;
+        animation-iteration-count:1!important;
+        transition-duration:.01ms!important;
+      }
+    }
+    @media(max-width:900px){
+      .trust-strip-grid{grid-template-columns:repeat(2,1fr)}
+      .trust-item:nth-child(2){border-right:0}
+      .trust-item:nth-child(-n+2){border-bottom:1px solid var(--line)}
+    }
+    @media(max-width:700px){
+      .container{width:min(94vw,680px)}
+      .trust-strip-grid{grid-template-columns:1fr 1fr}
+      .trust-item{
+        min-height:92px;
+        align-items:flex-start;
+        justify-content:flex-start;
+        padding:.9rem .75rem;
+      }
+      .trust-icon{width:34px;height:34px;flex-basis:34px}
+      .trust-item strong{font-size:.72rem}
+      .trust-item span{font-size:.62rem}
+      .product-card{border-radius:14px}
+      .product-info{padding:1rem}
+      .wishlist-btn{width:40px;height:40px}
+    }
+
 </style>
 </head>
 
 <body class="light-theme">
+<a class="skip-link" href="#collection">Aller aux produits</a>
 <a href="#main" class="skip-link">Aller au contenu</a>
 
 <div class="announcement">
@@ -1292,7 +1412,7 @@
       </div>
 
       <div class="hero-visual" aria-label="Visuel principal de la collection">
-        <div class="fashion-frame"><img src="./assets/images/hero-naris.webp?v=3" alt="Nari’s Wear bridal and evening collection" width="900" height="1343" fetchpriority="high"></div>
+        <div class="fashion-frame"><img decoding="async" src="./assets/images/hero-naris.webp?v=3" alt="Nari’s Wear bridal and evening collection" width="900" height="1343" fetchpriority="high"></div>
         <div class="visual-card one">
           <strong>Nouvelle collection</strong>
           <span>Édition limitée</span>
@@ -1464,7 +1584,29 @@
     </div>
   </section>
 
-  <section id="instagram">
+  
+<section class="trust-strip" aria-label="Services NARI’S WEAR">
+  <div class="container trust-strip-grid">
+    <div class="trust-item">
+      <span class="trust-icon" aria-hidden="true">✓</span>
+      <div><strong>Commande confirmée</strong><span>Validation rapide sur WhatsApp</span></div>
+    </div>
+    <div class="trust-item">
+      <span class="trust-icon" aria-hidden="true">⌂</span>
+      <div><strong>Livraison nationale</strong><span>Disponible dans les 58 wilayas</span></div>
+    </div>
+    <div class="trust-item">
+      <span class="trust-icon" aria-hidden="true">◇</span>
+      <div><strong>Paiement à la livraison</strong><span>Simple, pratique et rassurant</span></div>
+    </div>
+    <div class="trust-item">
+      <span class="trust-icon" aria-hidden="true">♡</span>
+      <div><strong>Favoris personnels</strong><span>Sauvegardés directement sur votre appareil</span></div>
+    </div>
+  </div>
+</section>
+
+<section id="instagram">
     <div class="container">
       <div class="section-head reveal">
         <div class="eyebrow">Instagram</div>
@@ -1931,8 +2073,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const images=(currentVariant?.images||[]).filter(url=>/^https?:\/\//i.test(url||''));
     if(currentImageIndex>=images.length)currentImageIndex=0;
     const image=images[currentImageIndex];
-    $('#modalMedia').innerHTML=image?`<img src="${esc(image)}" alt="${esc(currentProduct.name)} — ${esc(currentVariant.name)}"><div class="gallery-nav"><button type="button" id="galleryPrev" aria-label="Photo précédente">‹</button><button type="button" id="galleryNext" aria-label="Photo suivante">›</button></div>`:'Photo du produit';
-    $('#galleryThumbs').innerHTML=images.map((url,i)=>`<button type="button" class="gallery-thumb${i===currentImageIndex?' active':''}" data-image-index="${i}"><img src="${esc(url)}" alt=""></button>`).join('');
+    $('#modalMedia').innerHTML=image?`<img decoding="async" src="${esc(image)}" alt="${esc(currentProduct.name)} — ${esc(currentVariant.name)}"><div class="gallery-nav"><button type="button" id="galleryPrev" aria-label="Photo précédente">‹</button><button type="button" id="galleryNext" aria-label="Photo suivante">›</button></div>`:'Photo du produit';
+    $('#galleryThumbs').innerHTML=images.map((url,i)=>`<button type="button" class="gallery-thumb${i===currentImageIndex?' active':''}" data-image-index="${i}"><img decoding="async" src="${esc(url)}" alt=""></button>`).join('');
     $('#galleryThumbs').style.display=images.length>1?'flex':'none';
     const stock=Number(currentVariant?.stock||0),el=$('#variantStock');
     el.textContent=stock<=0?'Cette couleur est épuisée':stock<=3?`Plus que ${stock} en stock pour cette couleur`:`${stock} article${stock>1?'s':''} disponible${stock>1?'s':''} dans cette couleur`;
@@ -2225,19 +2367,19 @@ Merci de confirmer la disponibilité et le tarif de livraison.`;
 
 <nav class="mobile-bottom-nav" aria-label="Navigation mobile">
   <a href="#collection">
-    <strong>⌂</strong>
+    <strong aria-hidden="true">⌂</strong>
     <span>Boutique</span>
   </a>
   <a href="https://wa.me/213552080462" target="_blank" rel="noopener">
-    <strong>◉</strong>
+    <strong aria-hidden="true">◉</strong>
     <span>WhatsApp</span>
   </a>
   <button type="button" id="mobileWishlistButton" aria-label="Ouvrir les favoris">
-    <strong>♡</strong>
+    <strong aria-hidden="true">♡</strong>
     <span>Favoris <span id="mobileWishlistCount">0</span></span>
   </button>
   <button type="button" id="mobileCartButton" aria-label="Ouvrir le panier">
-    <strong>◇</strong>
+    <strong aria-hidden="true">◇</strong>
     <span>Panier</span>
   </button>
 </nav>
@@ -2359,7 +2501,7 @@ Merci de confirmer la disponibilité et le tarif de livraison.`;
       const price=getPrice(product);
       return `
         <article class="wishlist-item">
-          <img src="${image}" alt="${getName(product)}" loading="lazy">
+          <img decoding="async" src="${image}" alt="${getName(product)}" loading="lazy">
           <div>
             <h4>${getName(product)}</h4>
             <p>${price!==''?price+' DZD':''}</p>
@@ -2431,7 +2573,7 @@ Merci de confirmer la disponibilité et le tarif de livraison.`;
       return `
         <article class="product-card recently-viewed-card" data-product-id="${id}">
           <div class="product-media">
-            <img src="${image}" alt="${getName(product)}" loading="lazy">
+            <img decoding="async" src="${image}" alt="${getName(product)}" loading="lazy">
           </div>
           <div class="product-info">
             <h3>${getName(product)}</h3>
@@ -2474,24 +2616,30 @@ Merci de confirmer la disponibilité et le tarif de livraison.`;
   document.addEventListener('keydown',e=>{if(e.key==='Escape') closeWishlist()});
 
   let wishlistRefreshQueued=false;
-  const observer=new MutationObserver((mutations)=>{
-    const productAreaChanged=mutations.some(mutation=>
-      [...mutation.addedNodes].some(node=>
-        node.nodeType===1 &&
-        (node.matches?.('.product-card:not(.recently-viewed-card)') ||
-         node.querySelector?.('.product-card:not(.recently-viewed-card)'))
-      )
-    );
+  const productGrid =
+    document.querySelector('#productGrid') ||
+    document.querySelector('.product-grid');
 
-    if(!productAreaChanged || wishlistRefreshQueued) return;
+  if(productGrid){
+    const observer=new MutationObserver((mutations)=>{
+      const addedProduct=mutations.some(mutation=>
+        [...mutation.addedNodes].some(node=>
+          node.nodeType===1 &&
+          (node.matches?.('.product-card') || node.querySelector?.('.product-card'))
+        )
+      );
 
-    wishlistRefreshQueued=true;
-    requestAnimationFrame(()=>{
-      decorateProductCards();
-      wishlistRefreshQueued=false;
+      if(!addedProduct || wishlistRefreshQueued) return;
+
+      wishlistRefreshQueued=true;
+      requestAnimationFrame(()=>{
+        decorateProductCards();
+        wishlistRefreshQueued=false;
+      });
     });
-  });
-  observer.observe(document.body,{childList:true,subtree:true});
+
+    observer.observe(productGrid,{childList:true,subtree:true});
+  }
 
   setTimeout(()=>{
     decorateProductCards();
