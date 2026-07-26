@@ -573,105 +573,78 @@
     .review-author span{font-size:.75rem;color:var(--muted)}
 .instagram-grid{
       display:grid;
-      grid-template-columns:repeat(3,1fr);
-      gap:.8rem;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:1rem;
     }
-    .instagram-tile{
+    .instagram-reel{
       position:relative;
-      aspect-ratio:1/1;
+      min-width:0;
       overflow:hidden;
       border:1px solid var(--line);
-      background:var(--panel);
-      cursor:pointer;
-      isolation:isolate;
+      background:linear-gradient(145deg,rgba(201,161,90,.1),rgba(255,255,255,.025));
+      box-shadow:var(--shadow);
+      transition:transform .3s ease,border-color .3s ease,box-shadow .3s ease;
     }
-    .instagram-tile img{
+    .instagram-reel:hover{
+      transform:translateY(-5px);
+      border-color:rgba(201,161,90,.7);
+      box-shadow:0 22px 50px rgba(0,0,0,.38);
+    }
+    .instagram-reel-frame{
+      position:relative;
+      width:100%;
+      aspect-ratio:9/14;
+      overflow:hidden;
+      background:#fff;
+    }
+    .instagram-reel iframe{
       width:100%;
       height:100%;
-      object-fit:cover;
+      border:0;
       display:block;
-      transition:transform .45s ease,filter .45s ease;
+      background:#fff;
     }
-    .instagram-tile::after{
-      content:"Voir";
-      position:absolute;
-      inset:auto 1rem 1rem 1rem;
-      z-index:2;
+    .instagram-reel-link{
       display:flex;
       align-items:center;
-      justify-content:center;
-      min-height:42px;
-      background:rgba(17,13,11,.74);
-      border:1px solid rgba(234,210,157,.35);
-      color:#fff3dc;
-      font-size:.68rem;
-      letter-spacing:.14em;
+      justify-content:space-between;
+      gap:.75rem;
+      min-height:54px;
+      padding:.85rem 1rem;
+      color:var(--cream);
+      border-top:1px solid var(--line);
+      font-size:.72rem;
+      letter-spacing:.12em;
       text-transform:uppercase;
-      opacity:0;
-      transform:translateY(14px);
-      transition:.3s ease;
-      pointer-events:none;
+      transition:background .25s ease,color .25s ease;
     }
-    .instagram-tile:hover img{
-      transform:scale(1.055);
-      filter:brightness(.82);
+    .instagram-reel-link:hover{
+      background:rgba(201,161,90,.1);
+      color:var(--gold-bright);
     }
-    .instagram-tile:hover::after,
-    .instagram-tile:focus-visible::after{
-      opacity:1;
-      transform:none;
+    .instagram-reel-icon{
+      width:30px;
+      height:30px;
+      display:grid;
+      place-items:center;
+      border:1px solid rgba(201,161,90,.55);
+      border-radius:50%;
+      color:var(--gold-bright);
+      flex:0 0 30px;
     }
     .instagram-cta{text-align:center;margin-top:2rem}
-
-    .gallery-lightbox{
-      position:fixed;
-      inset:0;
-      z-index:500;
-      display:grid;
-      place-items:center;
-      padding:1rem;
-      background:rgba(8,6,5,.92);
-      opacity:0;
-      visibility:hidden;
-      transition:.25s ease;
-    }
-    .gallery-lightbox.active{
-      opacity:1;
-      visibility:visible;
-    }
-    .gallery-lightbox-inner{
-      position:relative;
-      width:min(92vw,900px);
-      max-height:92vh;
-      display:grid;
-      place-items:center;
-    }
-    .gallery-lightbox img{
-      max-width:100%;
-      max-height:88vh;
-      object-fit:contain;
-      border:1px solid var(--line);
-      box-shadow:var(--shadow);
-    }
-    .gallery-lightbox-close{
-      position:absolute;
-      top:.8rem;
-      right:.8rem;
-      z-index:3;
-      width:44px;
-      height:44px;
-      border:1px solid rgba(255,255,255,.3);
-      background:rgba(0,0,0,.58);
-      color:white;
-      cursor:pointer;
-    }
-
     @media(max-width:1020px){
+      .instagram-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    }
+    @media(max-width:700px){
+      .instagram-grid{grid-template-columns:1fr}
+      .instagram-reel-frame{aspect-ratio:9/13}
+    }
+@media(max-width:1020px){
       .featured-collections{grid-template-columns:repeat(2,1fr)}
       .why-grid{grid-template-columns:repeat(2,1fr)}
       .reviews-grid{grid-template-columns:1fr 1fr}
       .delivery-panel{grid-template-columns:1fr}
-.instagram-grid{grid-template-columns:repeat(3,1fr)}
     }
     @media(max-width:700px){
       .featured-collections{grid-template-columns:1fr}
@@ -679,7 +652,6 @@
       .why-grid{grid-template-columns:1fr}
       .reviews-grid{grid-template-columns:1fr}
       .delivery-copy{padding:1.5rem}
-.instagram-grid{grid-template-columns:repeat(2,1fr)}
     }
 
 
@@ -1029,7 +1001,44 @@
       .floating-wa,.floating-wa::before,.wa-attention{animation:none!important}
       .wa-attention{opacity:1;transform:none}
     }
-  </style>
+  
+    .shipping-extra{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin-top:.7rem}
+    .shipping-extra .form-group{margin:0}
+    @media(max-width:700px){.shipping-extra{grid-template-columns:1fr}}
+
+
+/* Controlled wishlist + cart merge. Existing delivery, map, WhatsApp and animations remain untouched. */
+.shop-action-btn{position:relative;min-width:42px;height:42px;padding:0 .72rem;border:1px solid var(--line);background:transparent;color:var(--cream);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:.35rem}
+.shop-action-btn:hover{border-color:var(--gold);color:var(--gold-bright)}
+.shop-count{position:absolute;right:-5px;top:-7px;min-width:19px;height:19px;padding:0 5px;border-radius:999px;background:var(--gold);color:var(--black);display:grid;place-items:center;font-size:.62rem;font-weight:800}
+.product-card{position:relative}
+.favorite-btn{position:absolute;right:.7rem;top:.7rem;z-index:7;width:42px;height:42px;border-radius:50%;border:1px solid rgba(255,255,255,.5);background:rgba(15,12,10,.7);color:white;cursor:pointer;font-size:1.2rem;display:grid;place-items:center;backdrop-filter:blur(8px)}
+.favorite-btn.active{background:var(--gold);border-color:var(--gold);color:var(--black)}
+.shop-drawer-layer{position:fixed;inset:0;z-index:1200;visibility:hidden;pointer-events:none}
+.shop-drawer-layer.active{visibility:visible;pointer-events:auto}
+.shop-drawer-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.68);opacity:0;transition:.25s}
+.shop-drawer-layer.active .shop-drawer-backdrop{opacity:1}
+.shop-drawer{position:absolute;right:0;top:0;width:min(460px,100%);height:100%;background:var(--panel);border-left:1px solid var(--line);box-shadow:-30px 0 80px rgba(0,0,0,.35);transform:translateX(102%);transition:.28s;display:flex;flex-direction:column}
+.shop-drawer-layer.active .shop-drawer{transform:none}
+.shop-drawer-head{height:76px;flex:0 0 76px;padding:0 1rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line)}
+.shop-drawer-head h3{font-size:2rem;margin:0}
+.shop-drawer-close{width:44px;height:44px;border:1px solid var(--line);background:transparent;color:var(--cream);cursor:pointer;font-size:1.25rem;border-radius:50%}
+.shop-drawer-body{padding:1rem;overflow:auto;flex:1}
+.shop-empty{text-align:center;color:var(--muted);padding:4rem 1rem;line-height:1.7}.shop-empty strong{display:block;color:var(--cream);font-size:1.4rem;margin-bottom:.5rem}
+.shop-item{display:grid;grid-template-columns:82px 1fr;gap:.8rem;padding:.8rem 0;border-bottom:1px solid var(--line)}
+.shop-item img{width:82px;height:108px;object-fit:cover;background:#16110e}
+.shop-item-title{font-weight:700;margin:.15rem 0 .4rem}.shop-item-meta{color:var(--muted);font-size:.72rem;line-height:1.6}
+.shop-item-actions{display:flex;gap:.45rem;flex-wrap:wrap;margin-top:.65rem}.shop-mini{min-height:36px;padding:.45rem .72rem;border:1px solid var(--line);background:transparent;color:var(--cream);cursor:pointer;font-size:.69rem}.shop-mini.gold{background:var(--gold);border-color:var(--gold);color:var(--black)}
+.shop-drawer-foot{padding:1rem;border-top:1px solid var(--line)}
+#addCartButton{width:100%;margin-top:.7rem}
+@media(max-width:700px){
+ .nav-actions{gap:.35rem}.utility-controls{gap:.25rem}.shop-action-btn{width:38px;height:38px;min-width:38px;padding:0;font-size:.85rem}.nav-cta{display:none}
+ .shop-drawer{top:auto;bottom:0;height:min(88svh,760px);width:100%;border-left:0;border-top:1px solid var(--line);border-radius:22px 22px 0 0;transform:translateY(102%)}
+ .shop-drawer-layer.active .shop-drawer{transform:none}.shop-drawer-head{height:66px;flex-basis:66px}.shop-drawer-body{padding-bottom:2rem}
+ .favorite-btn{width:38px;height:38px}
+}
+
+</style>
 </head>
 
 <body class="light-theme">
@@ -1056,6 +1065,8 @@
       <div class="utility-controls">
         <button class="utility-btn" id="themeToggle" aria-label="Changer le thème">☀</button>
         <button class="utility-btn lang-label" id="langToggle" aria-label="Changer la langue">AR</button>
+        <button class="shop-action-btn" id="wishlistOpen" aria-label="Ouvrir les favoris">♡<span class="shop-count" id="wishlistCount">0</span></button>
+        <button class="shop-action-btn" id="cartOpen" aria-label="Ouvrir le panier">◇<span class="shop-count" id="cartCount">0</span></button>
       </div>
       <a class="nav-cta" href="#collection" data-i18n="shop">Acheter</a>
       <button class="menu-btn" id="menuBtn" aria-label="Ouvrir le menu" aria-expanded="false">☰</button>
@@ -1355,40 +1366,111 @@
       </div>
 
       <div class="instagram-grid">
-        <button class="instagram-tile reveal" type="button" data-full="./assets/images/instagram/instagram-1.webp" aria-label="Ouvrir la photo Instagram 1">
-          <img src="./assets/images/instagram/instagram-1.webp" alt="Création Nari’s Wear 1" loading="lazy" decoding="async">
-        </button>
-        <button class="instagram-tile reveal" type="button" data-full="./assets/images/instagram/instagram-2.webp" aria-label="Ouvrir la photo Instagram 2">
-          <img src="./assets/images/instagram/instagram-2.webp" alt="Création Nari’s Wear 2" loading="lazy" decoding="async">
-        </button>
-        <button class="instagram-tile reveal" type="button" data-full="./assets/images/instagram/instagram-3.webp" aria-label="Ouvrir la photo Instagram 3">
-          <img src="./assets/images/instagram/instagram-3.webp" alt="Création Nari’s Wear 3" loading="lazy" decoding="async">
-        </button>
-        <button class="instagram-tile reveal" type="button" data-full="./assets/images/instagram/instagram-4.webp" aria-label="Ouvrir la photo Instagram 4">
-          <img src="./assets/images/instagram/instagram-4.webp" alt="Création Nari’s Wear 4" loading="lazy" decoding="async">
-        </button>
-        <button class="instagram-tile reveal" type="button" data-full="./assets/images/instagram/instagram-5.webp" aria-label="Ouvrir la photo Instagram 5">
-          <img src="./assets/images/instagram/instagram-5.webp" alt="Création Nari’s Wear 5" loading="lazy" decoding="async">
-        </button>
-        <button class="instagram-tile reveal" type="button" data-full="./assets/images/instagram/instagram-6.webp" aria-label="Ouvrir la photo Instagram 6">
-          <img src="./assets/images/instagram/instagram-6.webp" alt="Création Nari’s Wear 6" loading="lazy" decoding="async">
-        </button>
+        <article class="instagram-reel reveal">
+          <div class="instagram-reel-frame">
+            <iframe
+              src="https://www.instagram.com/reel/DbJxLIIsvaj/embed"
+              title="Instagram Reel NARI’S WEAR 1"
+              loading="lazy"
+              allowtransparency="true"
+              allow="encrypted-media; picture-in-picture"
+              referrerpolicy="strict-origin-when-cross-origin">
+            </iframe>
+          </div>
+          <a class="instagram-reel-link" href="https://www.instagram.com/reel/DbJxLIIsvaj/" target="_blank" rel="noopener">
+            <span>Voir le Reel sur Instagram</span>
+            <span class="instagram-reel-icon" aria-hidden="true">↗</span>
+          </a>
+        </article>
+        <article class="instagram-reel reveal">
+          <div class="instagram-reel-frame">
+            <iframe
+              src="https://www.instagram.com/reel/DbMBuYTR_0V/embed"
+              title="Instagram Reel NARI’S WEAR 2"
+              loading="lazy"
+              allowtransparency="true"
+              allow="encrypted-media; picture-in-picture"
+              referrerpolicy="strict-origin-when-cross-origin">
+            </iframe>
+          </div>
+          <a class="instagram-reel-link" href="https://www.instagram.com/reel/DbMBuYTR_0V/" target="_blank" rel="noopener">
+            <span>Voir le Reel sur Instagram</span>
+            <span class="instagram-reel-icon" aria-hidden="true">↗</span>
+          </a>
+        </article>
+        <article class="instagram-reel reveal">
+          <div class="instagram-reel-frame">
+            <iframe
+              src="https://www.instagram.com/reel/DbOwPT8xkXG/embed"
+              title="Instagram Reel NARI’S WEAR 3"
+              loading="lazy"
+              allowtransparency="true"
+              allow="encrypted-media; picture-in-picture"
+              referrerpolicy="strict-origin-when-cross-origin">
+            </iframe>
+          </div>
+          <a class="instagram-reel-link" href="https://www.instagram.com/reel/DbOwPT8xkXG/" target="_blank" rel="noopener">
+            <span>Voir le Reel sur Instagram</span>
+            <span class="instagram-reel-icon" aria-hidden="true">↗</span>
+          </a>
+        </article>
+        <article class="instagram-reel reveal">
+          <div class="instagram-reel-frame">
+            <iframe
+              src="https://www.instagram.com/reel/DbO_Y6FMPvI/embed"
+              title="Instagram Reel NARI’S WEAR 4"
+              loading="lazy"
+              allowtransparency="true"
+              allow="encrypted-media; picture-in-picture"
+              referrerpolicy="strict-origin-when-cross-origin">
+            </iframe>
+          </div>
+          <a class="instagram-reel-link" href="https://www.instagram.com/reel/DbO_Y6FMPvI/" target="_blank" rel="noopener">
+            <span>Voir le Reel sur Instagram</span>
+            <span class="instagram-reel-icon" aria-hidden="true">↗</span>
+          </a>
+        </article>
+        <article class="instagram-reel reveal">
+          <div class="instagram-reel-frame">
+            <iframe
+              src="https://www.instagram.com/reel/DbPBY_us8IH/embed"
+              title="Instagram Reel NARI’S WEAR 5"
+              loading="lazy"
+              allowtransparency="true"
+              allow="encrypted-media; picture-in-picture"
+              referrerpolicy="strict-origin-when-cross-origin">
+            </iframe>
+          </div>
+          <a class="instagram-reel-link" href="https://www.instagram.com/reel/DbPBY_us8IH/" target="_blank" rel="noopener">
+            <span>Voir le Reel sur Instagram</span>
+            <span class="instagram-reel-icon" aria-hidden="true">↗</span>
+          </a>
+        </article>
+        <article class="instagram-reel reveal">
+          <div class="instagram-reel-frame">
+            <iframe
+              src="https://www.instagram.com/reel/DbHGIOTRvAk/embed"
+              title="Instagram Reel NARI’S WEAR 6"
+              loading="lazy"
+              allowtransparency="true"
+              allow="encrypted-media; picture-in-picture"
+              referrerpolicy="strict-origin-when-cross-origin">
+            </iframe>
+          </div>
+          <a class="instagram-reel-link" href="https://www.instagram.com/reel/DbHGIOTRvAk/" target="_blank" rel="noopener">
+            <span>Voir le Reel sur Instagram</span>
+            <span class="instagram-reel-icon" aria-hidden="true">↗</span>
+          </a>
+        </article>
       </div>
 
-      <div class="instagram-cta">
+      <div class="instagram-cta reveal">
         <a class="btn-outline" href="https://www.instagram.com/naris_wear" target="_blank" rel="noopener" data-i18n="followInstagram">
           Voir Instagram
         </a>
       </div>
     </div>
   </section>
-
-  <div class="gallery-lightbox" id="galleryLightbox" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Aperçu de la photo">
-    <div class="gallery-lightbox-inner">
-      <button class="gallery-lightbox-close" id="galleryLightboxClose" aria-label="Fermer">✕</button>
-      <img id="galleryLightboxImage" src="" alt="Aperçu Nari’s Wear">
-    </div>
-  </div>
 
   <section id="faq">
     <div class="container faq-grid">
@@ -1402,7 +1484,7 @@
         <div class="map-actions"><a class="btn-outline" href="https://www.google.com/maps?q=36.695965,2.971272" target="_blank" rel="noopener">Ouvrir dans Google Maps</a></div>
       </div>
       <div class="faq-list reveal">
-        <article class="faq-item active"><button class="faq-question" type="button" aria-expanded="true"><strong>Livraison & délais</strong><span class="faq-plus">+</span></button><div class="faq-answer"><div><div class="faq-answer-content">Nous livrons dans les 58 wilayas avec Yalidine. À Alger, la livraison peut prendre 24 à 48 heures. Pour les autres wilayas, comptez généralement 2 à 5 jours ouvrables. Chaque commande est confirmée sur WhatsApp avant l’expédition.</div></div></div></article>
+        <article class="faq-item active"><button class="faq-question" type="button" aria-expanded="true"><strong>Livraison & délais</strong><span class="faq-plus">+</span></button><div class="faq-answer"><div><div class="faq-answer-content">Nous livrons dans les 58 wilayas grâce à nos partenaires de livraison. À Alger, la livraison peut prendre 24 à 48 heures. Pour les autres wilayas, comptez généralement 2 à 5 jours ouvrables. Chaque commande est confirmée sur WhatsApp avant l’expédition.</div></div></div></article>
         <article class="faq-item"><button class="faq-question" type="button" aria-expanded="false"><strong>Paiement</strong><span class="faq-plus">+</span></button><div class="faq-answer"><div><div class="faq-answer-content">Le paiement s’effectue à la livraison. Aucun paiement bancaire n’est demandé sur le site.</div></div></div></article>
         <article class="faq-item"><button class="faq-question" type="button" aria-expanded="false"><strong>Retours & échanges</strong><span class="faq-plus">+</span></button><div class="faq-answer"><div><div class="faq-answer-content">Toute demande d’échange doit être signalée dans les 24 heures suivant la réception. L’article doit être non porté, intact et conservé dans son emballage d’origine. En cas d’erreur de notre part, NARI’S WEAR prend en charge les frais liés à l’échange.</div></div></div></article>
         <article class="faq-item"><button class="faq-question" type="button" aria-expanded="false"><strong>Où se trouve la boutique ?</strong><span class="faq-plus">+</span></button><div class="faq-answer"><div><div class="faq-answer-content">Notre boutique se trouve à Alger, aux coordonnées 36.695965, 2.971272. Utilisez la carte ou le bouton Google Maps pour obtenir l’itinéraire exact.</div></div></div></article>
@@ -1464,6 +1546,22 @@
 </a>
 <button class="to-top" id="toTop" aria-label="Revenir en haut">↑</button>
 
+
+<div class="shop-drawer-layer" id="wishlistLayer" aria-hidden="true">
+  <div class="shop-drawer-backdrop" data-shop-close></div>
+  <aside class="shop-drawer" aria-label="Mes favoris">
+    <div class="shop-drawer-head"><h3>Favoris</h3><button class="shop-drawer-close" data-shop-close aria-label="Fermer">✕</button></div>
+    <div class="shop-drawer-body" id="wishlistBody"></div>
+  </aside>
+</div>
+<div class="shop-drawer-layer" id="cartLayer" aria-hidden="true">
+  <div class="shop-drawer-backdrop" data-shop-close></div>
+  <aside class="shop-drawer" aria-label="Mon panier">
+    <div class="shop-drawer-head"><h3>Panier</h3><button class="shop-drawer-close" data-shop-close aria-label="Fermer">✕</button></div>
+    <div class="shop-drawer-body" id="cartBody"></div>
+    <div class="shop-drawer-foot" id="cartFoot"></div>
+  </aside>
+</div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <div class="modal" id="orderModal" role="dialog" aria-modal="true" aria-labelledby="modalProductTitle">
@@ -1518,19 +1616,30 @@
           </select>
         </div>
 
+        <div class="shipping-extra">
+          <div class="form-group">
+            <label for="customerCommune">Commune</label>
+            <input class="form-control" id="customerCommune" type="text" placeholder="Votre commune" autocomplete="address-level2">
+          </div>
+          <div class="form-group" id="addressGroup">
+            <label for="customerAddress">Adresse complète</label>
+            <input class="form-control" id="customerAddress" type="text" placeholder="Quartier, rue, numéro..." autocomplete="street-address">
+          </div>
+        </div>
+
         <div class="form-group">
           <label>Mode de livraison</label>
           <div class="shipping-methods" id="shippingMethods">
             <button class="shipping-choice active" type="button" data-method="home"><strong>Livraison à domicile</strong><span>Livrée à votre adresse</span></button>
-            <button class="shipping-choice" type="button" data-method="stopdesk"><strong>Bureau Yalidine</strong><span>Retrait au bureau sélectionné</span></button>
           </div>
           <div class="shipping-summary" aria-live="polite">
             <div><span>Frais de livraison</span><strong id="shippingPrice">Choisissez une wilaya</strong></div>
             <div><span>Total estimé</span><strong id="orderTotal">—</strong></div>
           </div>
-          <small class="small-note" id="shippingNote">Le bureau Yalidine pourra être confirmé avec vous sur WhatsApp.</small>
+          <small class="small-note" id="shippingNote">Votre commande et votre adresse seront confirmées avec vous sur WhatsApp.</small>
         </div>
 
+        <button class="btn-solid" id="addCartButton" type="button">Ajouter au panier</button>
         <div class="modal-actions">
           <button class="btn-outline" id="continueShopping">Continuer</button>
           <button class="wa-btn" id="confirmWhatsApp">Commander</button>
@@ -1596,6 +1705,16 @@ document.addEventListener('DOMContentLoaded', () => {
   const money = v => Number(v || 0).toLocaleString('fr-FR') + ' DA';
 
   let products = [], category = 'all', currentProduct = null, currentVariant = null, currentImageIndex = 0, toastTimer;
+  const WISHLIST_KEY='naris-wishlist-controlled-v1';
+  const CART_KEY='naris-cart-controlled-v1';
+  let wishlist=readLocal(WISHLIST_KEY,[]), cart=readLocal(CART_KEY,[]);
+  function readLocal(key,fallback){try{return JSON.parse(localStorage.getItem(key))||fallback}catch{return fallback}}
+  function writeShopState(){localStorage.setItem(WISHLIST_KEY,JSON.stringify(wishlist));localStorage.setItem(CART_KEY,JSON.stringify(cart));syncShopCounts()}
+  function wishlistHas(id){return wishlist.some(x=>String(x.id)===String(id))}
+  function snapshotProduct(p){return {id:p.id,name:p.name,price:Number(p.price||0),category:p.category||'',images:Array.isArray(p.images)?p.images:[],variants:Array.isArray(p.variants)?p.variants:[],sizes:Array.isArray(p.sizes)?p.sizes:[],colors:Array.isArray(p.colors)?p.colors:[],stock:Number(p.stock||0),featured:!!p.featured,created_at:p.created_at||''}}
+  function shopImage(p){const vs=normalizeProductVariants(p),v=vs.find(x=>x.is_default)||vs[0];return (v?.images||[]).find(Boolean)||(p.images||[]).find(Boolean)||'./assets/images/naris-brand-art.webp'}
+  function syncShopCounts(){if($('#wishlistCount'))$('#wishlistCount').textContent=wishlist.length;if($('#cartCount'))$('#cartCount').textContent=cart.reduce((s,x)=>s+Number(x.quantity||1),0)}
+
 
   function toast(message,type=''){
     const el=$('#toast'); el.textContent=message; el.className=`toast show ${type}`.trim();
@@ -1651,6 +1770,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="product-media${safeImage?' has-image':''}">
           ${safeImage?`<img src="${esc(safeImage)}" alt="${esc(p.name)}" loading="lazy" decoding="async">`:''}
           ${p.featured?'<span class="product-badge">Nouveau</span>':''}
+          <button class="favorite-btn${wishlistHas(p.id)?' active':''}" type="button" data-favorite="${esc(p.id)}" aria-label="Ajouter aux favoris">${wishlistHas(p.id)?'♥':'♡'}</button>
           <button class="quick-btn" ${sold?'disabled':''}>${sold?'Indisponible':'Commander rapidement'}</button>
         </div>
         <div class="product-info">
@@ -1665,7 +1785,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   async function loadProducts(){
     if(!configured){
-      products=DEMO; renderFilters(); renderProducts(); return;
+      products=DEMO; renderFilters(); renderProducts(); renderWishlist(); renderCart(); syncShopCounts(); return;
     }
     const {data,error}=await db.from('products')
       .select('id,name,category,price,description,sizes,colors,images,variants,stock,featured,created_at')
@@ -1673,7 +1793,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if(error){
       console.error(error); products=DEMO;
     }else products=data||[];
-    renderFilters(); renderProducts();
+    renderFilters(); renderProducts(); renderWishlist(); renderCart(); syncShopCounts();
   }
 
   $('#filterBar').addEventListener('click',e=>{
@@ -1730,6 +1850,8 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   function closeModal(){$('#orderModal').classList.remove('active');document.body.classList.remove('modal-open')}
   $('#productGrid').addEventListener('click',e=>{
+    const heart=e.target.closest('[data-favorite]');
+    if(heart){e.stopPropagation();toggleFavorite(heart.dataset.favorite);return}
     const b=e.target.closest('.quick-btn'); if(!b||b.disabled)return;
     const p=products.find(x=>String(x.id)===b.closest('[data-id]').dataset.id); if(p)openModal(p);
   });
@@ -1748,6 +1870,49 @@ document.addEventListener('DOMContentLoaded', () => {
     if(e.target.closest('#galleryNext'))currentImageIndex=(currentImageIndex+1)%images.length;
     renderVariantGallery();
   });
+
+
+  function toggleFavorite(id){
+    const index=wishlist.findIndex(x=>String(x.id)===String(id));
+    if(index>=0){wishlist.splice(index,1);toast('Retiré des favoris')}else{const p=products.find(x=>String(x.id)===String(id));if(p){wishlist.unshift(snapshotProduct(p));toast('Ajouté aux favoris')}}
+    writeShopState();renderProducts();renderWishlist();
+  }
+  function openShopLayer(id){
+    closeShopLayers();const layer=$(id);layer.classList.add('active');layer.setAttribute('aria-hidden','false');document.body.classList.add('modal-open');
+  }
+  function closeShopLayers(){
+    $$('.shop-drawer-layer').forEach(x=>{x.classList.remove('active');x.setAttribute('aria-hidden','true')});
+    if(!$('#orderModal').classList.contains('active')&&!$('#mobilePanel').classList.contains('active'))document.body.classList.remove('modal-open');
+  }
+  function renderWishlist(){
+    if(!$('#wishlistBody'))return;
+    $('#wishlistBody').innerHTML=wishlist.length?wishlist.map(p=>`<article class="shop-item"><img src="${esc(shopImage(p))}" alt="${esc(p.name)}"><div><div class="shop-item-title">${esc(p.name)}</div><div class="shop-item-meta">${money(p.price)}</div><div class="shop-item-actions"><button class="shop-mini gold" data-wish-order="${esc(p.id)}">Choisir</button><button class="shop-mini" data-wish-remove="${esc(p.id)}">Retirer</button></div></div></article>`).join(''):'<div class="shop-empty"><strong>Votre wishlist est vide</strong>Appuyez sur le cœur d’un produit pour le sauvegarder.</div>';
+  }
+  function renderCart(){
+    if(!$('#cartBody'))return;
+    $('#cartBody').innerHTML=cart.length?cart.map(item=>`<article class="shop-item"><img src="${esc(item.image)}" alt="${esc(item.name)}"><div><div class="shop-item-title">${esc(item.name)}</div><div class="shop-item-meta">${esc(item.color)} · Taille ${esc(item.size)}<br>${money(item.price)} · Quantité ${item.quantity}</div><div class="shop-item-actions"><button class="shop-mini gold" data-cart-order="${esc(item.key)}">Commander</button><button class="shop-mini" data-cart-remove="${esc(item.key)}">Supprimer</button></div></div></article>`).join(''):'<div class="shop-empty"><strong>Votre panier est vide</strong>Choisissez une couleur et une taille, puis ajoutez l’article.</div>';
+    $('#cartFoot').innerHTML=cart.length?`<strong>${cart.reduce((s,x)=>s+Number(x.quantity||1),0)} article(s)</strong><div class="small-note" style="margin-top:.4rem">Chaque article utilise le formulaire de livraison existant afin de préserver les tarifs exacts par wilaya et commune.</div>`:'';
+  }
+  function selectedSize(){return $('#sizeOptions .option.active')?.dataset.value||''}
+  function addCurrentToCart(){
+    if(!currentProduct||!currentVariant)return;
+    const size=selectedSize();if(!size){toast('Veuillez choisir une taille disponible.','error');return}
+    const color=currentVariant.name,key=`${currentProduct.id}|${color}|${size}`,existing=cart.find(x=>x.key===key);
+    if(existing)existing.quantity+=1;else cart.unshift({key,id:currentProduct.id,name:currentProduct.name,price:Number(currentProduct.price),color,size,quantity:1,image:shopImage({...currentProduct,variants:[currentVariant]})});
+    writeShopState();renderCart();toast('Ajouté au panier');closeModal();openShopLayer('#cartLayer');
+  }
+  function openSavedProduct(id){
+    const p=products.find(x=>String(x.id)===String(id))||wishlist.find(x=>String(x.id)===String(id));if(!p)return;
+    closeShopLayers();openModal(p);
+  }
+  $('#wishlistOpen').addEventListener('click',()=>{renderWishlist();openShopLayer('#wishlistLayer')});
+  $('#cartOpen').addEventListener('click',()=>{renderCart();openShopLayer('#cartLayer')});
+  document.addEventListener('click',e=>{if(e.target.closest('[data-shop-close]'))closeShopLayers()});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeShopLayers()});
+  $('#wishlistBody').addEventListener('click',e=>{const r=e.target.closest('[data-wish-remove]');if(r){toggleFavorite(r.dataset.wishRemove);return}const o=e.target.closest('[data-wish-order]');if(o)openSavedProduct(o.dataset.wishOrder)});
+  $('#cartBody').addEventListener('click',e=>{const r=e.target.closest('[data-cart-remove]');if(r){cart=cart.filter(x=>x.key!==r.dataset.cartRemove);writeShopState();renderCart();return}const o=e.target.closest('[data-cart-order]');if(o){const item=cart.find(x=>x.key===o.dataset.cartOrder);if(!item)return;const p=products.find(x=>String(x.id)===String(item.id));if(p){closeShopLayers();openModal(p);setTimeout(()=>{selectVariant(item.color);const size=$$('#sizeOptions .option').find(x=>x.dataset.value===item.size&&!x.classList.contains('disabled'));if(size)size.click()},30)}}});
+  $('#addCartButton').addEventListener('click',addCurrentToCart);
+  syncShopCounts();renderWishlist();renderCart();
 
   function normalizeAlgerianPhone(value){
     let phone=String(value||'').replace(/[^\d+]/g,'').trim();
@@ -1769,12 +1934,12 @@ document.addEventListener('DOMContentLoaded', () => {
     return row ? row[deliveryMethod] : null;
   }
   function refreshShipping(){
+    deliveryMethod='home';
     const price=selectedDeliveryPrice();
     $('#shippingPrice').textContent=price==null?'Tarif à confirmer':money(price);
     $('#orderTotal').textContent=currentProduct&&price!=null?money(Number(currentProduct.price)+price):'—';
-    $('#shippingNote').textContent=deliveryMethod==='stopdesk'
-      ? 'Le bureau Yalidine exact sera confirmé avec vous sur WhatsApp.'
-      : 'Livraison directement à votre adresse.';
+    $('#shippingNote').textContent='Livraison directement à votre adresse. La commande sera confirmée sur WhatsApp.';
+    $('#addressGroup').style.display='block';
   }
   $('#customerWilaya').addEventListener('change',refreshShipping);
   $('#shippingMethods').addEventListener('click',e=>{
@@ -1796,7 +1961,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const btn=$('#confirmWhatsApp'),size=$('#sizeOptions .option.active')?.dataset.value||'Non précisée',
       color=currentVariant?.name||$('#colorOptions .option.active')?.dataset.value||'Non précisée',
       name=$('#customerName').value.trim(),rawPhone=$('#customerPhone').value.trim(),
-      phone=normalizeAlgerianPhone(rawPhone),wilaya=$('#customerWilaya').value,deliveryPrice=selectedDeliveryPrice(),deliveryLabel=deliveryMethod==='stopdesk'?'Bureau Yalidine':'À domicile';
+      phone=normalizeAlgerianPhone(rawPhone),wilaya=$('#customerWilaya').value,
+      commune=$('#customerCommune').value.trim(),address=$('#customerAddress').value.trim(),
+      deliveryPrice=selectedDeliveryPrice(),deliveryLabel='À domicile';
     if(name.length<2){toast('Merci de renseigner votre nom complet.','error');$('#customerName').focus();return}
     if(!validPhone(rawPhone)){
       const message=currentLang==='ar'
@@ -1808,6 +1975,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     $('#customerPhone').value=phone;
     if(!wilaya){toast('Veuillez choisir votre wilaya.','error');$('#customerWilaya').focus();return}
+    if(commune.length<2){toast('Veuillez renseigner votre commune.','error');$('#customerCommune').focus();return}
+    if(deliveryMethod==='home' && address.length<5){toast('Veuillez renseigner une adresse de livraison complète.','error');$('#customerAddress').focus();return}
 
     btn.disabled=true;btn.textContent='Préparation…';
     let saved=false;
@@ -1824,6 +1993,10 @@ document.addEventListener('DOMContentLoaded', () => {
         customer_name:name,
         customer_phone:phone,
         wilaya,
+        commune,
+        address,
+        delivery_method:'home',
+        shipping_price:deliveryPrice,
         status:'nouvelle'
       };
 
@@ -1856,7 +2029,9 @@ Informations client :
 • Nom : ${name}
 • Téléphone : ${phone}
 • Wilaya : ${wilaya}
+• Commune : ${commune}
 • Mode de livraison : ${deliveryLabel}
+• Adresse : ${address}
 • Frais de livraison : ${deliveryPrice==null?'À confirmer':money(deliveryPrice)}
 • Total estimé : ${deliveryPrice==null?'À confirmer':money(Number(currentProduct.price)+deliveryPrice)}
 
@@ -1982,39 +2157,6 @@ Merci de confirmer la disponibilité et le tarif de livraison.`;
     }
   };
   applyLanguage(currentLang);
-
-
-  const galleryLightbox=$('#galleryLightbox');
-  const galleryLightboxImage=$('#galleryLightboxImage');
-  const galleryLightboxClose=$('#galleryLightboxClose');
-
-  function openGalleryLightbox(src,alt){
-    galleryLightboxImage.src=src;
-    galleryLightboxImage.alt=alt||'Aperçu Nari’s Wear';
-    galleryLightbox.classList.add('active');
-    galleryLightbox.setAttribute('aria-hidden','false');
-    document.body.classList.add('modal-open');
-    setTimeout(()=>galleryLightboxClose.focus(),50);
-  }
-
-  function closeGalleryLightbox(){
-    galleryLightbox.classList.remove('active');
-    galleryLightbox.setAttribute('aria-hidden','true');
-    galleryLightboxImage.src='';
-    document.body.classList.remove('modal-open');
-  }
-
-  $$('.instagram-tile').forEach(tile=>{
-    tile.addEventListener('click',()=>{
-      const image=tile.querySelector('img');
-      openGalleryLightbox(tile.dataset.full,image?.alt);
-    });
-  });
-
-  galleryLightboxClose.addEventListener('click',closeGalleryLightbox);
-  galleryLightbox.addEventListener('click',event=>{
-    if(event.target===galleryLightbox) closeGalleryLightbox();
-  });
 
   $('#year').textContent=new Date().getFullYear();
   loadProducts();
