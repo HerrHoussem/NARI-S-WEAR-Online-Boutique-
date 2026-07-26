@@ -930,6 +930,7 @@
 
     @media (max-width:700px){
       :root{--header-h:72px}
+      html{scroll-padding-top:150px}
       .announcement{font-size:.62rem}
       header .container.nav-wrap{
         width:min(94vw,1180px);
@@ -1074,24 +1075,40 @@
   header .shop-action-btn,header .menu-btn{
     width:38px;min-width:38px;height:38px;padding:0;
   }
-  .drawer-mobile-tools{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:.65rem;
-    margin-top:1.25rem;
-  }
-  .drawer-mobile-tools button{
-    min-height:46px;
-    border:1px solid var(--line);
-    background:transparent;
-    color:var(--cream);
-    cursor:pointer;
+  .mobile-pref-bar{
     display:flex;
     align-items:center;
     justify-content:center;
-    gap:.55rem;
+    gap:.4rem;
+    padding:.5rem .9rem;
+    border-top:1px solid var(--line);
+    background:rgba(23,19,16,.72);
   }
-  body.light-theme .drawer-mobile-tools button{color:var(--black)}
+  .mobile-pref-btn{
+    flex:1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:.45rem;
+    min-height:38px;
+    border:1px solid var(--line);
+    border-radius:999px;
+    background:transparent;
+    color:var(--cream);
+    font-size:.72rem;
+    letter-spacing:.05em;
+    text-transform:uppercase;
+    cursor:pointer;
+    transition:.2s ease;
+  }
+  .mobile-pref-btn:active{background:rgba(201,161,90,.14);border-color:var(--gold)}
+  .mobile-pref-icon{font-size:.95rem;line-height:1}
+  .mobile-pref-sep{width:1px;height:22px;background:var(--line)}
+  body.light-theme .mobile-pref-bar{background:rgba(255,255,255,.6)}
+  body.light-theme .mobile-pref-btn{color:var(--black)}
+}
+@media (min-width:701px){
+  .mobile-pref-bar{display:none}
 }
 @media (max-width:390px){
   header .logo{font-size:.68rem;letter-spacing:.055em;gap:.34rem}
@@ -1264,6 +1281,17 @@ body.light-theme .optional-delivery-note span{color:#554a43}
       <button class="menu-btn" id="menuBtn" aria-label="Ouvrir le menu" aria-expanded="false">☰</button>
     </div>
   </div>
+  <div class="mobile-pref-bar" id="mobilePrefBar">
+    <button type="button" class="mobile-pref-btn" id="mobileBarTheme">
+      <span class="mobile-pref-icon" aria-hidden="true">☀</span>
+      <span data-i18n="themeLabel">Thème</span>
+    </button>
+    <span class="mobile-pref-sep" aria-hidden="true"></span>
+    <button type="button" class="mobile-pref-btn" id="mobileBarLang">
+      <span class="mobile-pref-icon" aria-hidden="true">AR</span>
+      <span data-i18n="langLabel">Langue</span>
+    </button>
+  </div>
 </header>
 
 <div class="mobile-panel" id="mobilePanel" aria-hidden="true">
@@ -1277,10 +1305,6 @@ body.light-theme .optional-delivery-note span{color:#554a43}
       <a href="#collection"><span data-i18n="collection">Collection</span></a>
       <a href="./admin/" class="drawer-admin-link"><span data-i18n="administration">Administration</span><small data-i18n="adminLogin">Connexion sécurisée</small></a>
       <a href="#contact"><span data-i18n="contact">Contact</span></a>
-    </div>
-    <div class="drawer-mobile-tools" aria-label="Préférences">
-      <button type="button" id="mobileThemeToggle"><span aria-hidden="true">☾</span><span>Thème</span></button>
-      <button type="button" id="mobileLangToggle"><span aria-hidden="true">AR</span><span>Langue</span></button>
     </div>
     <a href="https://wa.me/213552080462" target="_blank" rel="noopener" class="wa-btn" style="margin-top:1rem;width:100%">
       WhatsApp
@@ -2366,7 +2390,8 @@ Merci de confirmer la disponibilité et le tarif de livraison.`;
       limited:'Petites quantités',delivery:'Livraison nationale',advice:'Conseil personnalisé',
       selection:'La sélection',newThisWeek:'Nouveautés de la semaine',
       collectionDesc:'Des pièces élégantes en quantités limitées. Choisissez votre modèle, votre taille et commandez directement.',
-      madeInAlgiers:'Fait à Alger, pensé pour vous',readyOrder:'Prête à commander ?'
+      madeInAlgiers:'Fait à Alger, pensé pour vous',readyOrder:'Prête à commander ?',
+      themeLabel:'Thème',langLabel:'Langue'
     },
     ar:{
       featuredEyebrow:'المجموعات المميزة',featuredTitle:'إطلالة لكل مناسبة',
@@ -2400,7 +2425,8 @@ Merci de confirmer la disponibilité et le tarif de livraison.`;
       limited:'كميات محدودة',delivery:'توصيل لكل الولايات',advice:'مرافقة ونصيحة شخصية',
       selection:'مختاراتنا',newThisWeek:'جديد هذا الأسبوع',
       collectionDesc:'قطع أنيقة بكميات محدودة. اختاري الموديل والمقاس واطلبي مباشرة.',
-      madeInAlgiers:'من الجزائر، صُممت من أجلك',readyOrder:'جاهزة للطلب؟'
+      madeInAlgiers:'من الجزائر، صُممت من أجلك',readyOrder:'جاهزة للطلب؟',
+      themeLabel:'المظهر',langLabel:'اللغة'
     }
   };
 
@@ -2414,6 +2440,8 @@ Merci de confirmer la disponibilité et le tarif de livraison.`;
       if(translations[lang][key]) el.textContent = translations[lang][key];
     });
     $('#langToggle').textContent = lang === 'ar' ? 'FR' : 'AR';
+    const barLangIcon = $('#mobileBarLang .mobile-pref-icon');
+    if(barLangIcon) barLangIcon.textContent = lang === 'ar' ? 'FR' : 'AR';
     localStorage.setItem('naris-lang',lang);
   }
 
@@ -2422,21 +2450,21 @@ Merci de confirmer la disponibilité et le tarif de livraison.`;
   const savedTheme = localStorage.getItem('naris-theme') || 'light';
   if(savedTheme === 'light') document.body.classList.add('light-theme');
   $('#themeToggle').textContent = document.body.classList.contains('light-theme') ? '☾' : '☀';
+  const syncMobileThemeIcon = () => {
+    const barThemeIcon = $('#mobileBarTheme .mobile-pref-icon');
+    if(barThemeIcon) barThemeIcon.textContent = document.body.classList.contains('light-theme') ? '☾' : '☀';
+  };
+  syncMobileThemeIcon();
   $('#themeToggle').addEventListener('click',()=>{
     document.body.classList.toggle('light-theme');
     const light = document.body.classList.contains('light-theme');
     $('#themeToggle').textContent = light ? '☾' : '☀';
+    syncMobileThemeIcon();
     localStorage.setItem('naris-theme', light ? 'light' : 'dark');
   });
 
-  const mobileThemeToggle = $('#mobileThemeToggle');
-  const mobileLangToggle = $('#mobileLangToggle');
-  if(mobileThemeToggle){
-    mobileThemeToggle.addEventListener('click',()=>$('#themeToggle').click());
-  }
-  if(mobileLangToggle){
-    mobileLangToggle.addEventListener('click',()=>$('#langToggle').click());
-  }
+  $('#mobileBarTheme')?.addEventListener('click',()=>$('#themeToggle').click());
+  $('#mobileBarLang')?.addEventListener('click',()=>$('#langToggle').click());
 
 
   applyLanguage(currentLang);
