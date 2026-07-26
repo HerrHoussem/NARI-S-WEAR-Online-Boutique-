@@ -1203,6 +1203,60 @@ body.light-theme .newsletter-input-wrap input{color:var(--black)}
   header .shop-action-btn .modern-icon{width:20px;height:20px}
 }
 
+
+/* Always-visible mobile language and theme controls */
+.mobile-preferences-bar{display:none}
+@media(max-width:700px){
+  .mobile-preferences-bar{
+    position:sticky;
+    top:64px;
+    z-index:89;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    min-height:42px;
+    border-bottom:1px solid var(--line);
+    background:rgba(29,23,20,.96);
+    backdrop-filter:blur(14px);
+    -webkit-backdrop-filter:blur(14px);
+  }
+  .mobile-preferences-bar button{
+    min-width:0;
+    border:0;
+    border-right:1px solid var(--line);
+    background:transparent;
+    color:var(--cream);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:.45rem;
+    padding:.55rem .65rem;
+    font-size:.68rem;
+    font-weight:700;
+    letter-spacing:.03em;
+    cursor:pointer;
+  }
+  .mobile-preferences-bar button:last-child{border-right:0}
+  .mobile-preferences-bar svg{
+    width:17px;
+    height:17px;
+    fill:none;
+    stroke:currentColor;
+    stroke-width:1.8;
+    stroke-linecap:round;
+    stroke-linejoin:round;
+    flex:0 0 17px;
+  }
+  body.light-theme .mobile-preferences-bar{
+    background:rgba(255,250,243,.97);
+  }
+  body.light-theme .mobile-preferences-bar button{
+    color:var(--black);
+  }
+  body[dir="rtl"] .mobile-preferences-bar{
+    direction:rtl;
+  }
+}
+
 </style>
 </head>
 
@@ -1238,6 +1292,18 @@ body.light-theme .newsletter-input-wrap input{color:var(--black)}
     </div>
   </div>
 </header>
+
+
+<div class="mobile-preferences-bar" aria-label="Préférences d’affichage">
+  <button type="button" id="mobileHeaderThemeToggle" aria-label="Changer le thème">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8Z"/></svg>
+    <span id="mobileThemeLabel">Mode sombre</span>
+  </button>
+  <button type="button" id="mobileHeaderLangToggle" aria-label="Changer la langue">
+    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg>
+    <span id="mobileLangLabel">العربية</span>
+  </button>
+</div>
 
 <div class="mobile-panel" id="mobilePanel" aria-hidden="true">
   <div class="mobile-drawer">
@@ -2398,7 +2464,37 @@ Merci de confirmer la disponibilité et le tarif de livraison.`;
     localStorage.setItem('naris-theme', light ? 'light' : 'dark');
   });
 
-  const mobileThemeToggle = $('#mobileThemeToggle');
+
+  const mobileHeaderThemeToggle=$('#mobileHeaderThemeToggle');
+  const mobileHeaderLangToggle=$('#mobileHeaderLangToggle');
+  const mobileThemeLabel=$('#mobileThemeLabel');
+  const mobileLangLabel=$('#mobileLangLabel');
+
+  function syncMobilePreferenceLabels(){
+    if(mobileThemeLabel){
+      mobileThemeLabel.textContent=document.body.classList.contains('light-theme')
+        ? (currentLang==='ar'?'الوضع الداكن':'Mode sombre')
+        : (currentLang==='ar'?'الوضع الفاتح':'Mode clair');
+    }
+    if(mobileLangLabel){
+      mobileLangLabel.textContent=currentLang==='ar'?'Français':'العربية';
+    }
+  }
+
+  if(mobileHeaderThemeToggle){
+    mobileHeaderThemeToggle.addEventListener('click',()=>{
+      $('#themeToggle')?.click();
+      setTimeout(syncMobilePreferenceLabels,0);
+    });
+  }
+  if(mobileHeaderLangToggle){
+    mobileHeaderLangToggle.addEventListener('click',()=>{
+      $('#langToggle')?.click();
+      setTimeout(syncMobilePreferenceLabels,0);
+    });
+  }
+
+    const mobileThemeToggle = $('#mobileThemeToggle');
   const mobileLangToggle = $('#mobileLangToggle');
   if(mobileThemeToggle){
     mobileThemeToggle.addEventListener('click',()=>$('#themeToggle').click());
@@ -2420,6 +2516,7 @@ Merci de confirmer la disponibilité et le tarif de livraison.`;
     }
   };
   applyLanguage(currentLang);
+  syncMobilePreferenceLabels();
 
   $('#year').textContent=new Date().getFullYear();
   loadProducts();
