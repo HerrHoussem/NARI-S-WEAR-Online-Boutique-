@@ -1029,7 +1029,16 @@
       .floating-wa,.floating-wa::before,.wa-attention{animation:none!important}
       .wa-attention{opacity:1;transform:none}
     }
-  </style>
+  
+    .shipping-extra{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin-top:.7rem}
+    .shipping-extra .form-group{margin:0}
+    .agency-box{margin-top:.75rem;padding:.9rem;border:1px solid var(--line);background:rgba(255,255,255,.025)}
+    .agency-box[hidden]{display:none}
+    .agency-status{font-size:.73rem;color:var(--muted);margin:.45rem 0}
+    .agency-nearest{font-size:.75rem;color:var(--gold-bright);margin-top:.5rem}
+    @media(max-width:700px){.shipping-extra{grid-template-columns:1fr}}
+
+</style>
 </head>
 
 <body class="light-theme">
@@ -1518,6 +1527,17 @@
           </select>
         </div>
 
+        <div class="shipping-extra">
+          <div class="form-group">
+            <label for="customerCommune">Commune</label>
+            <input class="form-control" id="customerCommune" type="text" placeholder="Votre commune" autocomplete="address-level2">
+          </div>
+          <div class="form-group" id="addressGroup">
+            <label for="customerAddress">Adresse complète</label>
+            <input class="form-control" id="customerAddress" type="text" placeholder="Quartier, rue, numéro..." autocomplete="street-address">
+          </div>
+        </div>
+
         <div class="form-group">
           <label>Mode de livraison</label>
           <div class="shipping-methods" id="shippingMethods">
@@ -1529,6 +1549,15 @@
             <div><span>Total estimé</span><strong id="orderTotal">—</strong></div>
           </div>
           <small class="small-note" id="shippingNote">Le bureau Yalidine pourra être confirmé avec vous sur WhatsApp.</small>
+          <div class="agency-box" id="agencyBox" hidden>
+            <label for="yalidineAgency">Bureau Yalidine / StopDesk</label>
+            <select class="form-control" id="yalidineAgency">
+              <option value="">Chargement des bureaux...</option>
+            </select>
+            <div class="agency-status" id="agencyStatus"></div>
+            <button class="btn-outline" type="button" id="findNearestAgency">⌖ Suggérer le bureau le plus proche</button>
+            <div class="agency-nearest" id="nearestAgency"></div>
+          </div>
         </div>
 
         <div class="modal-actions">
@@ -1578,6 +1607,7 @@ document.addEventListener('DOMContentLoaded', () => {
     '56':{home:1450,stopdesk:1200},'57':{home:1050,stopdesk:700},'58':{home:1050,stopdesk:700}
   };
   let deliveryMethod='home';
+  let yalidineAgencies=[];
 
   const DEMO = [
     {id:'demo-1',name:'Robe Ambre',category:'robe',price:4500,sizes:['S','M','L'],colors:['Noir','Blanc','Jaune'],images:[],variants:[{name:'Noir',hex:'#000000',stock:4,images:[],is_default:true},{name:'Blanc',hex:'#ffffff',stock:2,images:[]},{name:'Jaune',hex:'#e9c94c',stock:2,images:[]}],featured:true,stock:8,created_at:'2026-07-20'},
@@ -1763,6 +1793,78 @@ document.addEventListener('DOMContentLoaded', () => {
     const phone=normalizeAlgerianPhone(value);
     return /^\+213[567]\d{8}$/.test(phone);
   }
+  function edgeFunctionUrl(action=''){
+    const base=String(CONFIG.supabaseUrl||'').replace(/\/$/,'');
+    return base ? `${base}/functions/v1/yalidine${action}` : '';
+  }
+  function normalizeAgency(raw){
+    const id=raw.id ?? raw.center_id ?? raw.stopdesk_id ?? raw.center_id;
+    const name=raw.name ?? raw.center_name ?? raw.stopdesk_name ?? raw.commune_name ?? `Bureau ${id||''}`;
+    const address=raw.address ?? raw.center_address ?? '';
+    const lat=Number(raw.latitude ?? raw.lat ?? raw.center_latitude);
+    const lng=Number(raw.longitude ?? raw.lng ?? raw.center_longitude);
+    return {id:String(id??''),name:String(name),address:String(address),lat:Number.isFinite(lat)?lat:null,lng:Number.isFinite(lng)?lng:null,raw};
+  }
+  async function loadYalidineAgencies(){
+    const box=$('#agencyBox'),select=$('#yalidineAgency'),status=$('#agencyStatus');
+    if(deliveryMethod!=='stopdesk'){box.hidden=true;return}
+    box.hidden=false;
+    const wilaya=$('#customerWilaya').value;
+    if(!wilaya){
+      select.innerHTML='<option value="">Choisissez d’abord une wilaya</option>';
+      status.textContent='';
+      return;
+    }
+    select.innerHTML='<option value="">Chargement des bureaux...</option>';
+    status.textContent='Connexion sécurisée à Yalidine…';
+    try{
+      const response=await fetch(`${edgeFunctionUrl()}?action=agencies&wilaya=${encodeURIComponent(wilaya)}`,{
+        headers:{'apikey':CONFIG.supabaseAnonKey,'Authorization':`Bearer ${CONFIG.supabaseAnonKey}`}
+      });
+      const body=await response.json();
+      if(!response.ok) throw new Error(body.error||'Impossible de charger les bureaux');
+      const rawList=Array.isArray(body.data)?body.data:Array.isArray(body)?body:(body.data?.data||body.centers||[]);
+      yalidineAgencies=rawList.map(normalizeAgency).filter(a=>a.id);
+      select.innerHTML='<option value="">Choisir un bureau Yalidine</option>'+
+        yalidineAgencies.map(a=>`<option value="${esc(a.id)}">${esc(a.name)}${a.address?' — '+esc(a.address):''}</option>`).join('');
+      status.textContent=yalidineAgencies.length
+        ? `${yalidineAgencies.length} bureau(x) disponible(s) dans cette wilaya.`
+        : 'Aucun bureau retourné. Vous pouvez continuer à domicile ou réessayer.';
+    }catch(error){
+      console.error(error);
+      yalidineAgencies=[];
+      select.innerHTML='<option value="">Bureaux indisponibles pour le moment</option>';
+      status.textContent='La connexion Yalidine doit être activée dans Supabase. La commande peut toujours être enregistrée.';
+    }
+  }
+  function distanceKm(lat1,lng1,lat2,lng2){
+    const r=6371,toRad=v=>v*Math.PI/180;
+    const dLat=toRad(lat2-lat1),dLng=toRad(lng2-lng1);
+    const a=Math.sin(dLat/2)**2+Math.cos(toRad(lat1))*Math.cos(toRad(lat2))*Math.sin(dLng/2)**2;
+    return 2*r*Math.asin(Math.sqrt(a));
+  }
+  $('#findNearestAgency').addEventListener('click',()=>{
+    const label=$('#nearestAgency');
+    if(!yalidineAgencies.length){label.textContent='Chargez d’abord les bureaux de la wilaya.';return}
+    if(!navigator.geolocation){
+      $('#yalidineAgency').value=yalidineAgencies[0].id;
+      label.textContent=`Suggestion : ${yalidineAgencies[0].name}`;
+      return;
+    }
+    label.textContent='Recherche de votre position…';
+    navigator.geolocation.getCurrentPosition(pos=>{
+      const located=yalidineAgencies.filter(a=>a.lat!=null&&a.lng!=null);
+      const nearest=located.length
+        ? located.map(a=>({...a,d:distanceKm(pos.coords.latitude,pos.coords.longitude,a.lat,a.lng)})).sort((a,b)=>a.d-b.d)[0]
+        : yalidineAgencies[0];
+      $('#yalidineAgency').value=nearest.id;
+      label.textContent=`Bureau suggéré : ${nearest.name}${nearest.d!=null?` (${nearest.d.toFixed(1)} km)`:''}`;
+    },()=>{
+      $('#yalidineAgency').value=yalidineAgencies[0].id;
+      label.textContent=`Suggestion disponible : ${yalidineAgencies[0].name}`;
+    },{enableHighAccuracy:false,timeout:8000,maximumAge:300000});
+  });
+
   function selectedDeliveryPrice(){
     const code=($('#customerWilaya').value||'').slice(0,2);
     const row=DELIVERY_PRICES[code];
@@ -1773,15 +1875,18 @@ document.addEventListener('DOMContentLoaded', () => {
     $('#shippingPrice').textContent=price==null?'Tarif à confirmer':money(price);
     $('#orderTotal').textContent=currentProduct&&price!=null?money(Number(currentProduct.price)+price):'—';
     $('#shippingNote').textContent=deliveryMethod==='stopdesk'
-      ? 'Le bureau Yalidine exact sera confirmé avec vous sur WhatsApp.'
+      ? 'Choisissez votre bureau Yalidine avant de confirmer.'
       : 'Livraison directement à votre adresse.';
+    $('#addressGroup').style.display=deliveryMethod==='home'?'block':'none';
+    $('#agencyBox').hidden=deliveryMethod!=='stopdesk';
   }
-  $('#customerWilaya').addEventListener('change',refreshShipping);
+  $('#customerWilaya').addEventListener('change',()=>{refreshShipping();loadYalidineAgencies()});
   $('#shippingMethods').addEventListener('click',e=>{
     const choice=e.target.closest('.shipping-choice');if(!choice)return;
     deliveryMethod=choice.dataset.method;
     $$('#shippingMethods .shipping-choice').forEach(x=>x.classList.toggle('active',x===choice));
     refreshShipping();
+    loadYalidineAgencies();
   });
   $$('.faq-question').forEach(button=>button.addEventListener('click',()=>{
     const item=button.closest('.faq-item');
@@ -1796,7 +1901,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const btn=$('#confirmWhatsApp'),size=$('#sizeOptions .option.active')?.dataset.value||'Non précisée',
       color=currentVariant?.name||$('#colorOptions .option.active')?.dataset.value||'Non précisée',
       name=$('#customerName').value.trim(),rawPhone=$('#customerPhone').value.trim(),
-      phone=normalizeAlgerianPhone(rawPhone),wilaya=$('#customerWilaya').value,deliveryPrice=selectedDeliveryPrice(),deliveryLabel=deliveryMethod==='stopdesk'?'Bureau Yalidine':'À domicile';
+      phone=normalizeAlgerianPhone(rawPhone),wilaya=$('#customerWilaya').value,
+      commune=$('#customerCommune').value.trim(),address=$('#customerAddress').value.trim(),
+      agencyId=$('#yalidineAgency').value,
+      agency=yalidineAgencies.find(a=>a.id===agencyId),
+      deliveryPrice=selectedDeliveryPrice(),deliveryLabel=deliveryMethod==='stopdesk'?'Bureau Yalidine':'À domicile';
     if(name.length<2){toast('Merci de renseigner votre nom complet.','error');$('#customerName').focus();return}
     if(!validPhone(rawPhone)){
       const message=currentLang==='ar'
@@ -1808,6 +1917,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     $('#customerPhone').value=phone;
     if(!wilaya){toast('Veuillez choisir votre wilaya.','error');$('#customerWilaya').focus();return}
+    if(commune.length<2){toast('Veuillez renseigner votre commune.','error');$('#customerCommune').focus();return}
+    if(deliveryMethod==='home' && address.length<5){toast('Veuillez renseigner une adresse de livraison complète.','error');$('#customerAddress').focus();return}
+    if(deliveryMethod==='stopdesk' && !agencyId){toast('Veuillez choisir un bureau Yalidine.','error');$('#yalidineAgency').focus();return}
 
     btn.disabled=true;btn.textContent='Préparation…';
     let saved=false;
@@ -1824,6 +1936,12 @@ document.addEventListener('DOMContentLoaded', () => {
         customer_name:name,
         customer_phone:phone,
         wilaya,
+        commune,
+        address:deliveryMethod==='home'?address:null,
+        delivery_method:deliveryMethod,
+        shipping_price:deliveryPrice,
+        stopdesk_id:deliveryMethod==='stopdesk'?agencyId:null,
+        stopdesk_name:deliveryMethod==='stopdesk'?(agency?.name||null):null,
         status:'nouvelle'
       };
 
@@ -1856,7 +1974,9 @@ Informations client :
 • Nom : ${name}
 • Téléphone : ${phone}
 • Wilaya : ${wilaya}
+• Commune : ${commune}
 • Mode de livraison : ${deliveryLabel}
+${deliveryMethod==='home'?`• Adresse : ${address}`:`• Bureau Yalidine : ${agency?.name||agencyId}`}
 • Frais de livraison : ${deliveryPrice==null?'À confirmer':money(deliveryPrice)}
 • Total estimé : ${deliveryPrice==null?'À confirmer':money(Number(currentProduct.price)+deliveryPrice)}
 
