@@ -2528,7 +2528,7 @@ Merci de confirmer la disponibilité et le tarif de livraison.`;
 
   $('#langToggle').addEventListener('click',()=>applyLanguage(currentLang === 'ar' ? 'fr' : 'ar'));
 
-  const savedTheme = localStorage.getItem('naris-theme') || 'light';
+  const savedTheme = localStorage.getItem('naris-theme') || 'dark';
   if(savedTheme === 'light') document.body.classList.add('light-theme');
   $('#themeToggle').textContent = document.body.classList.contains('light-theme') ? '☾' : '☀';
   const syncMobileThemeIcon = () => {
