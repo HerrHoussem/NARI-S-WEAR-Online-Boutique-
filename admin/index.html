@@ -127,6 +127,11 @@
   .toast.show{display:block}
   @media(max-width:800px){.dashboard-grid{grid-template-columns:1fr}.filters{width:100%}.filters input,.filters select{width:100%;min-width:0}}
 
+
+  .shipment-btn{border-color:rgba(201,161,90,.55)!important;color:var(--gold-bright)!important}
+  .tracking-code{display:block;margin-top:.3rem;color:var(--gold-bright);font-size:.68rem}
+  .shipment-status{display:inline-flex;margin-top:.3rem;padding:.18rem .42rem;border:1px solid var(--line);font-size:.62rem}
+
 </style>
 </head>
 <body>
@@ -620,10 +625,40 @@
   const STATUS_OPTIONS = ['nouvelle','confirmee','expediee','livree','annulee'];
   const STATUS_LABELS = {nouvelle:'Nouvelle', confirmee:'Confirmée', expediee:'Expédiée', livree:'Livrée', annulee:'Annulée'};
 
+
+  async function createYalidineShipment(orderId, button){
+    if(!confirm('Créer cet envoi dans Yalidine maintenant ?')) return;
+    const original=button.textContent;
+    button.disabled=true;button.textContent='Création…';
+    try{
+      const {data:{session}}=await db.auth.getSession();
+      if(!session) throw new Error('Session administrateur expirée');
+      const response=await fetch(`${CONFIG.supabaseUrl.replace(/\/$/,'')}/functions/v1/yalidine`,{
+        method:'POST',
+        headers:{
+          'Content-Type':'application/json',
+          'apikey':CONFIG.supabaseAnonKey,
+          'Authorization':`Bearer ${session.access_token}`
+        },
+        body:JSON.stringify({action:'create-shipment',order_id:orderId})
+      });
+      const body=await response.json();
+      if(!response.ok) throw new Error(body.error||'Erreur Yalidine');
+      showToast(`Envoi créé${body.tracking_code?' : '+body.tracking_code:''}`);
+      await loadOrders();
+      loadOverview();
+    }catch(error){
+      alert('Impossible de créer l’envoi : '+error.message);
+    }finally{
+      button.disabled=false;button.textContent=original;
+    }
+  }
+  window.createYalidineShipment=createYalidineShipment;
+
   async function loadOrders(){
     const tbody = document.getElementById('ordersTableBody');
     const { data, error } = await db.from('orders').select('*').order('created_at', {ascending:false});
-    if(error){ tbody.innerHTML = `<tr><td colspan="9" class="empty">Erreur de chargement</td></tr>`; return; }
+    if(error){ tbody.innerHTML = `<tr><td colspan="10" class="empty">Erreur de chargement</td></tr>`; return; }
     ordersCache = data || [];
     renderOrders();
   }
@@ -637,7 +672,7 @@
       return (!q || haystack.includes(q)) && (!status || o.status === status);
     });
 
-    if(!rows.length){ tbody.innerHTML = `<tr><td colspan="9" class="empty">Aucune commande correspondante.</td></tr>`; return; }
+    if(!rows.length){ tbody.innerHTML = `<tr><td colspan="10" class="empty">Aucune commande correspondante.</td></tr>`; return; }
 
     tbody.innerHTML = rows.map(o => `
       <tr>
@@ -653,6 +688,11 @@
           <select class="status-select" data-id="${o.id}">
             ${STATUS_OPTIONS.map(s => `<option value="${s}" ${o.status===s?'selected':''}>${STATUS_LABELS[s]}</option>`).join('')}
           </select>
+        </td>
+        <td>
+          ${o.yalidine_tracking
+            ? `<span class="badge gold">Créé</span><span class="tracking-code">${escapeHtml(o.yalidine_tracking)}</span>${o.yalidine_status?`<span class="shipment-status">${escapeHtml(o.yalidine_status)}</span>`:''}`
+            : `<button class="icon-link shipment-btn" onclick="createYalidineShipment('${o.id}',this)">Créer l'envoi</button>`}
         </td>
       </tr>
     `).join('');
@@ -673,13 +713,14 @@
   document.getElementById('orderStatusFilter').addEventListener('change', renderOrders);
 
   document.getElementById('exportOrdersBtn').addEventListener('click', () => {
-    const headers = ['Date','Client','Téléphone','Produit','Quantité','Taille','Couleur','Wilaya','Prix','Statut'];
+    const headers = ['Date','Client','Téléphone','Produit','Quantité','Taille','Couleur','Wilaya','Commune','Adresse','Livraison','StopDesk','Frais','Prix','Statut','Tracking Yalidine'];
     const escapeCsv = v => `"${String(v ?? '').replace(/"/g,'""')}"`;
     const lines = [headers.map(escapeCsv).join(',')];
     ordersCache.forEach(o => lines.push([
       new Date(o.created_at).toLocaleString('fr-FR'),
-      o.customer_name,o.customer_phone,o.product_name,o.quantity || 1,o.size,o.color,o.wilaya,
-      Number(o.price || 0) * (o.quantity || 1),STATUS_LABELS[o.status] || o.status
+      o.customer_name,o.customer_phone,o.product_name,o.quantity || 1,o.size,o.color,o.wilaya,o.commune,o.address,
+      o.delivery_method,o.stopdesk_name,o.shipping_price,
+      Number(o.price || 0) * (o.quantity || 1),STATUS_LABELS[o.status] || o.status,o.yalidine_tracking
     ].map(escapeCsv).join(',')));
     const blob = new Blob(['\ufeff' + lines.join('\n')], {type:'text/csv;charset=utf-8'});
     const url = URL.createObjectURL(blob);
