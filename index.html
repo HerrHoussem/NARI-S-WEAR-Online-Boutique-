@@ -1038,6 +1038,171 @@
  .favorite-btn{width:38px;height:38px}
 }
 
+
+/* Phone header overlap fix */
+@media (max-width:700px){
+  header .container.nav-wrap{
+    width:min(94vw,1180px);
+    display:grid;
+    grid-template-columns:minmax(0,1fr) auto;
+    align-items:center;
+    gap:.55rem;
+    direction:ltr!important;
+  }
+  header .logo{
+    grid-column:1;
+    justify-self:start;
+    min-width:0;
+    max-width:100%;
+    overflow:hidden;
+    font-size:.76rem;
+    letter-spacing:.08em;
+    gap:.42rem;
+  }
+  header .logo > span:last-child{
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+  header .nav-actions{
+    grid-column:2;
+    justify-self:end;
+    gap:.3rem;
+  }
+  header .utility-controls{gap:.28rem}
+  header #themeToggle,header #langToggle{display:none!important}
+  header .shop-action-btn,header .menu-btn{
+    width:38px;min-width:38px;height:38px;padding:0;
+  }
+  .drawer-mobile-tools{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:.65rem;
+    margin-top:1.25rem;
+  }
+  .drawer-mobile-tools button{
+    min-height:46px;
+    border:1px solid var(--line);
+    background:transparent;
+    color:var(--cream);
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:.55rem;
+  }
+  body.light-theme .drawer-mobile-tools button{color:var(--black)}
+}
+@media (max-width:390px){
+  header .logo{font-size:.68rem;letter-spacing:.055em;gap:.34rem}
+  header .logo-mark{width:30px;height:30px;min-width:30px}
+  header .shop-action-btn,header .menu-btn{width:35px;min-width:35px;height:35px}
+  header .nav-actions{gap:.2rem}
+}
+
+
+/* Final 2026 UI upgrade */
+.modern-icon{
+  width:22px;height:22px;display:block;fill:none;stroke:currentColor;
+  stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;
+  transition:transform .25s ease,fill .25s ease,stroke .25s ease;
+}
+.shop-action-btn:hover .modern-icon{transform:translateY(-1px) scale(1.06)}
+.shop-action-btn.has-items .icon-heart{fill:currentColor}
+.shop-action-btn.has-items .icon-bag{transform:translateY(-1px)}
+.shop-count{
+  transition:transform .28s cubic-bezier(.2,.8,.2,1),background .2s ease;
+  box-shadow:0 4px 13px rgba(0,0,0,.22);
+}
+.shop-count.bump{animation:counterBump .38s cubic-bezier(.2,.8,.2,1)}
+@keyframes counterBump{0%,100%{transform:scale(1)}45%{transform:scale(1.36)}}
+.favorite-btn{font-size:0}
+.favorite-btn .modern-icon{width:21px;height:21px}
+.favorite-btn.active .modern-icon{fill:currentColor}
+.shop-empty-icon{
+  width:58px;height:58px;margin:0 auto 1rem;display:grid;place-items:center;
+  border:1px solid var(--line);border-radius:50%;color:var(--gold);
+}
+.shop-empty-icon .modern-icon{width:27px;height:27px}
+.newsletter-section{
+  position:relative;padding:5.5rem 0;
+  border-top:1px solid var(--line);
+  background:
+    radial-gradient(circle at 15% 20%,rgba(201,161,90,.14),transparent 32%),
+    linear-gradient(135deg,var(--panel),var(--bg));
+  overflow:hidden;
+}
+.newsletter-section::after{
+  content:"N";position:absolute;right:4vw;top:50%;transform:translateY(-52%);
+  font:700 clamp(15rem,28vw,30rem)/1 "Cormorant Garamond",serif;
+  color:rgba(201,161,90,.04);pointer-events:none;
+}
+.newsletter-shell{
+  position:relative;z-index:1;display:grid;grid-template-columns:1fr 1.05fr;
+  align-items:center;gap:clamp(2rem,6vw,6rem);
+}
+.newsletter-copy h2{
+  margin:.65rem 0 1rem;font:600 clamp(2.3rem,5vw,4.7rem)/.94 "Cormorant Garamond",serif;
+  max-width:620px;
+}
+.newsletter-copy p{color:var(--muted);max-width:530px;line-height:1.75}
+.newsletter-input-wrap{
+  display:grid;grid-template-columns:auto 1fr auto;align-items:center;
+  min-height:62px;border:1px solid var(--line);background:rgba(255,255,255,.035);
+  padding:.4rem;border-radius:999px;transition:border-color .2s,box-shadow .2s;
+}
+.newsletter-input-wrap:focus-within{
+  border-color:var(--gold);box-shadow:0 0 0 4px rgba(201,161,90,.10);
+}
+.newsletter-mail-icon{
+  width:21px;height:21px;margin-left:1rem;fill:none;stroke:var(--gold);
+  stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;
+}
+.newsletter-input-wrap input{
+  width:100%;height:50px;border:0;outline:0;background:transparent;color:var(--cream);
+  padding:0 .85rem;font:inherit;
+}
+.newsletter-input-wrap input::placeholder{color:var(--muted)}
+.newsletter-input-wrap button{
+  min-height:50px;padding:0 1.25rem;border:0;border-radius:999px;background:var(--gold);
+  color:var(--black);font-weight:800;cursor:pointer;display:flex;align-items:center;gap:.45rem;
+  transition:transform .2s,filter .2s;
+}
+.newsletter-input-wrap button:hover{transform:translateY(-1px);filter:brightness(1.06)}
+.newsletter-input-wrap button:disabled{opacity:.58;cursor:wait}
+.newsletter-input-wrap button svg{
+  width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;
+  stroke-linecap:round;stroke-linejoin:round;
+}
+.newsletter-note{font-size:.68rem!important;line-height:1.55!important;margin:.8rem .5rem 0!important;color:var(--muted)!important}
+.newsletter-status{min-height:1.4rem;margin:.55rem .5rem 0;font-size:.76rem;font-weight:700;color:#6fd697}
+.newsletter-status.error{color:#e77d7d}
+.sr-only{
+  position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;
+  overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important;
+}
+body.light-theme .newsletter-input-wrap{background:rgba(0,0,0,.025)}
+body.light-theme .newsletter-input-wrap input{color:var(--black)}
+@media(max-width:800px){
+  .newsletter-section{padding:4rem 0}
+  .newsletter-shell{grid-template-columns:1fr;gap:1.5rem;text-align:center}
+  .newsletter-copy p{margin-left:auto;margin-right:auto}
+  .newsletter-input-wrap{max-width:580px;margin:auto}
+}
+@media(max-width:520px){
+  .newsletter-section{padding:3.3rem 0}
+  .newsletter-copy h2{font-size:2.55rem}
+  .newsletter-input-wrap{
+    grid-template-columns:auto 1fr;min-height:58px;border-radius:16px;padding:.35rem;
+  }
+  .newsletter-input-wrap button{
+    grid-column:1/-1;width:100%;margin-top:.35rem;border-radius:12px;
+  }
+  .newsletter-mail-icon{margin-left:.65rem}
+  .newsletter-note{font-size:.62rem!important}
+  header .shop-action-btn .modern-icon{width:20px;height:20px}
+}
+
 </style>
 </head>
 
@@ -1065,8 +1230,8 @@
       <div class="utility-controls">
         <button class="utility-btn" id="themeToggle" aria-label="Changer le thème">☀</button>
         <button class="utility-btn lang-label" id="langToggle" aria-label="Changer la langue">AR</button>
-        <button class="shop-action-btn" id="wishlistOpen" aria-label="Ouvrir les favoris">♡<span class="shop-count" id="wishlistCount">0</span></button>
-        <button class="shop-action-btn" id="cartOpen" aria-label="Ouvrir le panier">◇<span class="shop-count" id="cartCount">0</span></button>
+        <button class="shop-action-btn" id="wishlistOpen" aria-label="Ouvrir les favoris"><svg class="modern-icon icon-heart" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78Z"/></svg><span class="shop-count" id="wishlistCount">0</span></button>
+        <button class="shop-action-btn" id="cartOpen" aria-label="Ouvrir le panier"><svg class="modern-icon icon-bag" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8h12l1 13H5L6 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg><span class="shop-count" id="cartCount">0</span></button>
       </div>
       <a class="nav-cta" href="#collection" data-i18n="shop">Acheter</a>
       <button class="menu-btn" id="menuBtn" aria-label="Ouvrir le menu" aria-expanded="false">☰</button>
@@ -1086,7 +1251,11 @@
       <a href="./admin/" class="drawer-admin-link"><span data-i18n="administration">Administration</span><small data-i18n="adminLogin">Connexion sécurisée</small></a>
       <a href="#contact"><span data-i18n="contact">Contact</span></a>
     </div>
-    <a href="https://wa.me/213552080462" target="_blank" rel="noopener" class="wa-btn" style="margin-top:2rem;width:100%">
+    <div class="drawer-mobile-tools" aria-label="Préférences">
+      <button type="button" id="mobileThemeToggle"><span aria-hidden="true">☾</span><span>Thème</span></button>
+      <button type="button" id="mobileLangToggle"><span aria-hidden="true">AR</span><span>Langue</span></button>
+    </div>
+    <a href="https://wa.me/213552080462" target="_blank" rel="noopener" class="wa-btn" style="margin-top:1rem;width:100%">
       WhatsApp
     </a>
   </div>
@@ -1505,6 +1674,30 @@
   </section>
 </main>
 
+
+<section class="newsletter-section" id="newsletter" aria-labelledby="newsletterTitle">
+  <div class="container newsletter-shell reveal">
+    <div class="newsletter-copy">
+      <span class="eyebrow">NARI'S WEAR CLUB</span>
+      <h2 id="newsletterTitle">Recevez nos nouveautés en avant-première</h2>
+      <p>Collections, offres privées et inspirations mode — directement dans votre boîte mail.</p>
+    </div>
+    <form class="newsletter-form" id="newsletterForm" novalidate>
+      <label class="sr-only" for="newsletterEmail">Adresse e-mail</label>
+      <div class="newsletter-input-wrap">
+        <svg class="newsletter-mail-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18v14H3z"/><path d="m3 6 9 7 9-7"/></svg>
+        <input id="newsletterEmail" type="email" autocomplete="email" inputmode="email" placeholder="Votre adresse e-mail" required>
+        <button type="submit" id="newsletterSubmit">
+          <span>S'abonner</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+        </button>
+      </div>
+      <p class="newsletter-note">En vous inscrivant, vous acceptez de recevoir les actualités de NARI'S WEAR. Désinscription possible à tout moment.</p>
+      <div class="newsletter-status" id="newsletterStatus" role="status" aria-live="polite"></div>
+    </form>
+  </div>
+</section>
+
 <footer id="contact">
   <div class="container">
     <div class="footer-grid">
@@ -1713,7 +1906,23 @@ document.addEventListener('DOMContentLoaded', () => {
   function wishlistHas(id){return wishlist.some(x=>String(x.id)===String(id))}
   function snapshotProduct(p){return {id:p.id,name:p.name,price:Number(p.price||0),category:p.category||'',images:Array.isArray(p.images)?p.images:[],variants:Array.isArray(p.variants)?p.variants:[],sizes:Array.isArray(p.sizes)?p.sizes:[],colors:Array.isArray(p.colors)?p.colors:[],stock:Number(p.stock||0),featured:!!p.featured,created_at:p.created_at||''}}
   function shopImage(p){const vs=normalizeProductVariants(p),v=vs.find(x=>x.is_default)||vs[0];return (v?.images||[]).find(Boolean)||(p.images||[]).find(Boolean)||'./assets/images/naris-brand-art.webp'}
-  function syncShopCounts(){if($('#wishlistCount'))$('#wishlistCount').textContent=wishlist.length;if($('#cartCount'))$('#cartCount').textContent=cart.reduce((s,x)=>s+Number(x.quantity||1),0)}
+  function syncShopCounts(){
+    const wishCount=wishlist.length;
+    const bagCount=cart.reduce((s,x)=>s+Number(x.quantity||1),0);
+    const wishEl=$('#wishlistCount'),bagEl=$('#cartCount');
+    if(wishEl){
+      const changed=wishEl.textContent!==String(wishCount);
+      wishEl.textContent=wishCount;
+      $('#wishlistOpen')?.classList.toggle('has-items',wishCount>0);
+      if(changed){wishEl.classList.remove('bump');void wishEl.offsetWidth;wishEl.classList.add('bump')}
+    }
+    if(bagEl){
+      const changed=bagEl.textContent!==String(bagCount);
+      bagEl.textContent=bagCount;
+      $('#cartOpen')?.classList.toggle('has-items',bagCount>0);
+      if(changed){bagEl.classList.remove('bump');void bagEl.offsetWidth;bagEl.classList.add('bump')}
+    }
+  }
 
 
   function toast(message,type=''){
@@ -1770,7 +1979,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="product-media${safeImage?' has-image':''}">
           ${safeImage?`<img src="${esc(safeImage)}" alt="${esc(p.name)}" loading="lazy" decoding="async">`:''}
           ${p.featured?'<span class="product-badge">Nouveau</span>':''}
-          <button class="favorite-btn${wishlistHas(p.id)?' active':''}" type="button" data-favorite="${esc(p.id)}" aria-label="Ajouter aux favoris">${wishlistHas(p.id)?'♥':'♡'}</button>
+          <button class="favorite-btn${wishlistHas(p.id)?' active':''}" type="button" data-favorite="${esc(p.id)}" aria-label="${wishlistHas(p.id)?'Retirer des favoris':'Ajouter aux favoris'}"><svg class="modern-icon icon-heart" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78Z"/></svg></button>
           <button class="quick-btn" ${sold?'disabled':''}>${sold?'Indisponible':'Commander rapidement'}</button>
         </div>
         <div class="product-info">
@@ -1886,11 +2095,11 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   function renderWishlist(){
     if(!$('#wishlistBody'))return;
-    $('#wishlistBody').innerHTML=wishlist.length?wishlist.map(p=>`<article class="shop-item"><img src="${esc(shopImage(p))}" alt="${esc(p.name)}"><div><div class="shop-item-title">${esc(p.name)}</div><div class="shop-item-meta">${money(p.price)}</div><div class="shop-item-actions"><button class="shop-mini gold" data-wish-order="${esc(p.id)}">Choisir</button><button class="shop-mini" data-wish-remove="${esc(p.id)}">Retirer</button></div></div></article>`).join(''):'<div class="shop-empty"><strong>Votre wishlist est vide</strong>Appuyez sur le cœur d’un produit pour le sauvegarder.</div>';
+    $('#wishlistBody').innerHTML=wishlist.length?wishlist.map(p=>`<article class="shop-item"><img src="${esc(shopImage(p))}" alt="${esc(p.name)}"><div><div class="shop-item-title">${esc(p.name)}</div><div class="shop-item-meta">${money(p.price)}</div><div class="shop-item-actions"><button class="shop-mini gold" data-wish-order="${esc(p.id)}">Choisir</button><button class="shop-mini" data-wish-remove="${esc(p.id)}">Retirer</button></div></div></article>`).join(''):'<div class="shop-empty"><div class="shop-empty-icon"><svg class="modern-icon icon-heart" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78Z"/></svg></div><strong>Votre wishlist est vide</strong>Appuyez sur le cœur d’un produit pour le sauvegarder.</div>';
   }
   function renderCart(){
     if(!$('#cartBody'))return;
-    $('#cartBody').innerHTML=cart.length?cart.map(item=>`<article class="shop-item"><img src="${esc(item.image)}" alt="${esc(item.name)}"><div><div class="shop-item-title">${esc(item.name)}</div><div class="shop-item-meta">${esc(item.color)} · Taille ${esc(item.size)}<br>${money(item.price)} · Quantité ${item.quantity}</div><div class="shop-item-actions"><button class="shop-mini gold" data-cart-order="${esc(item.key)}">Commander</button><button class="shop-mini" data-cart-remove="${esc(item.key)}">Supprimer</button></div></div></article>`).join(''):'<div class="shop-empty"><strong>Votre panier est vide</strong>Choisissez une couleur et une taille, puis ajoutez l’article.</div>';
+    $('#cartBody').innerHTML=cart.length?cart.map(item=>`<article class="shop-item"><img src="${esc(item.image)}" alt="${esc(item.name)}"><div><div class="shop-item-title">${esc(item.name)}</div><div class="shop-item-meta">${esc(item.color)} · Taille ${esc(item.size)}<br>${money(item.price)} · Quantité ${item.quantity}</div><div class="shop-item-actions"><button class="shop-mini gold" data-cart-order="${esc(item.key)}">Commander</button><button class="shop-mini" data-cart-remove="${esc(item.key)}">Supprimer</button></div></div></article>`).join(''):'<div class="shop-empty"><div class="shop-empty-icon"><svg class="modern-icon icon-bag" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8h12l1 13H5L6 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg></div><strong>Votre panier est vide</strong>Choisissez une couleur et une taille, puis ajoutez l’article.</div>';
     $('#cartFoot').innerHTML=cart.length?`<strong>${cart.reduce((s,x)=>s+Number(x.quantity||1),0)} article(s)</strong><div class="small-note" style="margin-top:.4rem">Chaque article utilise le formulaire de livraison existant afin de préserver les tarifs exacts par wilaya et commune.</div>`:'';
   }
   function selectedSize(){return $('#sizeOptions .option.active')?.dataset.value||''}
@@ -1912,6 +2121,50 @@ document.addEventListener('DOMContentLoaded', () => {
   $('#wishlistBody').addEventListener('click',e=>{const r=e.target.closest('[data-wish-remove]');if(r){toggleFavorite(r.dataset.wishRemove);return}const o=e.target.closest('[data-wish-order]');if(o)openSavedProduct(o.dataset.wishOrder)});
   $('#cartBody').addEventListener('click',e=>{const r=e.target.closest('[data-cart-remove]');if(r){cart=cart.filter(x=>x.key!==r.dataset.cartRemove);writeShopState();renderCart();return}const o=e.target.closest('[data-cart-order]');if(o){const item=cart.find(x=>x.key===o.dataset.cartOrder);if(!item)return;const p=products.find(x=>String(x.id)===String(item.id));if(p){closeShopLayers();openModal(p);setTimeout(()=>{selectVariant(item.color);const size=$$('#sizeOptions .option').find(x=>x.dataset.value===item.size&&!x.classList.contains('disabled'));if(size)size.click()},30)}}});
   $('#addCartButton').addEventListener('click',addCurrentToCart);
+
+  const newsletterForm=$('#newsletterForm');
+  if(newsletterForm){
+    newsletterForm.addEventListener('submit',async e=>{
+      e.preventDefault();
+      const emailEl=$('#newsletterEmail');
+      const status=$('#newsletterStatus');
+      const submit=$('#newsletterSubmit');
+      const email=emailEl.value.trim().toLowerCase();
+      status.className='newsletter-status';
+      status.textContent='';
+      if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)){
+        status.classList.add('error');
+        status.textContent='Veuillez saisir une adresse e-mail valide.';
+        emailEl.focus();
+        return;
+      }
+      const saved=readLocal('naris-newsletter-subscribers',[]);
+      if(saved.includes(email)){
+        status.textContent='Vous êtes déjà inscrit(e) à notre newsletter.';
+        return;
+      }
+      submit.disabled=true;
+      submit.querySelector('span').textContent='Inscription…';
+      let storedOnline=false;
+      if(db){
+        try{
+          const result=await db.from('newsletter_subscribers').insert({email,source:'website'});
+          storedOnline=!result.error;
+        }catch(error){storedOnline=false}
+      }
+      saved.push(email);
+      localStorage.setItem('naris-newsletter-subscribers',JSON.stringify(saved));
+      emailEl.value='';
+      status.textContent=storedOnline
+        ? 'Merci ! Votre inscription est confirmée.'
+        : 'Merci ! Votre inscription a bien été enregistrée.';
+      submit.disabled=false;
+      submit.querySelector('span').textContent="S'abonner";
+      toast('Bienvenue dans le NARI’S WEAR Club');
+    });
+  }
+
+
   syncShopCounts();renderWishlist();renderCart();
 
   function normalizeAlgerianPhone(value){
@@ -2144,6 +2397,16 @@ Merci de confirmer la disponibilité et le tarif de livraison.`;
     $('#themeToggle').textContent = light ? '☾' : '☀';
     localStorage.setItem('naris-theme', light ? 'light' : 'dark');
   });
+
+  const mobileThemeToggle = $('#mobileThemeToggle');
+  const mobileLangToggle = $('#mobileLangToggle');
+  if(mobileThemeToggle){
+    mobileThemeToggle.addEventListener('click',()=>$('#themeToggle').click());
+  }
+  if(mobileLangToggle){
+    mobileLangToggle.addEventListener('click',()=>$('#langToggle').click());
+  }
+
 
   applyLanguage(currentLang);
   const originalApplyLanguage=applyLanguage;

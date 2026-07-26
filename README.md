@@ -1,25 +1,28 @@
-# Nari's Wear — GitHub Pages + Supabase
+# NARI'S WEAR — Final 2026 Upgrade
 
-## Setup
-1. Create a Supabase project.
-2. Run `supabase-setup.sql` in the Supabase SQL Editor.
-3. Copy the Project URL and anon public key into `config.js`.
-4. Upload this folder to the root of a GitHub repository.
-5. Enable GitHub Pages from the `main` branch and `/root`.
+Built from the stable Controlled Merge Header Fix.
 
-## Included
-- Live Supabase product catalog
-- Safe demo mode before configuration
-- Search, filters and sorting
-- Stock and sold-out indicators
-- All 58 Algerian wilayas
-- Algerian phone validation
-- Order storage plus WhatsApp confirmation
-- Responsive mobile layout
-- Safer database text rendering
+Preserved without modification:
+- Wilaya and commune delivery logic
+- Exact delivery tariffs
+- Existing delivery and WhatsApp order flow
+- Shop map and address
+- Moving ticker and animations
+- Floating WhatsApp button
+- Back-to-top arrow
+- Supabase products and orders
+- Upgraded admin dashboard with light/dark mode
+- Six Instagram Reels
 
-Replace the placeholder hero, story and lookbook areas with real boutique photos before launch.
+Added:
+- Modern inline SVG wishlist icon
+- Modern fashion shopping-bag icon
+- Filled active states and animated counters
+- Modern product-card favorite icons
+- Improved wishlist and cart empty states
+- Responsive luxury newsletter section
+- Email validation and duplicate prevention
+- Supabase newsletter submission when a `newsletter_subscribers` table exists
+- Automatic local browser fallback when that table does not exist
 
-## Product colors and galleries
-Before using the new color-variant editor, run `product-variants-migration.sql` in the Supabase SQL Editor.
-The admin can then add several colors, set stock per color, and upload multiple photos for each color. Selecting a color on the storefront changes the product gallery automatically.
+No delivery or checkout migration is required.
