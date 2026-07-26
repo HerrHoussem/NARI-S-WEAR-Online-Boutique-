@@ -2003,6 +2003,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function renderProducts(){
+    window.NARIS_PRODUCTS=products;
     const list=visibleProducts();
     $('#resultCount').textContent=`${list.length} article${list.length>1?'s':''}`;
     if(!list.length){$('#productGrid').innerHTML='<p class="grid-status">Aucun article ne correspond à votre recherche.</p>';return}
@@ -2040,6 +2041,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if(error){
       console.error(error); products=DEMO;
     }else products=data||[];
+    window.NARIS_PRODUCTS=products;
     renderFilters(); renderProducts();
   }
 
@@ -2378,9 +2380,9 @@ Merci de confirmer la disponibilité et le tarif de livraison.`;
     <strong aria-hidden="true">♡</strong>
     <span>Favoris <span id="mobileWishlistCount">0</span></span>
   </button>
-  <button type="button" id="mobileCartButton" aria-label="Ouvrir le panier">
+  <button type="button" id="mobileCartButton" aria-label="Voir les produits à commander">
     <strong aria-hidden="true">◇</strong>
-    <span>Panier</span>
+    <span>Commander</span>
   </button>
 </nav>
 
@@ -2390,12 +2392,8 @@ Merci de confirmer la disponibilité et le tarif de livraison.`;
   const mobileCartButton=document.getElementById('mobileCartButton');
   if(!mobileCartButton) return;
   mobileCartButton.addEventListener('click',()=>{
-    const existingCart=
-      document.getElementById('cartButton') ||
-      document.querySelector('[data-cart-open]') ||
-      document.querySelector('.cart-btn') ||
-      document.querySelector('[aria-label*="panier" i]');
-    if(existingCart) existingCart.click();
+    const collection=document.getElementById('collection') || document.getElementById('productGrid');
+    if(collection) collection.scrollIntoView({behavior:'smooth',block:'start'});
   });
 })();
 </script>
@@ -2408,6 +2406,7 @@ Merci de confirmer la disponibilité et le tarif de livraison.`;
   const MAX_RECENT=8;
 
   const getProducts=()=>{
+    if(Array.isArray(window.NARIS_PRODUCTS)) return window.NARIS_PRODUCTS;
     if(Array.isArray(window.products)) return window.products;
     if(Array.isArray(window.PRODUCTS)) return window.PRODUCTS;
     return [];
@@ -2432,7 +2431,13 @@ Merci de confirmer la disponibilité et le tarif de livraison.`;
   const load=(key)=>{try{return JSON.parse(localStorage.getItem(key)||'[]')}catch{return []}};
   const save=(key,value)=>localStorage.setItem(key,JSON.stringify(value));
 
-  let wishlist=load(STORAGE_KEY).map(String);
+  let wishlistRaw=load(STORAGE_KEY);
+  let wishlist=wishlistRaw.map(item=>typeof item==='object'&&item!==null?String(item.id):String(item));
+  let wishlistSnapshots=Object.fromEntries(
+    wishlistRaw
+      .filter(item=>typeof item==='object'&&item!==null)
+      .map(item=>[String(item.id),item])
+  );
   let recent=load(RECENT_KEY).map(String);
 
   const drawer=document.getElementById('wishlistDrawer');
@@ -2441,7 +2446,7 @@ Merci de confirmer la disponibilité et le tarif de livraison.`;
   const mobileCount=document.getElementById('mobileWishlistCount');
 
   function productById(id){
-    return getProducts().find(p=>getId(p)===String(id));
+    return getProducts().find(p=>getId(p)===String(id)) || wishlistSnapshots[String(id)] || null;
   }
 
   function syncCounts(){
@@ -2453,8 +2458,15 @@ Merci de confirmer la disponibilité et le tarif de livraison.`;
 
   function toggleWishlist(id){
     id=String(id);
-    wishlist=isSaved(id)?wishlist.filter(x=>x!==id):[id,...wishlist];
-    save(STORAGE_KEY,wishlist);
+    if(isSaved(id)){
+      wishlist=wishlist.filter(x=>x!==id);
+      delete wishlistSnapshots[id];
+    }else{
+      wishlist=[id,...wishlist];
+      const product=getProducts().find(p=>getId(p)===id);
+      if(product) wishlistSnapshots[id]={...product,id};
+    }
+    save(STORAGE_KEY,wishlist.map(savedId=>wishlistSnapshots[savedId]||savedId));
     renderWishlist();
     decorateProductCards();
   }
@@ -2641,11 +2653,27 @@ Merci de confirmer la disponibilité et le tarif de livraison.`;
     observer.observe(productGrid,{childList:true,subtree:true});
   }
 
+  function hydrateWishlistSnapshots(){
+    let changed=false;
+    wishlist.forEach(id=>{
+      if(!wishlistSnapshots[id]){
+        const product=getProducts().find(p=>getId(p)===id);
+        if(product){
+          wishlistSnapshots[id]={...product,id};
+          changed=true;
+        }
+      }
+    });
+    if(changed) save(STORAGE_KEY,wishlist.map(id=>wishlistSnapshots[id]||id));
+    renderWishlist();
+  }
+
   setTimeout(()=>{
     decorateProductCards();
-    renderWishlist();
+    hydrateWishlistSnapshots();
     renderRecentlyViewed();
-  },300);
+  },500);
+  setTimeout(hydrateWishlistSnapshots,1600);
 })();
 </script>
 
