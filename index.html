@@ -1204,58 +1204,31 @@ body.light-theme .newsletter-input-wrap input{color:var(--black)}
 }
 
 
-/* Always-visible mobile language and theme controls */
-.mobile-preferences-bar{display:none}
-@media(max-width:700px){
-  .mobile-preferences-bar{
-    position:sticky;
-    top:64px;
-    z-index:89;
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    min-height:42px;
-    border-bottom:1px solid var(--line);
-    background:rgba(29,23,20,.96);
-    backdrop-filter:blur(14px);
-    -webkit-backdrop-filter:blur(14px);
-  }
-  .mobile-preferences-bar button{
-    min-width:0;
-    border:0;
-    border-right:1px solid var(--line);
-    background:transparent;
-    color:var(--cream);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    gap:.45rem;
-    padding:.55rem .65rem;
-    font-size:.68rem;
-    font-weight:700;
-    letter-spacing:.03em;
-    cursor:pointer;
-  }
-  .mobile-preferences-bar button:last-child{border-right:0}
-  .mobile-preferences-bar svg{
-    width:17px;
-    height:17px;
-    fill:none;
-    stroke:currentColor;
-    stroke-width:1.8;
-    stroke-linecap:round;
-    stroke-linejoin:round;
-    flex:0 0 17px;
-  }
-  body.light-theme .mobile-preferences-bar{
-    background:rgba(255,250,243,.97);
-  }
-  body.light-theme .mobile-preferences-bar button{
-    color:var(--black);
-  }
-  body[dir="rtl"] .mobile-preferences-bar{
-    direction:rtl;
-  }
+.optional-field{
+  color:var(--muted);
+  font-size:.72em;
+  font-weight:500;
+  letter-spacing:0;
+  text-transform:none;
+  white-space:nowrap;
 }
+body.light-theme .optional-field{color:#6f6259}
+
+
+.optional-delivery-note{
+  margin:.15rem 0 1rem;
+  padding:.85rem 1rem;
+  border:1px solid rgba(201,161,90,.28);
+  background:rgba(201,161,90,.07);
+  display:grid;
+  gap:.25rem;
+  font-size:.76rem;
+  line-height:1.5;
+}
+.optional-delivery-note strong{color:var(--gold);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase}
+.optional-delivery-note span{color:var(--muted)}
+body.light-theme .optional-delivery-note{background:#fff8e9;border-color:rgba(132,95,45,.25)}
+body.light-theme .optional-delivery-note span{color:#554a43}
 
 </style>
 </head>
@@ -1292,18 +1265,6 @@ body.light-theme .newsletter-input-wrap input{color:var(--black)}
     </div>
   </div>
 </header>
-
-
-<div class="mobile-preferences-bar" aria-label="Préférences d’affichage">
-  <button type="button" id="mobileHeaderThemeToggle" aria-label="Changer le thème">
-    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8Z"/></svg>
-    <span id="mobileThemeLabel">Mode sombre</span>
-  </button>
-  <button type="button" id="mobileHeaderLangToggle" aria-label="Changer la langue">
-    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18"/></svg>
-    <span id="mobileLangLabel">العربية</span>
-  </button>
-</div>
 
 <div class="mobile-panel" id="mobilePanel" aria-hidden="true">
   <div class="mobile-drawer">
@@ -1875,14 +1836,20 @@ body.light-theme .newsletter-input-wrap input{color:var(--black)}
           </select>
         </div>
 
-        <div class="shipping-extra">
+        
+<div class="optional-delivery-note">
+  <strong>Informations facultatives</strong>
+  <span>Vous pouvez laisser la commune et l’adresse vides. Nous confirmerons les détails utiles avec vous sur WhatsApp.</span>
+</div>
+
+<div class="shipping-extra">
           <div class="form-group">
-            <label for="customerCommune">Commune</label>
-            <input class="form-control" id="customerCommune" type="text" placeholder="Votre commune" autocomplete="address-level2">
+            <label for="customerCommune">Commune <span class="optional-field">(facultatif)</span></label>
+            <input class="form-control" id="customerCommune" type="text" placeholder="Votre commune (facultatif)" autocomplete="address-level2">
           </div>
           <div class="form-group" id="addressGroup">
-            <label for="customerAddress">Adresse complète</label>
-            <input class="form-control" id="customerAddress" type="text" placeholder="Quartier, rue, numéro..." autocomplete="street-address">
+            <label for="customerAddress">Adresse complète <span class="optional-field">(facultatif)</span></label>
+            <input class="form-control" id="customerAddress" type="text" placeholder="Quartier, rue, numéro... (facultatif)" autocomplete="street-address">
           </div>
         </div>
 
@@ -1895,7 +1862,7 @@ body.light-theme .newsletter-input-wrap input{color:var(--black)}
             <div><span>Frais de livraison</span><strong id="shippingPrice">Choisissez une wilaya</strong></div>
             <div><span>Total estimé</span><strong id="orderTotal">—</strong></div>
           </div>
-          <small class="small-note" id="shippingNote">Votre commande et votre adresse seront confirmées avec vous sur WhatsApp.</small>
+          <small class="small-note" id="shippingNote">La commune et l’adresse sont facultatives. Les détails nécessaires seront confirmés avec vous sur WhatsApp.</small>
         </div>
 
         <button class="btn-solid" id="addCartButton" type="button">Ajouter au panier</button>
@@ -2166,7 +2133,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function renderCart(){
     if(!$('#cartBody'))return;
     $('#cartBody').innerHTML=cart.length?cart.map(item=>`<article class="shop-item"><img src="${esc(item.image)}" alt="${esc(item.name)}"><div><div class="shop-item-title">${esc(item.name)}</div><div class="shop-item-meta">${esc(item.color)} · Taille ${esc(item.size)}<br>${money(item.price)} · Quantité ${item.quantity}</div><div class="shop-item-actions"><button class="shop-mini gold" data-cart-order="${esc(item.key)}">Commander</button><button class="shop-mini" data-cart-remove="${esc(item.key)}">Supprimer</button></div></div></article>`).join(''):'<div class="shop-empty"><div class="shop-empty-icon"><svg class="modern-icon icon-bag" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8h12l1 13H5L6 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg></div><strong>Votre panier est vide</strong>Choisissez une couleur et une taille, puis ajoutez l’article.</div>';
-    $('#cartFoot').innerHTML=cart.length?`<strong>${cart.reduce((s,x)=>s+Number(x.quantity||1),0)} article(s)</strong><div class="small-note" style="margin-top:.4rem">Chaque article utilise le formulaire de livraison existant afin de préserver les tarifs exacts par wilaya et commune.</div>`:'';
+    $('#cartFoot').innerHTML=cart.length?`<strong>${cart.reduce((s,x)=>s+Number(x.quantity||1),0)} article(s)</strong><div class="small-note" style="margin-top:.4rem">Chaque article utilise le formulaire de livraison existant. La wilaya reste nécessaire pour calculer le tarif; la commune et l’adresse sont facultatives.</div>`:'';
   }
   function selectedSize(){return $('#sizeOptions .option.active')?.dataset.value||''}
   function addCurrentToCart(){
@@ -2257,7 +2224,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const price=selectedDeliveryPrice();
     $('#shippingPrice').textContent=price==null?'Tarif à confirmer':money(price);
     $('#orderTotal').textContent=currentProduct&&price!=null?money(Number(currentProduct.price)+price):'—';
-    $('#shippingNote').textContent='Livraison directement à votre adresse. La commande sera confirmée sur WhatsApp.';
+    $('#shippingNote').textContent='Livraison à domicile. La commune et l’adresse peuvent être précisées plus tard sur WhatsApp.';
     $('#addressGroup').style.display='block';
   }
   $('#customerWilaya').addEventListener('change',refreshShipping);
@@ -2294,8 +2261,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     $('#customerPhone').value=phone;
     if(!wilaya){toast('Veuillez choisir votre wilaya.','error');$('#customerWilaya').focus();return}
-    if(commune.length<2){toast('Veuillez renseigner votre commune.','error');$('#customerCommune').focus();return}
-    if(deliveryMethod==='home' && address.length<5){toast('Veuillez renseigner une adresse de livraison complète.','error');$('#customerAddress').focus();return}
 
     btn.disabled=true;btn.textContent='Préparation…';
     let saved=false;
@@ -2348,9 +2313,9 @@ Informations client :
 • Nom : ${name}
 • Téléphone : ${phone}
 • Wilaya : ${wilaya}
-• Commune : ${commune}
+• Commune : ${commune||'Non renseignée'}
 • Mode de livraison : ${deliveryLabel}
-• Adresse : ${address}
+• Adresse : ${address||'Non renseignée'}
 • Frais de livraison : ${deliveryPrice==null?'À confirmer':money(deliveryPrice)}
 • Total estimé : ${deliveryPrice==null?'À confirmer':money(Number(currentProduct.price)+deliveryPrice)}
 
@@ -2464,37 +2429,7 @@ Merci de confirmer la disponibilité et le tarif de livraison.`;
     localStorage.setItem('naris-theme', light ? 'light' : 'dark');
   });
 
-
-  const mobileHeaderThemeToggle=$('#mobileHeaderThemeToggle');
-  const mobileHeaderLangToggle=$('#mobileHeaderLangToggle');
-  const mobileThemeLabel=$('#mobileThemeLabel');
-  const mobileLangLabel=$('#mobileLangLabel');
-
-  function syncMobilePreferenceLabels(){
-    if(mobileThemeLabel){
-      mobileThemeLabel.textContent=document.body.classList.contains('light-theme')
-        ? (currentLang==='ar'?'الوضع الداكن':'Mode sombre')
-        : (currentLang==='ar'?'الوضع الفاتح':'Mode clair');
-    }
-    if(mobileLangLabel){
-      mobileLangLabel.textContent=currentLang==='ar'?'Français':'العربية';
-    }
-  }
-
-  if(mobileHeaderThemeToggle){
-    mobileHeaderThemeToggle.addEventListener('click',()=>{
-      $('#themeToggle')?.click();
-      setTimeout(syncMobilePreferenceLabels,0);
-    });
-  }
-  if(mobileHeaderLangToggle){
-    mobileHeaderLangToggle.addEventListener('click',()=>{
-      $('#langToggle')?.click();
-      setTimeout(syncMobilePreferenceLabels,0);
-    });
-  }
-
-    const mobileThemeToggle = $('#mobileThemeToggle');
+  const mobileThemeToggle = $('#mobileThemeToggle');
   const mobileLangToggle = $('#mobileLangToggle');
   if(mobileThemeToggle){
     mobileThemeToggle.addEventListener('click',()=>$('#themeToggle').click());
@@ -2516,7 +2451,6 @@ Merci de confirmer la disponibilité et le tarif de livraison.`;
     }
   };
   applyLanguage(currentLang);
-  syncMobilePreferenceLabels();
 
   $('#year').textContent=new Date().getFullYear();
   loadProducts();
