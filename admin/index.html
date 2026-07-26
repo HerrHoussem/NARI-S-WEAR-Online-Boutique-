@@ -104,6 +104,29 @@
   .mini-btn:hover{border-color:var(--gold);color:var(--gold)}
   @media(max-width:700px){header{padding:1rem;align-items:flex-start;gap:.8rem}header h1{font-size:1.05rem}.admin-account{flex-wrap:wrap;justify-content:flex-end}.admin-account span{width:100%;text-align:right}.tabs{padding:1rem 1rem 0;overflow-x:auto}.tab-btn{white-space:nowrap;padding:.7rem .9rem}main{padding:1rem}.form-row,.variant-grid{grid-template-columns:1fr}.modal-box{padding:1.2rem}}
   .empty{color:var(--muted);text-align:center;padding:2rem;font-size:.85rem}
+
+  .dashboard-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem}
+  .dashboard-card{background:var(--panel);border:1px solid var(--line);padding:1.2rem;min-width:0}
+  .dashboard-card h3{font-size:1.15rem;color:var(--gold-bright);margin-bottom:.85rem}
+  .mini-list{display:grid;gap:.55rem}
+  .mini-list-item{display:flex;justify-content:space-between;gap:1rem;border-bottom:1px solid var(--line);padding:.55rem 0;font-size:.8rem}
+  .mini-list-item:last-child{border-bottom:0}
+  .mini-list-item span:last-child{color:var(--gold-bright);text-align:right}
+  .filters{display:flex;gap:.65rem;align-items:center;flex-wrap:wrap}
+  .filters input,.filters select{min-width:170px}
+  .badge{display:inline-flex;align-items:center;padding:.22rem .5rem;border:1px solid var(--line);font-size:.65rem;letter-spacing:.07em;text-transform:uppercase}
+  .badge.gold{color:var(--gold-bright);border-color:rgba(201,161,90,.45)}
+  .badge.danger{color:#ff8f88;border-color:rgba(226,85,77,.45)}
+  .badge.muted{color:var(--muted)}
+  .drop-zone{border:1px dashed rgba(201,161,90,.45);padding:1rem;text-align:center;color:var(--muted);font-size:.75rem;transition:.2s}
+  .drop-zone.dragover{border-color:var(--gold-bright);background:rgba(201,161,90,.08);color:var(--gold-bright)}
+  .drop-zone input{margin-top:.65rem;width:100%}
+  .product-name-cell{display:flex;align-items:center;gap:.45rem}
+  .stock-low{color:#ff8f88;font-weight:500}
+  .toast{position:fixed;right:1rem;bottom:1rem;z-index:250;background:var(--panel);border:1px solid var(--gold);padding:.8rem 1rem;color:var(--cream);font-size:.8rem;display:none;max-width:320px}
+  .toast.show{display:block}
+  @media(max-width:800px){.dashboard-grid{grid-template-columns:1fr}.filters{width:100%}.filters input,.filters select{width:100%;min-width:0}}
+
 </style>
 </head>
 <body>
@@ -136,13 +159,31 @@
   <main>
     <section class="tab-panel active" id="tab-overview">
       <div class="stats" id="statsRow"></div>
-      <p style="color:var(--muted);font-size:.85rem">Vue d'ensemble rapide. Gérez vos produits et commandes dans les onglets ci-dessus.</p>
+      <div class="dashboard-grid">
+        <div class="dashboard-card">
+          <h3>Commandes récentes</h3>
+          <div class="mini-list" id="recentOrdersList"></div>
+        </div>
+        <div class="dashboard-card">
+          <h3>Stock à surveiller</h3>
+          <div class="mini-list" id="lowStockList"></div>
+        </div>
+      </div>
     </section>
 
     <section class="tab-panel" id="tab-products">
       <div class="toolbar">
         <h2>Produits</h2>
-        <button class="btn-outline" id="addProductBtn">+ Ajouter un produit</button>
+        <div class="filters">
+          <input type="search" id="productSearch" placeholder="Rechercher un produit...">
+          <select id="productCategoryFilter"><option value="">Toutes les catégories</option></select>
+          <select id="productStockFilter">
+            <option value="">Tous les stocks</option>
+            <option value="low">Stock faible (≤ 2)</option>
+            <option value="out">Rupture de stock</option>
+          </select>
+          <button class="btn-outline" id="addProductBtn">+ Ajouter un produit</button>
+        </div>
       </div>
       <div class="table-wrap">
         <table>
@@ -153,7 +194,21 @@
     </section>
 
     <section class="tab-panel" id="tab-orders">
-      <div class="toolbar"><h2>Commandes</h2></div>
+      <div class="toolbar">
+        <h2>Commandes</h2>
+        <div class="filters">
+          <input type="search" id="orderSearch" placeholder="Client, téléphone, produit...">
+          <select id="orderStatusFilter">
+            <option value="">Tous les statuts</option>
+            <option value="nouvelle">Nouvelles</option>
+            <option value="confirmee">Confirmées</option>
+            <option value="expediee">Expédiées</option>
+            <option value="livree">Livrées</option>
+            <option value="annulee">Annulées</option>
+          </select>
+          <button class="btn-outline" id="exportOrdersBtn">Exporter CSV</button>
+        </div>
+      </div>
       <div class="table-wrap">
         <table>
           <thead><tr><th>Date</th><th>Client</th><th>Téléphone</th><th>Article</th><th>Qté</th><th>Taille/Couleur</th><th>Wilaya</th><th>Prix</th><th>Statut</th></tr></thead>
@@ -203,6 +258,8 @@
   </div>
 </div>
 
+<div class="toast" id="toast"></div>
+
 <script>
   const CONFIG = window.NARIS_CONFIG || {};
   const configured = /^https:\/\/.+\.supabase\.co$/i.test(CONFIG.supabaseUrl || '') &&
@@ -214,6 +271,16 @@
   }
 
   const db = configured ? window.supabase.createClient(CONFIG.supabaseUrl, CONFIG.supabaseAnonKey) : null;
+  let productsCache = [];
+  let ordersCache = [];
+
+  function showToast(message){
+    const el = document.getElementById('toast');
+    el.textContent = message;
+    el.classList.add('show');
+    clearTimeout(window.__toastTimer);
+    window.__toastTimer = setTimeout(() => el.classList.remove('show'), 2600);
+  }
 
   const loginScreen = document.getElementById('loginScreen');
   const app = document.getElementById('app');
@@ -274,43 +341,92 @@
   function money(n){ return Number(n).toLocaleString('fr-FR') + ' DA'; }
 
   async function loadOverview(){
-    const { data: orders } = await db.from('orders').select('*');
-    const { data: products } = await db.from('products').select('id, stock, is_active');
+    const { data: orders } = await db.from('orders').select('*').order('created_at', {ascending:false});
+    const { data: products } = await db.from('products').select('*').order('created_at', {ascending:false});
     const list = orders || [];
-    const revenue = list.filter(o => o.status !== 'annulee')
-      .reduce((s,o) => s + Number(o.price) * (o.quantity || 1), 0);
+    const productList = products || [];
+    const today = new Date();
+    const todayKey = today.toISOString().slice(0,10);
+    const validOrders = list.filter(o => o.status !== 'annulee');
+    const revenue = validOrders.reduce((s,o) => s + Number(o.price || 0) * (o.quantity || 1), 0);
+    const todayOrders = list.filter(o => String(o.created_at || '').slice(0,10) === todayKey);
+    const todayRevenue = todayOrders.filter(o => o.status !== 'annulee')
+      .reduce((s,o) => s + Number(o.price || 0) * (o.quantity || 1), 0);
     const pending = list.filter(o => o.status === 'nouvelle').length;
-    const lowStock = (products||[]).filter(p => p.is_active && p.stock <= 2).length;
+    const lowProducts = productList.filter(p => p.is_active && Number(p.stock || 0) <= 2);
 
     document.getElementById('statsRow').innerHTML = `
-      <div class="stat"><div class="label">Commandes totales</div><div class="value">${list.length}</div></div>
+      <div class="stat"><div class="label">Commandes aujourd'hui</div><div class="value">${todayOrders.length}</div></div>
+      <div class="stat"><div class="label">CA aujourd'hui</div><div class="value">${money(todayRevenue)}</div></div>
       <div class="stat"><div class="label">Nouvelles commandes</div><div class="value">${pending}</div></div>
-      <div class="stat"><div class="label">Chiffre d'affaires estimé</div><div class="value">${money(revenue)}</div></div>
-      <div class="stat"><div class="label">Produits en stock faible</div><div class="value">${lowStock}</div></div>
+      <div class="stat"><div class="label">Stock faible</div><div class="value">${lowProducts.length}</div></div>
+      <div class="stat"><div class="label">CA total estimé</div><div class="value">${money(revenue)}</div></div>
     `;
+
+    document.getElementById('recentOrdersList').innerHTML = list.slice(0,6).map(o => `
+      <div class="mini-list-item">
+        <span>${escapeHtml(o.customer_name || 'Client')} — ${escapeHtml(o.product_name || 'Article')}</span>
+        <span>${money(Number(o.price || 0) * (o.quantity || 1))}</span>
+      </div>`).join('') || '<div class="empty">Aucune commande.</div>';
+
+    document.getElementById('lowStockList').innerHTML = lowProducts.slice(0,8).map(p => `
+      <div class="mini-list-item">
+        <span>${escapeHtml(p.name || 'Produit')}</span>
+        <span>${Number(p.stock || 0)} en stock</span>
+      </div>`).join('') || '<div class="empty">Tous les stocks sont corrects.</div>';
   }
 
   async function loadProducts(){
     const tbody = document.getElementById('productsTableBody');
     const { data, error } = await db.from('products').select('*').order('created_at', {ascending:false});
     if(error){ tbody.innerHTML = `<tr><td colspan="7" class="empty">Erreur de chargement</td></tr>`; return; }
-    if(!data.length){ tbody.innerHTML = `<tr><td colspan="7" class="empty">Aucun produit. Cliquez sur "Ajouter un produit".</td></tr>`; return; }
+    productsCache = data || [];
+    const categories = [...new Set(productsCache.map(p => (p.category || '').trim()).filter(Boolean))].sort();
+    const select = document.getElementById('productCategoryFilter');
+    const current = select.value;
+    select.innerHTML = '<option value="">Toutes les catégories</option>' + categories.map(c => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
+    select.value = categories.includes(current) ? current : '';
+    renderProducts();
+  }
 
-    tbody.innerHTML = data.map(p => `
+  function renderProducts(){
+    const tbody = document.getElementById('productsTableBody');
+    const q = document.getElementById('productSearch').value.trim().toLowerCase();
+    const category = document.getElementById('productCategoryFilter').value;
+    const stockFilter = document.getElementById('productStockFilter').value;
+    const rows = productsCache.filter(p => {
+      const matchesQ = !q || [p.name,p.category].some(v => String(v || '').toLowerCase().includes(q));
+      const matchesCategory = !category || p.category === category;
+      const stock = Number(p.stock || 0);
+      const matchesStock = !stockFilter || (stockFilter === 'low' && stock <= 2) || (stockFilter === 'out' && stock === 0);
+      return matchesQ && matchesCategory && matchesStock;
+    });
+
+    if(!rows.length){ tbody.innerHTML = `<tr><td colspan="7" class="empty">Aucun produit correspondant.</td></tr>`; return; }
+
+    tbody.innerHTML = rows.map(p => {
+      const image = p.images && p.images[0] ? p.images[0] : (Array.isArray(p.variants) ? (p.variants.find(v=>v.is_default)?.images?.[0] || p.variants[0]?.images?.[0]) : '');
+      const stock = Number(p.stock || 0);
+      return `
       <tr>
-        <td>${p.images && p.images[0] ? `<img class="thumb" src="${p.images[0]}">` : ''}</td>
-        <td>${p.name}</td>
-        <td>${p.category}</td>
+        <td>${image ? `<img class="thumb" src="${image}" alt="">` : ''}</td>
+        <td><div class="product-name-cell">${escapeHtml(p.name)} ${p.featured ? '<span class="badge gold">Nouveau</span>' : ''}</div></td>
+        <td>${escapeHtml(p.category || '—')}</td>
         <td>${money(p.price)}</td>
-        <td>${p.stock}</td>
-        <td>${p.is_active ? 'Oui' : 'Non'}</td>
+        <td class="${stock <= 2 ? 'stock-low' : ''}">${stock}${stock === 0 ? ' — rupture' : stock <= 2 ? ' — faible' : ''}</td>
+        <td>${p.is_active ? '<span class="badge gold">Visible</span>' : '<span class="badge muted">Masqué</span>'}</td>
         <td class="actions">
           <button class="icon-link" onclick="editProduct('${p.id}')">Modifier</button>
+          <button class="icon-link" onclick="duplicateProduct('${p.id}')">Dupliquer</button>
           <button class="icon-link danger" onclick="deleteProduct('${p.id}')">Supprimer</button>
         </td>
-      </tr>
-    `).join('');
+      </tr>`;
+    }).join('');
   }
+
+  ['productSearch','productCategoryFilter','productStockFilter'].forEach(id => {
+    document.getElementById(id).addEventListener(id === 'productSearch' ? 'input' : 'change', renderProducts);
+  });
 
   const productModal = document.getElementById('productModal');
 
@@ -364,10 +480,35 @@
         <div class="size-rows">${(v.sizes||[]).map((sz,j)=>`<div class="size-row" data-size-index="${j}"><input class="s-name" value="${escapeHtml(sz.name)}" placeholder="M"><input class="s-stock" type="number" min="0" value="${sz.stock==null?'':sz.stock}" placeholder="Stock"><button type="button" class="mini-btn remove-size">×</button></div>`).join('')}</div>
         <small class="size-help">Laissez cette liste vide pour utiliser uniquement le stock global de la couleur.</small>
       </div>
-      <div class="form-group" style="margin-top:.7rem"><label>Photos de cette couleur</label><input class="v-files" type="file" accept="image/*" multiple></div>
+      <div class="form-group" style="margin-top:.7rem">
+        <label>Photos de cette couleur</label>
+        <div class="drop-zone">Glissez-déposez les photos ici ou cliquez pour sélectionner
+          <input class="v-files" type="file" accept="image/*" multiple>
+        </div>
+      </div>
       <div class="variant-images">${v.images.map((url,j)=>`<span class="variant-image"><img src="${url}"><button type="button" class="remove-image" data-image="${j}">×</button></span>`).join('')}</div>
     </div>`).join('');
   }
+
+  function setupDropZones(){
+    document.querySelectorAll('.drop-zone').forEach(zone => {
+      const input = zone.querySelector('.v-files');
+      zone.addEventListener('click', e => { if(e.target !== input) input.click(); });
+      ['dragenter','dragover'].forEach(type => zone.addEventListener(type, e => { e.preventDefault(); zone.classList.add('dragover'); }));
+      ['dragleave','drop'].forEach(type => zone.addEventListener(type, e => { e.preventDefault(); zone.classList.remove('dragover'); }));
+      zone.addEventListener('drop', e => {
+        if(!e.dataTransfer.files.length) return;
+        const dt = new DataTransfer();
+        [...input.files, ...e.dataTransfer.files].filter(f => f.type.startsWith('image/')).forEach(f => dt.items.add(f));
+        input.files = dt.files;
+        zone.firstChild.textContent = `${input.files.length} photo(s) prête(s) à être envoyée(s) `;
+      });
+      input.addEventListener('change', () => {
+        zone.firstChild.textContent = input.files.length ? `${input.files.length} photo(s) sélectionnée(s) ` : 'Glissez-déposez les photos ici ou cliquez pour sélectionner ';
+      });
+    });
+  }
+
   function escapeHtml(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]))}
   function syncVariantsFromForm(){
     document.querySelectorAll('.variant-editor').forEach((card,i)=>{
@@ -391,6 +532,30 @@
   window.editProduct = async function(id){
     const { data } = await db.from('products').select('*').eq('id', id).single();
     openProductModal(data);
+  };
+
+
+  window.duplicateProduct = async function(id){
+    const product = productsCache.find(p => String(p.id) === String(id));
+    if(!product) return;
+    if(!confirm(`Créer une copie de "${product.name}" ?`)) return;
+    const payload = {
+      name: `${product.name} — copie`,
+      category: product.category,
+      price: product.price,
+      sizes: product.sizes || [],
+      colors: product.colors || [],
+      stock: product.stock || 0,
+      featured: false,
+      is_active: false,
+      images: product.images || [],
+      variants: product.variants || []
+    };
+    const { error } = await db.from('products').insert(payload);
+    if(error){ alert('Erreur: ' + error.message); return; }
+    showToast('Produit dupliqué et enregistré comme masqué.');
+    await loadProducts();
+    loadOverview();
   };
 
   window.deleteProduct = async function(id){
@@ -459,18 +624,31 @@
     const tbody = document.getElementById('ordersTableBody');
     const { data, error } = await db.from('orders').select('*').order('created_at', {ascending:false});
     if(error){ tbody.innerHTML = `<tr><td colspan="9" class="empty">Erreur de chargement</td></tr>`; return; }
-    if(!data.length){ tbody.innerHTML = `<tr><td colspan="9" class="empty">Aucune commande pour le moment.</td></tr>`; return; }
+    ordersCache = data || [];
+    renderOrders();
+  }
 
-    tbody.innerHTML = data.map(o => `
+  function renderOrders(){
+    const tbody = document.getElementById('ordersTableBody');
+    const q = document.getElementById('orderSearch').value.trim().toLowerCase();
+    const status = document.getElementById('orderStatusFilter').value;
+    const rows = ordersCache.filter(o => {
+      const haystack = [o.customer_name,o.customer_phone,o.product_name,o.wilaya,o.color,o.size].join(' ').toLowerCase();
+      return (!q || haystack.includes(q)) && (!status || o.status === status);
+    });
+
+    if(!rows.length){ tbody.innerHTML = `<tr><td colspan="9" class="empty">Aucune commande correspondante.</td></tr>`; return; }
+
+    tbody.innerHTML = rows.map(o => `
       <tr>
         <td>${new Date(o.created_at).toLocaleDateString('fr-FR')}</td>
-        <td>${o.customer_name}</td>
-        <td>${o.customer_phone}</td>
-        <td>${o.product_name}</td>
+        <td>${escapeHtml(o.customer_name || '—')}</td>
+        <td>${escapeHtml(o.customer_phone || '—')}</td>
+        <td>${escapeHtml(o.product_name || '—')}</td>
         <td>${o.quantity || 1}</td>
-        <td>${o.size || '—'} / ${o.color || '—'}</td>
-        <td>${o.wilaya || '—'}</td>
-        <td>${money(o.price)}</td>
+        <td>${escapeHtml(o.size || '—')} / ${escapeHtml(o.color || '—')}</td>
+        <td>${escapeHtml(o.wilaya || '—')}</td>
+        <td>${money(Number(o.price || 0) * (o.quantity || 1))}</td>
         <td>
           <select class="status-select" data-id="${o.id}">
             ${STATUS_OPTIONS.map(s => `<option value="${s}" ${o.status===s?'selected':''}>${STATUS_LABELS[s]}</option>`).join('')}
@@ -482,11 +660,35 @@
     tbody.querySelectorAll('.status-select').forEach(sel => {
       sel.addEventListener('change', async () => {
         const { error } = await db.from('orders').update({ status: sel.value }).eq('id', sel.dataset.id);
-        if(error) alert('Erreur: ' + error.message);
+        if(error){ alert('Erreur: ' + error.message); return; }
+        const item = ordersCache.find(o => String(o.id) === String(sel.dataset.id));
+        if(item) item.status = sel.value;
+        showToast('Statut de la commande mis à jour.');
         loadOverview();
       });
     });
   }
+
+  document.getElementById('orderSearch').addEventListener('input', renderOrders);
+  document.getElementById('orderStatusFilter').addEventListener('change', renderOrders);
+
+  document.getElementById('exportOrdersBtn').addEventListener('click', () => {
+    const headers = ['Date','Client','Téléphone','Produit','Quantité','Taille','Couleur','Wilaya','Prix','Statut'];
+    const escapeCsv = v => `"${String(v ?? '').replace(/"/g,'""')}"`;
+    const lines = [headers.map(escapeCsv).join(',')];
+    ordersCache.forEach(o => lines.push([
+      new Date(o.created_at).toLocaleString('fr-FR'),
+      o.customer_name,o.customer_phone,o.product_name,o.quantity || 1,o.size,o.color,o.wilaya,
+      Number(o.price || 0) * (o.quantity || 1),STATUS_LABELS[o.status] || o.status
+    ].map(escapeCsv).join(',')));
+    const blob = new Blob(['\ufeff' + lines.join('\n')], {type:'text/csv;charset=utf-8'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `naris-commandes-${new Date().toISOString().slice(0,10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+  });
 
   checkSession();
 </script>
