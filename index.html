@@ -392,6 +392,18 @@
       grid-column:1/-1;text-align:center;padding:3rem 1rem;color:var(--muted);
       font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;
     }
+    .skeleton-card{background:var(--panel);border:1px solid var(--line);overflow:hidden}
+    .skeleton-media{aspect-ratio:3/4}
+    .skeleton-media,.skeleton-line{
+      background:linear-gradient(100deg,var(--panel) 30%,var(--panel-soft) 50%,var(--panel) 70%);
+      background-size:200% 100%;animation:skeletonShine 1.5s ease-in-out infinite;
+    }
+    .skeleton-lines{padding:.9rem}
+    .skeleton-line{height:11px;margin-bottom:.55rem}
+    .skeleton-line.w60{width:60%}
+    .skeleton-line.w40{width:40%}
+    @keyframes skeletonShine{0%{background-position:200% 0}100%{background-position:-200% 0}}
+    @media (prefers-reduced-motion:reduce){.skeleton-media,.skeleton-line{animation:none}}
     .product-badge{
       position:absolute;top:.7rem;left:.7rem;z-index:2;
       background:rgba(23,19,16,.55);color:var(--gold-bright);
@@ -926,6 +938,13 @@
       .hero-ctas,.hero-note{justify-content:center}
       .hero-visual{min-height:520px;width:min(620px,100%);margin-inline:auto}
       .product-grid{grid-template-columns:repeat(2,1fr)}
+      .filters{
+        flex-wrap:nowrap;justify-content:flex-start;overflow-x:auto;
+        -webkit-overflow-scrolling:touch;scrollbar-width:none;
+        margin:0 -1rem 2rem;padding:0 1rem .3rem;
+      }
+      .filters::-webkit-scrollbar{display:none}
+      .filter-btn{flex:0 0 auto;white-space:nowrap}
       .catalog-tools{grid-template-columns:1fr}
       .story-grid{grid-template-columns:1fr}
       .story-visual{min-height:500px}
@@ -988,7 +1007,38 @@
       .modal-content{padding:1.35rem}
       .modal-content h3{font-size:2.2rem}
       .modal-actions{grid-template-columns:1fr}
+      .modal-content{padding-bottom:.5rem}
+      .modal-actions{
+        position:sticky;bottom:-1px;z-index:6;
+        background:#1d1714;
+        margin:1rem -1.35rem -1.35rem;padding:.9rem 1.35rem calc(.9rem + env(safe-area-inset-bottom));
+        box-shadow:0 -10px 24px rgba(0,0,0,.35);
+      }
+      body.light-theme .modal-actions{background:var(--panel)}
+      .floating-wa{bottom:5.6rem}
+      .to-top{bottom:9.2rem}
+      .mobile-bottom-nav{
+        position:fixed;left:8px;right:8px;bottom:8px;z-index:2500;
+        display:grid;grid-template-columns:repeat(4,1fr);
+        min-height:60px;overflow:hidden;
+        border:1px solid var(--line);border-radius:16px;
+        background:rgba(23,19,16,.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+        box-shadow:0 18px 45px rgba(0,0,0,.34);
+        padding-bottom:env(safe-area-inset-bottom);
+      }
+      body.light-theme .mobile-bottom-nav{background:rgba(255,250,243,.92)}
+      .mobile-bottom-nav a,.mobile-bottom-nav button{
+        display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.2rem;
+        min-width:0;border:0;border-right:1px solid var(--line);
+        background:transparent;color:var(--cream);font:inherit;
+        font-size:.58rem;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;
+      }
+      .mobile-bottom-nav > :last-child{border-right:0}
+      .mobile-bottom-nav strong{font-size:1.15rem;line-height:1;color:var(--gold)}
+      .mobile-bottom-nav a:active,.mobile-bottom-nav button:active{background:rgba(201,161,90,.13)}
+      footer{padding-bottom:6.5rem}
     }
+    @media (min-width:701px){.mobile-bottom-nav{display:none}}
 
 
     @media (max-width:430px){
@@ -1390,7 +1440,10 @@ body.light-theme .optional-delivery-note span{color:#554a43}
       <p class="result-count" id="resultCount" aria-live="polite"></p>
 
       <div class="product-grid" id="productGrid">
-        <p class="grid-status">Chargement de la collection…</p>
+        <div class="skeleton-card"><div class="skeleton-media"></div><div class="skeleton-lines"><div class="skeleton-line w60"></div><div class="skeleton-line w40"></div></div></div>
+        <div class="skeleton-card"><div class="skeleton-media"></div><div class="skeleton-lines"><div class="skeleton-line w60"></div><div class="skeleton-line w40"></div></div></div>
+        <div class="skeleton-card"><div class="skeleton-media"></div><div class="skeleton-lines"><div class="skeleton-line w60"></div><div class="skeleton-line w40"></div></div></div>
+        <div class="skeleton-card"><div class="skeleton-media"></div><div class="skeleton-lines"><div class="skeleton-line w60"></div><div class="skeleton-line w40"></div></div></div>
       </div>
     </div>
   </section>
@@ -1794,6 +1847,25 @@ body.light-theme .optional-delivery-note span{color:#554a43}
 </a>
 <button class="to-top" id="toTop" aria-label="Revenir en haut">↑</button>
 
+<nav class="mobile-bottom-nav" aria-label="Navigation mobile">
+  <a href="#home">
+    <strong aria-hidden="true">⌂</strong>
+    <span>Accueil</span>
+  </a>
+  <a href="#collection">
+    <strong aria-hidden="true">◇</strong>
+    <span>Boutique</span>
+  </a>
+  <button type="button" id="mobileNavWishlist">
+    <strong aria-hidden="true">♡</strong>
+    <span>Favoris <span id="mobileNavWishlistCount">0</span></span>
+  </button>
+  <button type="button" id="mobileNavCart">
+    <strong aria-hidden="true">⛃</strong>
+    <span>Panier <span id="mobileNavCartCount">0</span></span>
+  </button>
+</nav>
+
 
 <div class="shop-drawer-layer" id="wishlistLayer" aria-hidden="true">
   <div class="shop-drawer-backdrop" data-shop-close></div>
@@ -1894,11 +1966,11 @@ body.light-theme .optional-delivery-note span{color:#554a43}
         </div>
 
         <button class="btn-solid" id="addCartButton" type="button">Ajouter au panier</button>
+        <p class="small-note">La commande sera préparée sous forme de message WhatsApp. Aucun paiement n'est effectué sur cette page.</p>
         <div class="modal-actions">
           <button class="btn-outline" id="continueShopping">Continuer</button>
           <button class="wa-btn" id="confirmWhatsApp">Commander</button>
         </div>
-        <p class="small-note">La commande sera préparée sous forme de message WhatsApp. Aucun paiement n'est effectué sur cette page.</p>
       </div>
     </div>
   </div>
@@ -1983,6 +2055,9 @@ document.addEventListener('DOMContentLoaded', () => {
       $('#cartOpen')?.classList.toggle('has-items',bagCount>0);
       if(changed){bagEl.classList.remove('bump');void bagEl.offsetWidth;bagEl.classList.add('bump')}
     }
+    const mobileWishEl=$('#mobileNavWishlistCount'),mobileBagEl=$('#mobileNavCartCount');
+    if(mobileWishEl) mobileWishEl.textContent=wishCount;
+    if(mobileBagEl) mobileBagEl.textContent=bagCount;
   }
 
 
@@ -2177,6 +2252,8 @@ document.addEventListener('DOMContentLoaded', () => {
   }
   $('#wishlistOpen').addEventListener('click',()=>{renderWishlist();openShopLayer('#wishlistLayer')});
   $('#cartOpen').addEventListener('click',()=>{renderCart();openShopLayer('#cartLayer')});
+  $('#mobileNavWishlist')?.addEventListener('click',()=>$('#wishlistOpen').click());
+  $('#mobileNavCart')?.addEventListener('click',()=>$('#cartOpen').click());
   document.addEventListener('click',e=>{if(e.target.closest('[data-shop-close]'))closeShopLayers()});
   document.addEventListener('keydown',e=>{if(e.key==='Escape')closeShopLayers()});
   $('#wishlistBody').addEventListener('click',e=>{const r=e.target.closest('[data-wish-remove]');if(r){toggleFavorite(r.dataset.wishRemove);return}const o=e.target.closest('[data-wish-order]');if(o)openSavedProduct(o.dataset.wishOrder)});
