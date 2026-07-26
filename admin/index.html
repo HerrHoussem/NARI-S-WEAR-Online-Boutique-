@@ -127,6 +127,103 @@
   .toast.show{display:block}
   @media(max-width:800px){.dashboard-grid{grid-template-columns:1fr}.filters{width:100%}.filters input,.filters select{width:100%;min-width:0}}
 
+
+  /* Light mode */
+  body.light-mode{
+    --bg:#f5f2eb;
+    --panel:#ffffff;
+    --panel-2:#faf8f3;
+    --text:#241f1a;
+    --muted:#6f675f;
+    --line:rgba(74,61,48,.16);
+    --gold:#9c6d25;
+    --gold-bright:#b9822d;
+    --danger:#b54040;
+    --success:#2f7d4d;
+    --shadow:0 14px 38px rgba(54,44,34,.12);
+    background:#f5f2eb;
+    color:#241f1a;
+  }
+  body.light-mode .sidebar,
+  body.light-mode .topbar,
+  body.light-mode .card,
+  body.light-mode .panel,
+  body.light-mode .modal-card,
+  body.light-mode .auth-card{
+    background:#ffffff;
+    color:#241f1a;
+    border-color:rgba(74,61,48,.14);
+  }
+  body.light-mode input,
+  body.light-mode select,
+  body.light-mode textarea,
+  body.light-mode .search-input,
+  body.light-mode .status-select{
+    background:#fffdf9;
+    color:#241f1a;
+    border-color:rgba(74,61,48,.2);
+  }
+  body.light-mode input::placeholder,
+  body.light-mode textarea::placeholder{
+    color:#91877d;
+  }
+  body.light-mode table{
+    background:#ffffff;
+  }
+  body.light-mode th{
+    background:#f1ece3;
+    color:#4b4239;
+  }
+  body.light-mode td{
+    color:#2f2923;
+    border-color:rgba(74,61,48,.12);
+  }
+  body.light-mode tr:hover td{
+    background:#faf6ef;
+  }
+  body.light-mode .nav-link,
+  body.light-mode .icon-link,
+  body.light-mode .btn-secondary{
+    color:#3d352d;
+  }
+  body.light-mode .nav-link:hover,
+  body.light-mode .nav-link.active{
+    background:#efe5d4;
+    color:#7e561b;
+  }
+  body.light-mode .badge{
+    background:#f3eee6;
+    color:#574d43;
+    border-color:rgba(74,61,48,.14);
+  }
+  body.light-mode .toast{
+    background:#ffffff;
+    color:#241f1a;
+    border-color:rgba(74,61,48,.18);
+  }
+  .theme-toggle{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:.45rem;
+    min-height:40px;
+    padding:.55rem .85rem;
+    border:1px solid var(--line);
+    background:var(--panel);
+    color:var(--text);
+    cursor:pointer;
+    font:inherit;
+    transition:.25s ease;
+  }
+  .theme-toggle:hover{
+    border-color:var(--gold);
+    color:var(--gold-bright);
+  }
+  .theme-toggle-icon{
+    font-size:1rem;
+    line-height:1;
+  }
+
 </style>
 </head>
 <body>
@@ -147,7 +244,12 @@
 <div id="app">
   <header>
     <h1>NARI'S <b>WEAR</b> — Admin</h1>
-    <div class="admin-account"><span id="adminEmail"></span><a href="../index.html">Voir la boutique</a><button id="logoutBtn">Déconnexion</button></div>
+    <div class="admin-account"><span id="adminEmail"></span><a href="../index.html">Voir la boutique</a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Changer le thème">
+        <span class="theme-toggle-icon" id="themeToggleIcon">☀</span>
+        <span id="themeToggleText">Mode clair</span>
+      </button>
+<button id="logoutBtn">Déconnexion</button></div>
   </header>
 
   <div class="tabs">
@@ -692,5 +794,33 @@
 
   checkSession();
 </script>
+
+<script>
+(function(){
+  const body=document.body;
+  const button=document.getElementById('themeToggle');
+  const icon=document.getElementById('themeToggleIcon');
+  const text=document.getElementById('themeToggleText');
+
+  function applyTheme(theme){
+    const isLight=theme==='light';
+    body.classList.toggle('light-mode',isLight);
+    if(icon) icon.textContent=isLight?'☾':'☀';
+    if(text) text.textContent=isLight?'Mode sombre':'Mode clair';
+    if(button) button.setAttribute('aria-pressed',String(isLight));
+    localStorage.setItem('naris-admin-theme',theme);
+  }
+
+  const saved=localStorage.getItem('naris-admin-theme');
+  applyTheme(saved || 'light');
+
+  if(button){
+    button.addEventListener('click',()=>{
+      applyTheme(body.classList.contains('light-mode')?'dark':'light');
+    });
+  }
+})();
+</script>
+
 </body>
 </html>
