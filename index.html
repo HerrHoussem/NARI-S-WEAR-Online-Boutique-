@@ -2418,12 +2418,18 @@ Merci de confirmer la disponibilité et le tarif de livraison.`;
     if(!section || !grid) return;
     const products=recent.map(productById).filter(Boolean).slice(0,4);
     section.classList.toggle('has-items',products.length>0);
+    const signature=products.map(product=>getId(product)).join('|');
+    if(grid.dataset.signature===signature){
+      decorateProductCards();
+      return;
+    }
+    grid.dataset.signature=signature;
     grid.innerHTML=products.map(product=>{
       const id=getId(product);
       const image=getImage(product);
       const price=getPrice(product);
       return `
-        <article class="product-card" data-product-id="${id}">
+        <article class="product-card recently-viewed-card" data-product-id="${id}">
           <div class="product-media">
             <img src="${image}" alt="${getName(product)}" loading="lazy">
           </div>
@@ -2467,9 +2473,23 @@ Merci de confirmer la disponibilité et le tarif de livraison.`;
   document.getElementById('wishlistBackdrop')?.addEventListener('click',closeWishlist);
   document.addEventListener('keydown',e=>{if(e.key==='Escape') closeWishlist()});
 
-  const observer=new MutationObserver(()=>{
-    decorateProductCards();
-    renderRecentlyViewed();
+  let wishlistRefreshQueued=false;
+  const observer=new MutationObserver((mutations)=>{
+    const productAreaChanged=mutations.some(mutation=>
+      [...mutation.addedNodes].some(node=>
+        node.nodeType===1 &&
+        (node.matches?.('.product-card:not(.recently-viewed-card)') ||
+         node.querySelector?.('.product-card:not(.recently-viewed-card)'))
+      )
+    );
+
+    if(!productAreaChanged || wishlistRefreshQueued) return;
+
+    wishlistRefreshQueued=true;
+    requestAnimationFrame(()=>{
+      decorateProductCards();
+      wishlistRefreshQueued=false;
+    });
   });
   observer.observe(document.body,{childList:true,subtree:true});
 
