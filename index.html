@@ -573,78 +573,105 @@
     .review-author span{font-size:.75rem;color:var(--muted)}
 .instagram-grid{
       display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:1rem;
+      grid-template-columns:repeat(3,1fr);
+      gap:.8rem;
     }
-    .instagram-reel{
+    .instagram-tile{
       position:relative;
-      min-width:0;
+      aspect-ratio:1/1;
       overflow:hidden;
       border:1px solid var(--line);
-      background:linear-gradient(145deg,rgba(201,161,90,.1),rgba(255,255,255,.025));
-      box-shadow:var(--shadow);
-      transition:transform .3s ease,border-color .3s ease,box-shadow .3s ease;
+      background:var(--panel);
+      cursor:pointer;
+      isolation:isolate;
     }
-    .instagram-reel:hover{
-      transform:translateY(-5px);
-      border-color:rgba(201,161,90,.7);
-      box-shadow:0 22px 50px rgba(0,0,0,.38);
-    }
-    .instagram-reel-frame{
-      position:relative;
-      width:100%;
-      aspect-ratio:9/14;
-      overflow:hidden;
-      background:#fff;
-    }
-    .instagram-reel iframe{
+    .instagram-tile img{
       width:100%;
       height:100%;
-      border:0;
+      object-fit:cover;
       display:block;
-      background:#fff;
+      transition:transform .45s ease,filter .45s ease;
     }
-    .instagram-reel-link{
+    .instagram-tile::after{
+      content:"Voir";
+      position:absolute;
+      inset:auto 1rem 1rem 1rem;
+      z-index:2;
       display:flex;
       align-items:center;
-      justify-content:space-between;
-      gap:.75rem;
-      min-height:54px;
-      padding:.85rem 1rem;
-      color:var(--cream);
-      border-top:1px solid var(--line);
-      font-size:.72rem;
-      letter-spacing:.12em;
+      justify-content:center;
+      min-height:42px;
+      background:rgba(17,13,11,.74);
+      border:1px solid rgba(234,210,157,.35);
+      color:#fff3dc;
+      font-size:.68rem;
+      letter-spacing:.14em;
       text-transform:uppercase;
-      transition:background .25s ease,color .25s ease;
+      opacity:0;
+      transform:translateY(14px);
+      transition:.3s ease;
+      pointer-events:none;
     }
-    .instagram-reel-link:hover{
-      background:rgba(201,161,90,.1);
-      color:var(--gold-bright);
+    .instagram-tile:hover img{
+      transform:scale(1.055);
+      filter:brightness(.82);
     }
-    .instagram-reel-icon{
-      width:30px;
-      height:30px;
-      display:grid;
-      place-items:center;
-      border:1px solid rgba(201,161,90,.55);
-      border-radius:50%;
-      color:var(--gold-bright);
-      flex:0 0 30px;
+    .instagram-tile:hover::after,
+    .instagram-tile:focus-visible::after{
+      opacity:1;
+      transform:none;
     }
     .instagram-cta{text-align:center;margin-top:2rem}
+
+    .gallery-lightbox{
+      position:fixed;
+      inset:0;
+      z-index:500;
+      display:grid;
+      place-items:center;
+      padding:1rem;
+      background:rgba(8,6,5,.92);
+      opacity:0;
+      visibility:hidden;
+      transition:.25s ease;
+    }
+    .gallery-lightbox.active{
+      opacity:1;
+      visibility:visible;
+    }
+    .gallery-lightbox-inner{
+      position:relative;
+      width:min(92vw,900px);
+      max-height:92vh;
+      display:grid;
+      place-items:center;
+    }
+    .gallery-lightbox img{
+      max-width:100%;
+      max-height:88vh;
+      object-fit:contain;
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
+    }
+    .gallery-lightbox-close{
+      position:absolute;
+      top:.8rem;
+      right:.8rem;
+      z-index:3;
+      width:44px;
+      height:44px;
+      border:1px solid rgba(255,255,255,.3);
+      background:rgba(0,0,0,.58);
+      color:white;
+      cursor:pointer;
+    }
+
     @media(max-width:1020px){
-      .instagram-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-    }
-    @media(max-width:700px){
-      .instagram-grid{grid-template-columns:1fr}
-      .instagram-reel-frame{aspect-ratio:9/13}
-    }
-@media(max-width:1020px){
       .featured-collections{grid-template-columns:repeat(2,1fr)}
       .why-grid{grid-template-columns:repeat(2,1fr)}
       .reviews-grid{grid-template-columns:1fr 1fr}
       .delivery-panel{grid-template-columns:1fr}
+.instagram-grid{grid-template-columns:repeat(3,1fr)}
     }
     @media(max-width:700px){
       .featured-collections{grid-template-columns:1fr}
@@ -652,6 +679,7 @@
       .why-grid{grid-template-columns:1fr}
       .reviews-grid{grid-template-columns:1fr}
       .delivery-copy{padding:1.5rem}
+.instagram-grid{grid-template-columns:repeat(2,1fr)}
     }
 
 
@@ -1332,111 +1360,40 @@
       </div>
 
       <div class="instagram-grid">
-        <article class="instagram-reel reveal">
-          <div class="instagram-reel-frame">
-            <iframe
-              src="https://www.instagram.com/reel/DbJxLIIsvaj/embed"
-              title="Instagram Reel NARI’S WEAR 1"
-              loading="lazy"
-              allowtransparency="true"
-              allow="encrypted-media; picture-in-picture"
-              referrerpolicy="strict-origin-when-cross-origin">
-            </iframe>
-          </div>
-          <a class="instagram-reel-link" href="https://www.instagram.com/reel/DbJxLIIsvaj/" target="_blank" rel="noopener">
-            <span>Voir le Reel sur Instagram</span>
-            <span class="instagram-reel-icon" aria-hidden="true">↗</span>
-          </a>
-        </article>
-        <article class="instagram-reel reveal">
-          <div class="instagram-reel-frame">
-            <iframe
-              src="https://www.instagram.com/reel/DbMBuYTR_0V/embed"
-              title="Instagram Reel NARI’S WEAR 2"
-              loading="lazy"
-              allowtransparency="true"
-              allow="encrypted-media; picture-in-picture"
-              referrerpolicy="strict-origin-when-cross-origin">
-            </iframe>
-          </div>
-          <a class="instagram-reel-link" href="https://www.instagram.com/reel/DbMBuYTR_0V/" target="_blank" rel="noopener">
-            <span>Voir le Reel sur Instagram</span>
-            <span class="instagram-reel-icon" aria-hidden="true">↗</span>
-          </a>
-        </article>
-        <article class="instagram-reel reveal">
-          <div class="instagram-reel-frame">
-            <iframe
-              src="https://www.instagram.com/reel/DbOwPT8xkXG/embed"
-              title="Instagram Reel NARI’S WEAR 3"
-              loading="lazy"
-              allowtransparency="true"
-              allow="encrypted-media; picture-in-picture"
-              referrerpolicy="strict-origin-when-cross-origin">
-            </iframe>
-          </div>
-          <a class="instagram-reel-link" href="https://www.instagram.com/reel/DbOwPT8xkXG/" target="_blank" rel="noopener">
-            <span>Voir le Reel sur Instagram</span>
-            <span class="instagram-reel-icon" aria-hidden="true">↗</span>
-          </a>
-        </article>
-        <article class="instagram-reel reveal">
-          <div class="instagram-reel-frame">
-            <iframe
-              src="https://www.instagram.com/reel/DbO_Y6FMPvI/embed"
-              title="Instagram Reel NARI’S WEAR 4"
-              loading="lazy"
-              allowtransparency="true"
-              allow="encrypted-media; picture-in-picture"
-              referrerpolicy="strict-origin-when-cross-origin">
-            </iframe>
-          </div>
-          <a class="instagram-reel-link" href="https://www.instagram.com/reel/DbO_Y6FMPvI/" target="_blank" rel="noopener">
-            <span>Voir le Reel sur Instagram</span>
-            <span class="instagram-reel-icon" aria-hidden="true">↗</span>
-          </a>
-        </article>
-        <article class="instagram-reel reveal">
-          <div class="instagram-reel-frame">
-            <iframe
-              src="https://www.instagram.com/reel/DbPBY_us8IH/embed"
-              title="Instagram Reel NARI’S WEAR 5"
-              loading="lazy"
-              allowtransparency="true"
-              allow="encrypted-media; picture-in-picture"
-              referrerpolicy="strict-origin-when-cross-origin">
-            </iframe>
-          </div>
-          <a class="instagram-reel-link" href="https://www.instagram.com/reel/DbPBY_us8IH/" target="_blank" rel="noopener">
-            <span>Voir le Reel sur Instagram</span>
-            <span class="instagram-reel-icon" aria-hidden="true">↗</span>
-          </a>
-        </article>
-        <article class="instagram-reel reveal">
-          <div class="instagram-reel-frame">
-            <iframe
-              src="https://www.instagram.com/reel/DbHGIOTRvAk/embed"
-              title="Instagram Reel NARI’S WEAR 6"
-              loading="lazy"
-              allowtransparency="true"
-              allow="encrypted-media; picture-in-picture"
-              referrerpolicy="strict-origin-when-cross-origin">
-            </iframe>
-          </div>
-          <a class="instagram-reel-link" href="https://www.instagram.com/reel/DbHGIOTRvAk/" target="_blank" rel="noopener">
-            <span>Voir le Reel sur Instagram</span>
-            <span class="instagram-reel-icon" aria-hidden="true">↗</span>
-          </a>
-        </article>
+        <button class="instagram-tile reveal" type="button" data-full="./assets/images/instagram/instagram-1.webp" aria-label="Ouvrir la photo Instagram 1">
+          <img src="./assets/images/instagram/instagram-1.webp" alt="Création Nari’s Wear 1" loading="lazy" decoding="async">
+        </button>
+        <button class="instagram-tile reveal" type="button" data-full="./assets/images/instagram/instagram-2.webp" aria-label="Ouvrir la photo Instagram 2">
+          <img src="./assets/images/instagram/instagram-2.webp" alt="Création Nari’s Wear 2" loading="lazy" decoding="async">
+        </button>
+        <button class="instagram-tile reveal" type="button" data-full="./assets/images/instagram/instagram-3.webp" aria-label="Ouvrir la photo Instagram 3">
+          <img src="./assets/images/instagram/instagram-3.webp" alt="Création Nari’s Wear 3" loading="lazy" decoding="async">
+        </button>
+        <button class="instagram-tile reveal" type="button" data-full="./assets/images/instagram/instagram-4.webp" aria-label="Ouvrir la photo Instagram 4">
+          <img src="./assets/images/instagram/instagram-4.webp" alt="Création Nari’s Wear 4" loading="lazy" decoding="async">
+        </button>
+        <button class="instagram-tile reveal" type="button" data-full="./assets/images/instagram/instagram-5.webp" aria-label="Ouvrir la photo Instagram 5">
+          <img src="./assets/images/instagram/instagram-5.webp" alt="Création Nari’s Wear 5" loading="lazy" decoding="async">
+        </button>
+        <button class="instagram-tile reveal" type="button" data-full="./assets/images/instagram/instagram-6.webp" aria-label="Ouvrir la photo Instagram 6">
+          <img src="./assets/images/instagram/instagram-6.webp" alt="Création Nari’s Wear 6" loading="lazy" decoding="async">
+        </button>
       </div>
 
-      <div class="instagram-cta reveal">
+      <div class="instagram-cta">
         <a class="btn-outline" href="https://www.instagram.com/naris_wear" target="_blank" rel="noopener" data-i18n="followInstagram">
           Voir Instagram
         </a>
       </div>
     </div>
   </section>
+
+  <div class="gallery-lightbox" id="galleryLightbox" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Aperçu de la photo">
+    <div class="gallery-lightbox-inner">
+      <button class="gallery-lightbox-close" id="galleryLightboxClose" aria-label="Fermer">✕</button>
+      <img id="galleryLightboxImage" src="" alt="Aperçu Nari’s Wear">
+    </div>
+  </div>
 
   <section id="faq">
     <div class="container faq-grid">
@@ -2050,6 +2007,39 @@ Merci de confirmer la disponibilité et le tarif de livraison.`;
     }
   };
   applyLanguage(currentLang);
+
+
+  const galleryLightbox=$('#galleryLightbox');
+  const galleryLightboxImage=$('#galleryLightboxImage');
+  const galleryLightboxClose=$('#galleryLightboxClose');
+
+  function openGalleryLightbox(src,alt){
+    galleryLightboxImage.src=src;
+    galleryLightboxImage.alt=alt||'Aperçu Nari’s Wear';
+    galleryLightbox.classList.add('active');
+    galleryLightbox.setAttribute('aria-hidden','false');
+    document.body.classList.add('modal-open');
+    setTimeout(()=>galleryLightboxClose.focus(),50);
+  }
+
+  function closeGalleryLightbox(){
+    galleryLightbox.classList.remove('active');
+    galleryLightbox.setAttribute('aria-hidden','true');
+    galleryLightboxImage.src='';
+    document.body.classList.remove('modal-open');
+  }
+
+  $$('.instagram-tile').forEach(tile=>{
+    tile.addEventListener('click',()=>{
+      const image=tile.querySelector('img');
+      openGalleryLightbox(tile.dataset.full,image?.alt);
+    });
+  });
+
+  galleryLightboxClose.addEventListener('click',closeGalleryLightbox);
+  galleryLightbox.addEventListener('click',event=>{
+    if(event.target===galleryLightbox) closeGalleryLightbox();
+  });
 
   $('#year').textContent=new Date().getFullYear();
   loadProducts();
