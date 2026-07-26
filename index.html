@@ -485,28 +485,6 @@
     }
 
 
-    .campaign-art{
-      padding-top:1rem;
-    }
-    .campaign-art-card{
-      position:relative;
-      overflow:hidden;
-      border:1px solid var(--line);
-      background:linear-gradient(180deg,#241d18,#1d1714);
-      box-shadow:var(--shadow);
-    }
-    .campaign-art-card img{
-      width:100%;
-      height:auto;
-      display:block;
-    }
-    .campaign-art-overlay{
-      position:absolute;inset:0;
-      background:linear-gradient(180deg,transparent 70%,rgba(0,0,0,.38));
-      pointer-events:none;
-    }
-
-
     .featured-collections{
       display:grid;
       grid-template-columns:repeat(4,1fr);
@@ -571,27 +549,6 @@
     }
     .review-author strong{display:block;color:var(--cream)}
     .review-author span{font-size:.75rem;color:var(--muted)}
-.instagram-grid{
-      display:grid;
-      grid-template-columns:repeat(3,1fr);
-      gap:.8rem;
-    }
-    .instagram-tile{
-      position:relative;
-      aspect-ratio:1/1;
-      overflow:hidden;
-      border:1px solid var(--line);
-      background:var(--panel);
-      cursor:pointer;
-      isolation:isolate;
-    }
-    .instagram-tile img{
-      width:100%;
-      height:100%;
-      object-fit:cover;
-      display:block;
-      transition:transform .45s ease,filter .45s ease;
-    }
     .instagram-tile::after{
       content:"Voir";
       position:absolute;
@@ -611,10 +568,6 @@
       transform:translateY(14px);
       transition:.3s ease;
       pointer-events:none;
-    }
-    .instagram-tile:hover img{
-      transform:scale(1.055);
-      filter:brightness(.82);
     }
     .instagram-tile:hover::after,
     .instagram-tile:focus-visible::after{
@@ -671,7 +624,6 @@
       .why-grid{grid-template-columns:repeat(2,1fr)}
       .reviews-grid{grid-template-columns:1fr 1fr}
       .delivery-panel{grid-template-columns:1fr}
-.instagram-grid{grid-template-columns:repeat(3,1fr)}
     }
     @media(max-width:700px){
       .featured-collections{grid-template-columns:1fr}
@@ -679,7 +631,6 @@
       .why-grid{grid-template-columns:1fr}
       .reviews-grid{grid-template-columns:1fr}
       .delivery-copy{padding:1.5rem}
-.instagram-grid{grid-template-columns:repeat(2,1fr)}
     }
 
 
@@ -1178,23 +1129,6 @@
     </div>
   </section>
 
-  
-
-
-  <section class="campaign-art" id="campaign">
-    <div class="container">
-      <div class="section-head reveal">
-        <div class="eyebrow">L’univers Nari’s Wear</div>
-        <h2>Bridal & Evening Boutique</h2>
-        <p>Une identité élégante pour les cérémonies, les soirées et les moments inoubliables.</p>
-      </div>
-      <div class="campaign-art-card reveal">
-        <img src="./assets/images/naris-brand-art.webp?v=2" alt="Campagne Nari’s Wear Bridal and Evening Boutique" width="900" height="1200" loading="lazy" decoding="async">
-        <div class="campaign-art-overlay"></div>
-      </div>
-    </div>
-  </section>
-
 
   <section id="featured-collections">
     <div class="container">
@@ -1347,43 +1281,6 @@
             loading="lazy"
             decoding="async">
         </div>
-      </div>
-    </div>
-  </section>
-
-  <section id="instagram">
-    <div class="container">
-      <div class="section-head reveal">
-        <div class="eyebrow">Instagram</div>
-        <h2 data-i18n="instagramTitle">Suivez nos dernières créations</h2>
-        <p data-i18n="instagramDesc">Découvrez l’univers Nari’s Wear et nos inspirations les plus récentes.</p>
-      </div>
-
-      <div class="instagram-grid">
-        <button class="instagram-tile reveal" type="button" data-full="./assets/images/instagram/instagram-1.webp" aria-label="Ouvrir la photo Instagram 1">
-          <img src="./assets/images/instagram/instagram-1.webp" alt="Création Nari’s Wear 1" loading="lazy" decoding="async">
-        </button>
-        <button class="instagram-tile reveal" type="button" data-full="./assets/images/instagram/instagram-2.webp" aria-label="Ouvrir la photo Instagram 2">
-          <img src="./assets/images/instagram/instagram-2.webp" alt="Création Nari’s Wear 2" loading="lazy" decoding="async">
-        </button>
-        <button class="instagram-tile reveal" type="button" data-full="./assets/images/instagram/instagram-3.webp" aria-label="Ouvrir la photo Instagram 3">
-          <img src="./assets/images/instagram/instagram-3.webp" alt="Création Nari’s Wear 3" loading="lazy" decoding="async">
-        </button>
-        <button class="instagram-tile reveal" type="button" data-full="./assets/images/instagram/instagram-4.webp" aria-label="Ouvrir la photo Instagram 4">
-          <img src="./assets/images/instagram/instagram-4.webp" alt="Création Nari’s Wear 4" loading="lazy" decoding="async">
-        </button>
-        <button class="instagram-tile reveal" type="button" data-full="./assets/images/instagram/instagram-5.webp" aria-label="Ouvrir la photo Instagram 5">
-          <img src="./assets/images/instagram/instagram-5.webp" alt="Création Nari’s Wear 5" loading="lazy" decoding="async">
-        </button>
-        <button class="instagram-tile reveal" type="button" data-full="./assets/images/instagram/instagram-6.webp" aria-label="Ouvrir la photo Instagram 6">
-          <img src="./assets/images/instagram/instagram-6.webp" alt="Création Nari’s Wear 6" loading="lazy" decoding="async">
-        </button>
-      </div>
-
-      <div class="instagram-cta">
-        <a class="btn-outline" href="https://www.instagram.com/naris_wear" target="_blank" rel="noopener" data-i18n="followInstagram">
-          Voir Instagram
-        </a>
       </div>
     </div>
   </section>
@@ -2028,12 +1925,6 @@ Merci de confirmer la disponibilité et le tarif de livraison.`;
     galleryLightboxImage.src='';
     document.body.classList.remove('modal-open');
   }
-
-  $$('.instagram-tile').forEach(tile=>{
-    tile.addEventListener('click',()=>{
-      const image=tile.querySelector('img');
-      openGalleryLightbox(tile.dataset.full,image?.alt);
-    });
   });
 
   galleryLightboxClose.addEventListener('click',closeGalleryLightbox);
