@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-4WZMB4VPYY"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-4WZMB4VPYY');
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Nari's Wear — prêt-à-porter féminin à Alger. Robes, ensembles, abayas et pièces élégantes avec livraison partout en Algérie.">
@@ -525,7 +533,7 @@
 
     .featured-collections{
       display:grid;
-      grid-template-columns:repeat(4,1fr);
+      grid-template-columns:repeat(3,1fr);
       gap:1rem;
     }
     .collection-card{
@@ -1496,7 +1504,7 @@ body.light-theme .optional-delivery-note span{color:#554a43}
       <div class="section-head reveal">
         <div class="eyebrow" data-i18n="featuredEyebrow">Collections vedettes</div>
         <h2 data-i18n="featuredTitle">Une tenue pour chaque moment</h2>
-        <p data-i18n="featuredDesc">Découvrez nos univers bridal, soirée, abaya et nouveautés.</p>
+        <p data-i18n="featuredDesc">Découvrez nos univers bridal, soirée et nouveautés.</p>
       </div>
       <div class="featured-collections">
         <article class="collection-card reveal">
@@ -1516,15 +1524,6 @@ body.light-theme .optional-delivery-note span{color:#554a43}
             <div class="eyebrow">Evening</div>
             <h3 data-i18n="evening">Robes de soirée</h3>
             <p data-i18n="eveningDesc">Des silhouettes élégantes pour vos soirées et événements.</p>
-            <a href="#collection" data-i18n="discoverCollection">Découvrir</a>
-          </div>
-        </article>
-        <article class="collection-card reveal">
-          <img src="./assets/images/collection-abayas.jpg" alt="Abayas" loading="lazy" decoding="async" onerror="this.remove()">
-          <div class="collection-card-content">
-            <div class="eyebrow">Abayas</div>
-            <h3 data-i18n="abayas">Abayas</h3>
-            <p data-i18n="abayasDesc">Des coupes modernes, fluides et sophistiquées.</p>
             <a href="#collection" data-i18n="discoverCollection">Découvrir</a>
           </div>
         </article>
@@ -2459,7 +2458,7 @@ Merci de confirmer la disponibilité et le tarif de livraison.`;
   const translations = {
     fr:{
       featuredEyebrow:'Collections vedettes',featuredTitle:'Une tenue pour chaque moment',
-      featuredDesc:'Découvrez nos univers bridal, soirée, abaya et nouveautés.',
+      featuredDesc:'Découvrez nos univers bridal, soirée et nouveautés.',
       bridal:'Bridal',bridalDesc:'Des créations raffinées pour les cérémonies les plus précieuses.',
       evening:'Robes de soirée',eveningDesc:'Des silhouettes élégantes pour vos soirées et événements.',
       abayas:'Abayas',abayasDesc:'Des coupes modernes, fluides et sophistiquées.',
@@ -2494,7 +2493,7 @@ Merci de confirmer la disponibilité et le tarif de livraison.`;
     },
     ar:{
       featuredEyebrow:'المجموعات المميزة',featuredTitle:'إطلالة لكل مناسبة',
-      featuredDesc:'اكتشفي مجموعات الزفاف والسهرات والعبايات والجديد.',
+      featuredDesc:'اكتشفي مجموعات الزفاف والسهرات والجديد.',
       bridal:'فساتين الزفاف',bridalDesc:'تصاميم راقية لأجمل المناسبات واللحظات.',
       evening:'فساتين السهرة',eveningDesc:'إطلالات أنيقة للسهرات والمناسبات.',
       abayas:'عبايات',abayasDesc:'قصات عصرية وانسيابية وراقية.',
