@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-4WZMB4VPYY"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-4WZMB4VPYY');
+</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex,nofollow">
@@ -126,6 +134,36 @@
   .toast{position:fixed;right:1rem;bottom:1rem;z-index:250;background:var(--panel);border:1px solid var(--gold);padding:.8rem 1rem;color:var(--cream);font-size:.8rem;display:none;max-width:320px}
   .toast.show{display:block}
   @media(max-width:800px){.dashboard-grid{grid-template-columns:1fr}.filters{width:100%}.filters input,.filters select{width:100%;min-width:0}}
+
+  .analytics-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:1rem;margin-top:1rem}
+  @media(max-width:800px){.analytics-grid{grid-template-columns:1fr}}
+
+  .bar-chart{display:flex;align-items:flex-end;gap:.4rem;height:180px;padding-top:1rem}
+  .bar-chart .bar-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;min-width:0}
+  .bar-chart .bar{width:100%;max-width:26px;background:linear-gradient(180deg,var(--gold-bright),var(--gold));border-radius:3px 3px 0 0;transition:height .4s ease;position:relative}
+  .bar-chart .bar:hover::after{
+    content:attr(data-tip);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);
+    background:var(--black);border:1px solid var(--gold);color:var(--cream);padding:.3rem .5rem;
+    font-size:.65rem;white-space:nowrap;z-index:5;
+  }
+  .bar-chart .bar-label{font-size:.6rem;color:var(--muted);margin-top:.4rem;white-space:nowrap;transform:rotate(0);text-align:center}
+  .bar-chart-empty{color:var(--muted);font-size:.8rem;text-align:center;padding:2.5rem 0;width:100%}
+
+  .hbar-chart{display:grid;gap:.7rem}
+  .hbar-row{display:grid;gap:.3rem}
+  .hbar-row-label{display:flex;justify-content:space-between;font-size:.75rem;color:var(--cream)}
+  .hbar-row-label span:last-child{color:var(--gold-bright)}
+  .hbar-track{height:8px;background:var(--black);border:1px solid var(--line);border-radius:4px;overflow:hidden}
+  .hbar-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-bright));border-radius:4px 0 0 4px;transition:width .4s ease}
+
+  .traffic-card{margin-top:1rem}
+  .traffic-card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:1rem;flex-wrap:wrap}
+  .traffic-card-head p{color:var(--muted);font-size:.82rem;margin-top:.3rem;max-width:480px}
+  .traffic-card-note{
+    margin-top:1rem;padding:.9rem 1rem;background:var(--black);border:1px solid var(--line);
+    color:var(--muted);font-size:.8rem;line-height:1.7;
+  }
+  .traffic-card-note strong{display:block;color:var(--gold-bright);margin-bottom:.3rem}
 
 
   /* Light mode */
@@ -254,6 +292,7 @@
 
   <div class="tabs">
     <button class="tab-btn active" data-tab="overview">Aperçu</button>
+    <button class="tab-btn" data-tab="analytics">Analytics</button>
     <button class="tab-btn" data-tab="products">Produits</button>
     <button class="tab-btn" data-tab="orders">Commandes</button>
   </div>
@@ -269,6 +308,58 @@
         <div class="dashboard-card">
           <h3>Stock à surveiller</h3>
           <div class="mini-list" id="lowStockList"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="tab-panel" id="tab-analytics">
+      <div class="toolbar">
+        <h2>Analytics</h2>
+        <select id="analyticsRange">
+          <option value="7">7 derniers jours</option>
+          <option value="30" selected>30 derniers jours</option>
+          <option value="90">90 derniers jours</option>
+        </select>
+      </div>
+
+      <div class="stats" id="analyticsStats"></div>
+
+      <div class="analytics-grid">
+        <div class="dashboard-card">
+          <h3>Chiffre d'affaires par jour</h3>
+          <div id="revenueChart" class="bar-chart"></div>
+        </div>
+        <div class="dashboard-card">
+          <h3>Commandes par statut</h3>
+          <div id="statusChart" class="hbar-chart"></div>
+        </div>
+      </div>
+
+      <div class="analytics-grid">
+        <div class="dashboard-card">
+          <h3>Produits les plus commandés</h3>
+          <div class="mini-list" id="topProductsList"></div>
+        </div>
+        <div class="dashboard-card">
+          <h3>Wilayas principales</h3>
+          <div class="mini-list" id="topWilayasList"></div>
+        </div>
+      </div>
+
+      <div class="dashboard-card traffic-card">
+        <div class="traffic-card-head">
+          <div>
+            <h3>Trafic du site (Google Analytics)</h3>
+            <p>Visiteurs, pages vues et sources de trafic — données en direct depuis Google Analytics.</p>
+          </div>
+          <a class="btn-outline" href="https://analytics.google.com/" target="_blank" rel="noopener">Ouvrir Google Analytics ↗</a>
+        </div>
+        <div class="traffic-card-note">
+          <strong>Intégration en direct pas encore branchée.</strong>
+          Le tag Google Analytics est actif sur le site (les données sont bien collectées), mais les afficher ici
+          nécessite une connexion sécurisée supplémentaire (clé d'accès Google Cloud) que nous pouvons mettre en
+          place ensemble en quelques étapes. En attendant, consultez vos chiffres de trafic directement sur
+          Google Analytics via le bouton ci-dessus.
         </div>
       </div>
     </section>
@@ -429,6 +520,7 @@
     loadOverview();
     loadProducts();
     loadOrders();
+    loadAnalytics();
   }
 
   document.querySelectorAll('.tab-btn').forEach(btn => {
@@ -791,6 +883,105 @@
     a.click();
     URL.revokeObjectURL(url);
   });
+
+  async function loadAnalytics(){
+    if(!db) return;
+    const days = Number(document.getElementById('analyticsRange').value || 30);
+    const since = new Date();
+    since.setDate(since.getDate() - (days - 1));
+    since.setHours(0,0,0,0);
+
+    const { data, error } = await db.from('orders').select('created_at,price,quantity,status,product_name,wilaya').gte('created_at', since.toISOString());
+    if(error){ console.error('analytics error:', error); return; }
+    const orders = data || [];
+    const valid = orders.filter(o => o.status !== 'annulee');
+
+    // ---- Top stats ----
+    const revenue = valid.reduce((s,o) => s + Number(o.price || 0) * (o.quantity || 1), 0);
+    const avgOrder = valid.length ? revenue / valid.length : 0;
+    document.getElementById('analyticsStats').innerHTML = `
+      <div class="stat"><div class="label">Commandes (${days}j)</div><div class="value">${orders.length}</div></div>
+      <div class="stat"><div class="label">Chiffre d'affaires (${days}j)</div><div class="value">${money(revenue)}</div></div>
+      <div class="stat"><div class="label">Panier moyen</div><div class="value">${money(avgOrder)}</div></div>
+      <div class="stat"><div class="label">Taux d'annulation</div><div class="value">${orders.length ? Math.round((orders.length - valid.length) / orders.length * 100) : 0}%</div></div>
+    `;
+
+    // ---- Revenue by day ----
+    const byDay = {};
+    for(let i=0;i<days;i++){
+      const d = new Date(since); d.setDate(d.getDate()+i);
+      byDay[d.toISOString().slice(0,10)] = 0;
+    }
+    valid.forEach(o => {
+      const key = (o.created_at||'').slice(0,10);
+      if(key in byDay) byDay[key] += Number(o.price || 0) * (o.quantity || 1);
+    });
+    const dayKeys = Object.keys(byDay);
+    const maxRevenue = Math.max(1, ...Object.values(byDay));
+    const chartEl = document.getElementById('revenueChart');
+    if(!dayKeys.length || maxRevenue <= 1){
+      chartEl.innerHTML = `<div class="bar-chart-empty">Pas encore de commandes sur cette période.</div>`;
+    }else{
+      // thin out labels if too many days to avoid crowding
+      const labelEvery = days > 31 ? 7 : (days > 14 ? 3 : 1);
+      chartEl.innerHTML = dayKeys.map((key,i) => {
+        const val = byDay[key];
+        const h = Math.max(2, Math.round((val / maxRevenue) * 150));
+        const d = new Date(key);
+        const label = i % labelEvery === 0 ? `${d.getDate()}/${d.getMonth()+1}` : '';
+        return `<div class="bar-col">
+          <div class="bar" style="height:${h}px" data-tip="${d.toLocaleDateString('fr-FR')} — ${money(val)}"></div>
+          <div class="bar-label">${label}</div>
+        </div>`;
+      }).join('');
+    }
+
+    // ---- Orders by status ----
+    const statusCounts = {};
+    orders.forEach(o => { statusCounts[o.status] = (statusCounts[o.status]||0) + 1; });
+    const statusEl = document.getElementById('statusChart');
+    const totalForStatus = orders.length || 1;
+    if(!orders.length){
+      statusEl.innerHTML = `<div class="bar-chart-empty">Aucune commande sur cette période.</div>`;
+    }else{
+      statusEl.innerHTML = Object.keys(STATUS_LABELS).map(s => {
+        const count = statusCounts[s] || 0;
+        const pct = Math.round((count/totalForStatus)*100);
+        return `<div class="hbar-row">
+          <div class="hbar-row-label"><span>${STATUS_LABELS[s]}</span><span>${count}</span></div>
+          <div class="hbar-track"><div class="hbar-fill" style="width:${pct}%"></div></div>
+        </div>`;
+      }).join('');
+    }
+
+    // ---- Top products ----
+    const productStats = {};
+    valid.forEach(o => {
+      const name = o.product_name || 'Sans nom';
+      if(!productStats[name]) productStats[name] = {count:0, revenue:0};
+      productStats[name].count += Number(o.quantity || 1);
+      productStats[name].revenue += Number(o.price || 0) * (o.quantity || 1);
+    });
+    const topProducts = Object.entries(productStats).sort((a,b) => b[1].revenue - a[1].revenue).slice(0,6);
+    const topProductsEl = document.getElementById('topProductsList');
+    topProductsEl.innerHTML = topProducts.length
+      ? topProducts.map(([name,s]) => `<div class="mini-list-item"><span>${name} · ${s.count} vendu${s.count>1?'s':''}</span><span>${money(s.revenue)}</span></div>`).join('')
+      : `<p style="color:var(--muted);font-size:.82rem">Aucune donnée pour le moment.</p>`;
+
+    // ---- Top wilayas ----
+    const wilayaStats = {};
+    orders.forEach(o => {
+      const w = o.wilaya || 'Non précisée';
+      wilayaStats[w] = (wilayaStats[w]||0) + 1;
+    });
+    const topWilayas = Object.entries(wilayaStats).sort((a,b) => b[1]-a[1]).slice(0,6);
+    const topWilayasEl = document.getElementById('topWilayasList');
+    topWilayasEl.innerHTML = topWilayas.length
+      ? topWilayas.map(([w,count]) => `<div class="mini-list-item"><span>${w}</span><span>${count} commande${count>1?'s':''}</span></div>`).join('')
+      : `<p style="color:var(--muted);font-size:.82rem">Aucune donnée pour le moment.</p>`;
+  }
+
+  document.getElementById('analyticsRange').addEventListener('change', loadAnalytics);
 
   checkSession();
 </script>
