@@ -1468,6 +1468,96 @@ body.light-theme .optional-delivery-note span{color:#554a43}
   .modal-actions{grid-template-columns:1fr}
   .modal-actions #continueShopping{display:none}
 }
+
+
+/* FINAL MOBILE PRODUCT MODAL FIX — full uncropped image + always-visible close button */
+@media (max-width:700px){
+  #orderModal.modal{padding:0!important;overflow:hidden!important;}
+  #orderModal .modal-card{
+    display:block!important;
+    width:100%!important;
+    height:100dvh!important;
+    max-height:100dvh!important;
+    overflow-y:auto!important;
+    overflow-x:hidden!important;
+    -webkit-overflow-scrolling:touch!important;
+    overscroll-behavior:contain!important;
+  }
+  #orderModal .modal-grid{
+    display:block!important;
+    height:auto!important;
+    min-height:100%!important;
+    overflow:visible!important;
+  }
+  #orderModal .modal-gallery{
+    display:block!important;
+    width:100%!important;
+    background:#0f0d0c!important;
+    overflow:visible!important;
+  }
+  #orderModal .modal-media{
+    display:block!important;
+    width:100%!important;
+    height:auto!important;
+    min-height:0!important;
+    max-height:none!important;
+    aspect-ratio:auto!important;
+    overflow:visible!important;
+    background:#0f0d0c!important;
+    line-height:0!important;
+  }
+  #orderModal .modal-media img{
+    display:block!important;
+    width:100%!important;
+    height:auto!important;
+    min-height:0!important;
+    max-height:none!important;
+    object-fit:contain!important;
+    object-position:center top!important;
+    background:#0f0d0c!important;
+  }
+  #orderModal .gallery-thumbs{
+    position:relative!important;
+    min-height:0!important;
+  }
+  #orderModal .modal-content{
+    display:block!important;
+    min-height:0!important;
+    overflow:visible!important;
+    padding:1.25rem 1.2rem 1rem!important;
+  }
+  #orderModal .modal-close{
+    position:fixed!important;
+    top:calc(12px + env(safe-area-inset-top))!important;
+    right:12px!important;
+    z-index:99999!important;
+    display:grid!important;
+    place-items:center!important;
+    width:46px!important;
+    height:46px!important;
+    padding:0!important;
+    border-radius:50%!important;
+    border:2px solid #fff!important;
+    background:#d2a857!important;
+    color:#111!important;
+    opacity:1!important;
+    visibility:visible!important;
+    box-shadow:0 6px 22px rgba(0,0,0,.55)!important;
+    font-size:1.35rem!important;
+    font-weight:800!important;
+    line-height:1!important;
+    -webkit-appearance:none!important;
+    appearance:none!important;
+  }
+  #orderModal .modal-actions{
+    position:sticky!important;
+    left:auto!important;
+    right:auto!important;
+    bottom:0!important;
+    z-index:50!important;
+    margin:1rem -1.2rem -1rem!important;
+  }
+}
 </style>
 </head>
 
