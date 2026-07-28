@@ -391,7 +391,7 @@
     .product-media img{transition:transform .45s ease,filter .45s ease}
     .product-card:hover .product-media img{transform:scale(1.035);filter:brightness(.88)}
     .product-media{
-      aspect-ratio:3/4;position:relative;overflow:hidden;cursor:pointer;
+      aspect-ratio:3/4;position:relative;overflow:hidden;
       background:
         linear-gradient(180deg,transparent 45%,rgba(0,0,0,.75)),
         radial-gradient(circle at 50% 30%,rgba(201,161,90,.12),transparent 25%),
@@ -903,7 +903,7 @@
     .to-top.visible{opacity:1;visibility:visible;transform:translateY(0)}
 
     .modal{
-      position:fixed;inset:0;z-index:3000;display:grid;place-items:center;
+      position:fixed;inset:0;z-index:200;display:grid;place-items:center;
       background:rgba(0,0,0,.76);padding:1rem;
       opacity:0;visibility:hidden;transition:.25s ease;
     }
@@ -925,9 +925,8 @@
     .modal-gallery{min-width:0}
     .modal-media{position:relative;overflow:hidden}
     .modal-media img{width:100%;height:100%;object-fit:cover;display:block}
-    .gallery-nav{position:absolute;z-index:8;top:50%;left:.7rem;right:.7rem;display:flex;justify-content:space-between;transform:translateY(-50%);pointer-events:none}
-    .gallery-nav button{pointer-events:auto;width:46px;height:46px;border-radius:50%;border:1px solid rgba(255,255,255,.55);background:rgba(10,9,8,.78);color:white;cursor:pointer;font-size:1.45rem;display:grid;place-items:center;touch-action:manipulation;-webkit-tap-highlight-color:transparent}
-    .gallery-nav button:active{transform:scale(.94);background:rgba(201,161,90,.9);color:#171310}
+    .gallery-nav{position:absolute;inset:50% .7rem auto;display:flex;justify-content:space-between;transform:translateY(-50%);pointer-events:none}
+    .gallery-nav button{pointer-events:auto;width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,.35);background:rgba(10,9,8,.68);color:white;cursor:pointer}
     .gallery-thumbs{display:flex;gap:.55rem;padding:.7rem;background:#151210;overflow-x:auto}
     .gallery-thumb{flex:0 0 58px;width:58px;height:72px;padding:0;border:1px solid var(--line);background:#211b17;cursor:pointer}
     .gallery-thumb.active{border-color:var(--gold)}
@@ -1042,14 +1041,8 @@
       .lookbook{grid-template-columns:1fr 1fr;grid-template-rows:320px 220px 220px}
       .look:first-child{grid-column:1/3;grid-row:auto}
       .footer-grid{grid-template-columns:1fr}
-      .modal{padding:0;align-items:stretch}
-      .modal-card{width:100%;max-height:100dvh;height:100dvh;border-left:0;border-right:0}
       .modal-grid{grid-template-columns:1fr}
-      .modal-media{min-height:52dvh;max-height:72dvh}
-      .modal-media img{object-fit:contain;background:#120f0d}
-      .gallery-nav{left:.85rem;right:.85rem}
-      .gallery-nav button{width:50px;height:50px;font-size:1.65rem}
-      body.modal-open .mobile-bottom-nav{display:none!important}
+      .modal-media{min-height:260px}
       .modal-content{padding:1.35rem}
       .modal-content h3{font-size:2.2rem}
       .modal-actions{grid-template-columns:1fr}
@@ -1347,6 +1340,17 @@ body.light-theme .optional-field{color:#6f6259}
 body.light-theme .optional-delivery-note{background:#fff8e9;border-color:rgba(132,95,45,.25)}
 body.light-theme .optional-delivery-note span{color:#554a43}
 
+
+/* NARI'S WEAR customer experience suite */
+.smart-filter-panel{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.7rem;margin:0 auto 1.25rem;max-width:1100px}
+.smart-filter-panel select,.smart-filter-panel input{min-height:46px;background:var(--panel);border:1px solid var(--line);color:var(--cream);padding:.7rem .85rem;outline:none}
+.product-badge-stack{position:absolute;left:.65rem;top:.65rem;z-index:6;display:grid;gap:.35rem}.smart-badge{width:max-content;padding:.28rem .58rem;border-radius:999px;background:rgba(10,9,8,.78);border:1px solid var(--gold);color:var(--gold-bright);font-size:.58rem;letter-spacing:.09em;text-transform:uppercase;backdrop-filter:blur(7px)}
+.recommendations{margin-top:2rem;padding-top:1.25rem;border-top:1px solid var(--line)}.recommendations h4{font-family:'Cormorant Garamond',serif;font-size:1.65rem;color:var(--gold-bright);margin-bottom:.8rem}.recommendation-row{display:grid;grid-template-columns:repeat(3,1fr);gap:.65rem}.recommendation-card{border:1px solid var(--line);background:var(--panel);cursor:pointer;overflow:hidden;text-align:left;color:var(--cream)}.recommendation-card img{width:100%;aspect-ratio:3/4;object-fit:cover}.recommendation-card div{padding:.6rem}.recommendation-card strong{display:block;font-size:.78rem}.recommendation-card span{font-size:.7rem;color:var(--gold-bright)}
+.review-summary{display:flex;align-items:center;gap:.6rem;margin:.35rem 0 .7rem;color:var(--gold-bright);font-size:.78rem}.review-section{padding:5.5rem 0}.review-live-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}.review-live-card{border:1px solid var(--line);background:var(--panel);padding:1.1rem}.review-live-card img{width:100%;aspect-ratio:4/3;object-fit:cover;margin-top:.8rem}.review-form{max-width:720px;margin:2rem auto 0;border:1px solid var(--line);background:var(--panel);padding:1.2rem}.review-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:.7rem}.review-form textarea{min-height:110px;resize:vertical}.review-form input,.review-form select,.review-form textarea{width:100%;background:var(--black);border:1px solid var(--line);color:var(--cream);padding:.75rem}.review-status{min-height:1.2rem;margin-top:.6rem;color:var(--gold-bright);font-size:.78rem}
+.promo-box{margin-top:1rem;border:1px dashed var(--gold);padding:.85rem}.promo-row{display:grid;grid-template-columns:1fr auto;gap:.5rem}.promo-row input{min-width:0}.promo-result{font-size:.74rem;color:var(--muted);margin-top:.45rem}.promo-result.success{color:#70d89a}.promo-result.error{color:#ef8c86}
+.cx-fab{position:fixed;right:1.2rem;bottom:12.7rem;z-index:90;width:52px;height:52px;border-radius:50%;background:var(--gold);color:var(--black);display:grid;place-items:center;font-size:1.35rem;box-shadow:var(--shadow);cursor:pointer}.cx-panel{position:fixed;right:1.2rem;bottom:16.8rem;z-index:95;width:min(390px,calc(100vw - 2rem));max-height:70vh;background:var(--panel);border:1px solid var(--line);box-shadow:var(--shadow);display:none;flex-direction:column}.cx-panel.active{display:flex}.cx-head{padding:.9rem 1rem;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}.cx-head strong{color:var(--gold-bright)}.cx-tabs{display:grid;grid-template-columns:1fr 1fr}.cx-tabs button{padding:.7rem;background:transparent;color:var(--muted);border-bottom:1px solid var(--line)}.cx-tabs button.active{color:var(--gold);border-bottom-color:var(--gold)}.cx-body{padding:1rem;overflow:auto}.cx-messages{display:grid;gap:.55rem;max-height:250px;overflow:auto;margin-bottom:.7rem}.cx-msg{padding:.65rem .75rem;border-radius:14px;background:rgba(201,161,90,.10);font-size:.82rem}.cx-msg.user{background:var(--gold);color:var(--black);margin-left:18%}.cx-input{display:grid;grid-template-columns:1fr auto;gap:.45rem}.cx-input input,.cx-input textarea{width:100%;background:var(--black);border:1px solid var(--line);color:var(--cream);padding:.7rem}.cx-quick{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.7rem}.cx-quick button{padding:.45rem .65rem;border:1px solid var(--line);background:transparent;color:var(--cream);font-size:.7rem}.live-chat-form{display:grid;gap:.55rem}.live-chat-form input,.live-chat-form textarea{width:100%;background:var(--black);border:1px solid var(--line);color:var(--cream);padding:.7rem}.live-chat-form textarea{min-height:95px}
+@media(max-width:800px){.smart-filter-panel{grid-template-columns:1fr 1fr}.review-live-grid{grid-template-columns:1fr}.review-form-grid{grid-template-columns:1fr}.recommendation-row{grid-template-columns:repeat(2,1fr)}.cx-fab{bottom:10.8rem}.cx-panel{bottom:14.8rem}}
+
 </style>
 </head>
 
@@ -1483,6 +1487,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <option value="price-desc">Prix décroissant</option>
           <option value="name">Nom A–Z</option>
         </select>
+      </div>
+
+      <div class="smart-filter-panel reveal" aria-label="Filtres avancés">
+        <select id="visualColorFilter"><option value="">Toutes les couleurs</option></select>
+        <select id="visualSizeFilter"><option value="">Toutes les tailles</option></select>
+        <select id="visualStockFilter"><option value="">Toute disponibilité</option><option value="available">En stock</option><option value="low">Presque épuisé</option></select>
+        <input id="visualMaxPrice" type="number" min="0" step="100" placeholder="Prix maximum (DA)">
       </div>
       <div class="filters reveal" role="group" aria-label="Filtrer les produits" id="filterBar">
         <button class="filter-btn active" data-filter="all">Tout</button>
@@ -1806,7 +1817,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     </div>
   </section>
 
-  <section class="order-cta" id="order">
+  
+<section class="review-section" id="customerReviews">
+  <div class="container">
+    <div class="section-head"><div class="eyebrow">Avis vérifiés</div><h2>Vos looks, vos avis</h2><p>Découvrez les expériences de nos clientes et partagez la vôtre avec une photo.</p></div>
+    <div class="review-live-grid" id="reviewLiveGrid"><div class="grid-status">Chargement des avis…</div></div>
+    <form class="review-form" id="reviewForm">
+      <div class="review-form-grid"><input id="reviewName" required placeholder="Votre nom"><select id="reviewRating"><option value="5">★★★★★</option><option value="4">★★★★☆</option><option value="3">★★★☆☆</option></select></div>
+      <div class="review-form-grid" style="margin-top:.7rem"><select id="reviewProduct"><option value="">Choisir un produit</option></select><input id="reviewPhoto" type="file" accept="image/*"></div>
+      <textarea id="reviewText" required placeholder="Votre avis…" style="margin-top:.7rem"></textarea>
+      <button class="btn-solid" type="submit" style="margin-top:.7rem">Envoyer mon avis</button><div class="review-status" id="reviewStatus"></div>
+    </form>
+  </div>
+</section>
+
+<section class="order-cta" id="order">
     <div class="container reveal">
       <div class="eyebrow">Commande simple</div>
       <h2>Votre prochain look vous attend.</h2>
@@ -1920,6 +1945,15 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+
+<button class="cx-fab" id="cxFab" aria-label="Conseil et chat">✦</button>
+<aside class="cx-panel" id="cxPanel" aria-label="Assistant Nari's Wear">
+ <div class="cx-head"><strong>Conseillère Nari’s Wear</strong><button id="cxClose" class="icon-btn">✕</button></div>
+ <div class="cx-tabs"><button class="active" data-cx-tab="assistant">Assistant taille & style</button><button data-cx-tab="chat">Live chat</button></div>
+ <div class="cx-body" id="cxAssistant"><div class="cx-messages" id="cxMessages"><div class="cx-msg">Bonjour ✨ Dites-moi ce que vous cherchez ou demandez-moi une recommandation de taille.</div></div><div class="cx-quick"><button data-ai="robe">Je cherche une robe</button><button data-ai="size">Aide pour la taille</button><button data-ai="budget">Selon mon budget</button></div><div class="cx-input"><input id="cxQuestion" placeholder="Ex. robe noire, budget 6000 DA"><button class="btn-solid" id="cxSend">Envoyer</button></div></div>
+ <div class="cx-body" id="cxChat" hidden><form class="live-chat-form" id="liveChatForm"><input id="chatName" required placeholder="Votre nom"><input id="chatPhone" placeholder="Téléphone / WhatsApp"><textarea id="chatMessage" required placeholder="Comment pouvons-nous vous aider ?"></textarea><button class="wa-btn" type="submit">Envoyer au support</button><a class="btn-outline" href="https://wa.me/213552080462" target="_blank" rel="noopener" style="text-align:center">Chat immédiat sur WhatsApp</a><div class="review-status" id="chatStatus"></div></form></div>
+</aside>
+
 <div class="modal" id="orderModal" role="dialog" aria-modal="true" aria-labelledby="modalProductTitle">
   <div class="modal-card">
     <div class="modal-grid">
@@ -2001,6 +2035,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <small class="small-note" id="shippingNote">La commune et l’adresse sont facultatives. Les détails nécessaires seront confirmés avec vous sur WhatsApp.</small>
         </div>
 
+
+        <div class="promo-box">
+          <label for="promoCode">Code promo</label>
+          <div class="promo-row"><input class="form-control" id="promoCode" placeholder="Ex. NARIS10"><button class="btn-outline" id="applyPromo" type="button">Appliquer</button></div>
+          <div class="promo-result" id="promoResult">Ajoutez un code valide pour obtenir une réduction.</div>
+        </div>
+        <div class="recommendations" id="recommendationsBox"><h4>Les clientes ont aussi aimé</h4><div class="recommendation-row" id="recommendationRow"></div></div>
         <button class="btn-solid" id="addCartButton" type="button">Ajouter au panier</button>
         <p class="small-note">La commande sera préparée sous forme de message WhatsApp. Aucun paiement n'est effectué sur cette page.</p>
         <div class="modal-actions">
@@ -2207,7 +2248,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const images=(currentVariant?.images||[]).filter(url=>/^https?:\/\//i.test(url||''));
     if(currentImageIndex>=images.length)currentImageIndex=0;
     const image=images[currentImageIndex];
-    $('#modalMedia').innerHTML=image?`<img src="${esc(image)}" alt="${esc(currentProduct.name)} — ${esc(currentVariant.name)}">${images.length>1?'<div class="gallery-nav"><button type="button" data-gallery-nav="prev" aria-label="Photo précédente">‹</button><button type="button" data-gallery-nav="next" aria-label="Photo suivante">›</button></div>':''}`:'Photo du produit';
+    $('#modalMedia').innerHTML=image?`<img src="${esc(image)}" alt="${esc(currentProduct.name)} — ${esc(currentVariant.name)}"><div class="gallery-nav"><button type="button" id="galleryPrev" aria-label="Photo précédente">‹</button><button type="button" id="galleryNext" aria-label="Photo suivante">›</button></div>`:'Photo du produit';
     $('#galleryThumbs').innerHTML=images.map((url,i)=>`<button type="button" class="gallery-thumb${i===currentImageIndex?' active':''}" data-image-index="${i}"><img src="${esc(url)}" alt=""></button>`).join('');
     $('#galleryThumbs').style.display=images.length>1?'flex':'none';
     const stock=Number(currentVariant?.stock||0),el=$('#variantStock');
@@ -2221,10 +2262,6 @@ document.addEventListener('DOMContentLoaded', () => {
     currentVariant=variants.find(v=>v.name===name)||variants[0]; currentImageIndex=0;
     $$('#colorOptions .option').forEach(b=>b.classList.toggle('active',b.dataset.value===currentVariant.name));
     renderVariantGallery();
-    // On phones, immediately bring the selected colour's photo into view.
-    if(window.matchMedia('(max-width:700px)').matches){
-      requestAnimationFrame(()=>$('#modalMedia').scrollIntoView({behavior:'smooth',block:'start'}));
-    }
   }
   function openModal(p){
     currentProduct=p; $('#modalProductTitle').textContent=p.name; $('#modalProductPrice').textContent=money(p.price);
@@ -2237,15 +2274,8 @@ document.addEventListener('DOMContentLoaded', () => {
   $('#productGrid').addEventListener('click',e=>{
     const heart=e.target.closest('[data-favorite]');
     if(heart){e.stopPropagation();toggleFavorite(heart.dataset.favorite);return}
-    const card=e.target.closest('.product-card[data-id]');
-    if(!card)return;
-    const quick=e.target.closest('.quick-btn');
-    const media=e.target.closest('.product-media');
-    // Open from the CTA or from anywhere on the product picture.
-    if((quick && !quick.disabled) || (media && !quick)){
-      const p=products.find(x=>String(x.id)===card.dataset.id);
-      if(p && Number(p.stock||0)>0)openModal(p);
-    }
+    const b=e.target.closest('.quick-btn'); if(!b||b.disabled)return;
+    const p=products.find(x=>String(x.id)===b.closest('[data-id]').dataset.id); if(p)openModal(p);
   });
   $('#modalClose').addEventListener('click',closeModal); $('#continueShopping').addEventListener('click',closeModal);
   $('#orderModal').addEventListener('click',e=>{if(e.target===$('#orderModal'))closeModal()});
@@ -2257,29 +2287,11 @@ document.addEventListener('DOMContentLoaded', () => {
   }));
   $('#galleryThumbs').addEventListener('click',e=>{const b=e.target.closest('[data-image-index]');if(!b)return;currentImageIndex=Number(b.dataset.imageIndex);renderVariantGallery()});
   $('#modalMedia').addEventListener('click',e=>{
-    const nav=e.target.closest('[data-gallery-nav]');
-    if(!nav)return;
-    e.preventDefault();e.stopPropagation();
-    const images=(currentVariant?.images||[]).filter(url=>/^https?:\/\//i.test(url||''));
-    if(images.length<2)return;
-    currentImageIndex=nav.dataset.galleryNav==='prev'
-      ?(currentImageIndex-1+images.length)%images.length
-      :(currentImageIndex+1)%images.length;
+    const images=(currentVariant?.images||[]).filter(url=>/^https?:\/\//i.test(url||''));if(images.length<2)return;
+    if(e.target.closest('#galleryPrev'))currentImageIndex=(currentImageIndex-1+images.length)%images.length;
+    if(e.target.closest('#galleryNext'))currentImageIndex=(currentImageIndex+1)%images.length;
     renderVariantGallery();
   });
-
-  // Swipe left/right on the main product image on touch devices.
-  let galleryTouchX=null;
-  $('#modalMedia').addEventListener('touchstart',e=>{galleryTouchX=e.touches[0]?.clientX??null},{passive:true});
-  $('#modalMedia').addEventListener('touchend',e=>{
-    if(galleryTouchX==null)return;
-    const endX=e.changedTouches[0]?.clientX??galleryTouchX;
-    const delta=endX-galleryTouchX;galleryTouchX=null;
-    const images=(currentVariant?.images||[]).filter(url=>/^https?:\/\//i.test(url||''));
-    if(images.length<2||Math.abs(delta)<45)return;
-    currentImageIndex=delta>0?(currentImageIndex-1+images.length)%images.length:(currentImageIndex+1)%images.length;
-    renderVariantGallery();
-  },{passive:true});
 
 
   function toggleFavorite(id){
@@ -2663,6 +2675,74 @@ Merci de confirmer la disponibilité et le tarif de livraison.`;
     });
   }
   initCollectionGalleries();
+
+
+  // ===== Customer experience suite =====
+  let activePromo=null;
+  const smartFilterIds=['visualColorFilter','visualSizeFilter','visualStockFilter','visualMaxPrice'];
+  function populateSmartFilters(){
+    const colors=[...new Set(products.flatMap(p=>normalizeProductVariants(p).map(v=>v.name)).filter(Boolean))].sort();
+    const sizes=[...new Set(products.flatMap(p=>normalizeProductVariants(p).flatMap(v=>(v.sizes||[]).map(s=>s.name)).concat(p.sizes||[])).filter(Boolean))].sort();
+    $('#visualColorFilter').innerHTML='<option value="">Toutes les couleurs</option>'+colors.map(x=>`<option>${esc(x)}</option>`).join('');
+    $('#visualSizeFilter').innerHTML='<option value="">Toutes les tailles</option>'+sizes.map(x=>`<option>${esc(x)}</option>`).join('');
+    $('#reviewProduct').innerHTML='<option value="">Choisir un produit</option>'+products.map(p=>`<option value="${esc(p.id)}">${esc(p.name)}</option>`).join('');
+  }
+  function cardMatchesSmart(p){
+    const color=$('#visualColorFilter')?.value||'',size=$('#visualSizeFilter')?.value||'',stock=$('#visualStockFilter')?.value||'',max=Number($('#visualMaxPrice')?.value||0);
+    const variants=normalizeProductVariants(p); const total=Number(p.stock||variants.reduce((s,v)=>s+Number(v.stock||0),0));
+    return (!color||variants.some(v=>v.name===color))&&(!size||variants.some(v=>(v.sizes||[]).some(s=>s.name===size)||(p.sizes||[]).includes(size)))&&(!stock||(stock==='available'?total>0:total>0&&total<=3))&&(!max||Number(p.price)<=max);
+  }
+  const originalRenderProducts=renderProducts;
+  renderProducts=function(){
+    originalRenderProducts();
+    $$('#productGrid .product-card').forEach(card=>{
+      const p=products.find(x=>String(x.id)===String(card.dataset.id)); if(!p)return;
+      if(!cardMatchesSmart(p)) card.style.display='none';
+      const media=card.querySelector('.product-media'); if(media&&!media.querySelector('.product-badge-stack')){
+        const days=(Date.now()-new Date(p.created_at||0).getTime())/86400000;
+        const stack=document.createElement('div'); stack.className='product-badge-stack';
+        if(p.featured) stack.innerHTML+='<span class="smart-badge">🔥 Best Seller</span>';
+        if(days<=21) stack.innerHTML+='<span class="smart-badge">Nouveau</span>';
+        if(Number(p.stock||0)>0&&Number(p.stock||0)<=3) stack.innerHTML+='<span class="smart-badge">Presque épuisé</span>';
+        media.appendChild(stack);
+      }
+      const info=card.querySelector('.product-info'); if(info&&!info.querySelector('.review-summary')) info.insertAdjacentHTML('afterbegin','<div class="review-summary" data-review-summary>★★★★★ <span>Nouveau</span></div>');
+    });
+  };
+  smartFilterIds.forEach(id=>$('#'+id)?.addEventListener(id==='visualMaxPrice'?'input':'change',renderProducts));
+
+  function renderRecommendations(){
+    if(!currentProduct)return; const same=products.filter(p=>String(p.id)!==String(currentProduct.id)&&p.category===currentProduct.category).slice(0,3);
+    const fallback=products.filter(p=>String(p.id)!==String(currentProduct.id)).slice(0,3); const list=same.length?same:fallback;
+    $('#recommendationRow').innerHTML=list.map(p=>`<button class="recommendation-card" data-rec-id="${esc(p.id)}"><img src="${esc(shopImage(p))}" alt="${esc(p.name)}"><div><strong>${esc(p.name)}</strong><span>${money(p.price)}</span></div></button>`).join('')||'<span class="small-note">D’autres suggestions arrivent bientôt.</span>';
+  }
+  const originalOpenModal=openModal; openModal=function(p){originalOpenModal(p);activePromo=null;$('#promoCode').value='';$('#promoResult').className='promo-result';$('#promoResult').textContent='Ajoutez un code valide pour obtenir une réduction.';renderRecommendations()};
+  $('#recommendationRow').addEventListener('click',e=>{const b=e.target.closest('[data-rec-id]');if(!b)return;const p=products.find(x=>String(x.id)===b.dataset.recId);if(p)openModal(p)});
+
+  async function fetchPromo(code){
+    if(!code)return null;
+    if(db){try{const {data}=await db.from('promo_codes').select('*').eq('code',code.toUpperCase()).eq('is_active',true).maybeSingle();if(data&&(!data.expires_at||new Date(data.expires_at)>new Date()))return data}catch(e){}}
+    const builtins={NARIS10:{code:'NARIS10',discount_type:'percent',discount_value:10,min_order:0},WELCOME:{code:'WELCOME',discount_type:'fixed',discount_value:500,min_order:4000}};return builtins[code.toUpperCase()]||null;
+  }
+  $('#applyPromo').addEventListener('click',async()=>{const el=$('#promoResult'),code=$('#promoCode').value.trim();const promo=await fetchPromo(code);if(!promo){activePromo=null;el.className='promo-result error';el.textContent='Code invalide ou expiré.';refreshShipping();return}if(Number(currentProduct?.price||0)<Number(promo.min_order||0)){el.className='promo-result error';el.textContent=`Minimum requis : ${money(promo.min_order)}`;return}activePromo=promo;el.className='promo-result success';el.textContent=promo.discount_type==='percent'?`Réduction de ${promo.discount_value}% appliquée.`:`Réduction de ${money(promo.discount_value)} appliquée.`;refreshShipping()});
+  function promoDiscount(amount){if(!activePromo)return 0;return activePromo.discount_type==='percent'?Math.round(amount*Number(activePromo.discount_value)/100):Math.min(amount,Number(activePromo.discount_value||0))}
+  const originalRefreshShipping=refreshShipping;refreshShipping=function(){originalRefreshShipping();if(currentProduct&&activePromo){const code=$('#customerWilaya').value.slice(0,2),delivery=DELIVERY_PRICES[code]?.[deliveryMethod]||0,base=Number(currentProduct.price),discount=promoDiscount(base);$('#orderTotal').textContent=money(Math.max(0,base-discount)+delivery);$('#shippingNote').textContent=`Code ${activePromo.code} : -${money(discount)}. `+$('#shippingNote').textContent.replace(/^Code .*?\. /,'')}};
+
+  async function loadPublicReviews(){
+    let rows=[];if(db){try{const {data}=await db.from('product_reviews').select('*').eq('is_approved',true).order('created_at',{ascending:false}).limit(9);rows=data||[]}catch(e){}}
+    $('#reviewLiveGrid').innerHTML=rows.length?rows.map(r=>`<article class="review-live-card"><div class="review-stars">${'★'.repeat(Number(r.rating||5))}</div><p>${esc(r.comment)}</p><strong>${esc(r.customer_name)}</strong>${r.photo_url?`<img src="${esc(r.photo_url)}" alt="Photo avis cliente">`:''}</article>`).join(''):'<div class="grid-status">Soyez la première cliente à partager votre avis.</div>';
+    const counts={};rows.forEach(r=>{const k=String(r.product_id||'');(counts[k]??=[]).push(Number(r.rating||5))});$$('[data-review-summary]').forEach(el=>{const p=el.closest('.product-card');const a=counts[p?.dataset.id]||[];if(a.length)el.innerHTML=`★ ${ (a.reduce((s,x)=>s+x,0)/a.length).toFixed(1)} <span>(${a.length} avis)</span>`});
+  }
+  $('#reviewForm').addEventListener('submit',async e=>{e.preventDefault();const status=$('#reviewStatus');status.textContent='Envoi…';let photo_url=null;if(db&&$('#reviewPhoto').files[0]){const f=$('#reviewPhoto').files[0],path=`reviews/${Date.now()}-${f.name.replace(/[^a-z0-9._-]/gi,'-')}`;const up=await db.storage.from('review-images').upload(path,f);if(!up.error)photo_url=db.storage.from('review-images').getPublicUrl(path).data.publicUrl}const payload={customer_name:$('#reviewName').value.trim(),rating:Number($('#reviewRating').value),product_id:$('#reviewProduct').value||null,comment:$('#reviewText').value.trim(),photo_url,is_approved:false};if(db){const {error}=await db.from('product_reviews').insert(payload);if(error){status.textContent='Impossible d’envoyer : '+error.message;return}}else{const saved=JSON.parse(localStorage.getItem('naris-reviews')||'[]');saved.unshift(payload);localStorage.setItem('naris-reviews',JSON.stringify(saved))}status.textContent='Merci ! Votre avis sera publié après validation.';e.target.reset()});
+
+  // Smart assistant + support chat
+  const cxPanel=$('#cxPanel');$('#cxFab').onclick=()=>cxPanel.classList.toggle('active');$('#cxClose').onclick=()=>cxPanel.classList.remove('active');$$('[data-cx-tab]').forEach(b=>b.onclick=()=>{$$('[data-cx-tab]').forEach(x=>x.classList.toggle('active',x===b));$('#cxAssistant').hidden=b.dataset.cxTab!=='assistant';$('#cxChat').hidden=b.dataset.cxTab!=='chat'});
+  function aiReply(q){const text=q.toLowerCase();if(/taille|size|morph/.test(text))return 'Pour vous conseiller précisément, indiquez votre taille habituelle, votre hauteur et si vous préférez une coupe près du corps ou ample. Les tailles disponibles apparaissent sur chaque produit.';const budget=(text.match(/\d{4,6}/)||[])[0];let list=products.filter(p=>!budget||Number(p.price)<=Number(budget));if(/robe/.test(text))list=list.filter(p=>/robe/i.test(p.category+' '+p.name));if(/noir/.test(text))list=list.filter(p=>normalizeProductVariants(p).some(v=>/noir/i.test(v.name)));list=list.slice(0,3);return list.length?'Je vous recommande : '+list.map(p=>`${p.name} (${money(p.price)})`).join(', ')+'. Touchez le produit dans la collection pour voir les couleurs et tailles.':'Je n’ai pas trouvé une correspondance exacte. Essayez une catégorie, une couleur ou un budget différent.'}
+  function sendAi(q){if(!q.trim())return;$('#cxMessages').insertAdjacentHTML('beforeend',`<div class="cx-msg user">${esc(q)}</div><div class="cx-msg">${esc(aiReply(q))}</div>`);$('#cxMessages').scrollTop=$('#cxMessages').scrollHeight;$('#cxQuestion').value=''}
+  $('#cxSend').onclick=()=>sendAi($('#cxQuestion').value);$('#cxQuestion').addEventListener('keydown',e=>{if(e.key==='Enter')sendAi(e.target.value)});$$('[data-ai]').forEach(b=>b.onclick=()=>sendAi(b.textContent));
+  $('#liveChatForm').addEventListener('submit',async e=>{e.preventDefault();const payload={customer_name:$('#chatName').value.trim(),customer_phone:$('#chatPhone').value.trim(),message:$('#chatMessage').value.trim(),status:'new'};const status=$('#chatStatus');if(db){const {error}=await db.from('support_messages').insert(payload);if(error){status.textContent='Erreur : '+error.message;return}}status.textContent='Message envoyé. Nous vous répondrons rapidement.';e.target.reset()});
+
+  const originalLoadProducts=loadProducts;loadProducts=async function(){await originalLoadProducts();populateSmartFilters();renderProducts();loadPublicReviews()};
 
   loadProducts();
 });
