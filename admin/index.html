@@ -62,7 +62,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   #logoutBtn{border:1px solid var(--line);color:var(--muted);background:transparent;padding:.5rem 1rem;font-size:.72rem;letter-spacing:.1em;text-transform:uppercase}
   #logoutBtn:hover{border-color:var(--gold);color:var(--gold)}
 
-  .tabs{display:flex;gap:.5rem;padding:1.2rem 2rem 0;border-bottom:1px solid var(--line)}
+  .tabs{position:relative;z-index:20;overflow-x:auto;-webkit-overflow-scrolling:touch;display:flex;gap:.5rem;padding:1.2rem 2rem 0;border-bottom:1px solid var(--line)}
   .tab-btn{background:transparent;color:var(--muted);padding:.8rem 1.2rem;font-size:.78rem;letter-spacing:.1em;text-transform:uppercase;border-bottom:2px solid transparent}
   .tab-btn.active{color:var(--gold-bright);border-color:var(--gold)}
   main{padding:2rem;max-width:1280px;margin:0 auto}
@@ -117,7 +117,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   .mini-btn{border:1px solid var(--line);background:transparent;color:var(--muted);padding:.45rem .65rem;font-size:.72rem}
   .size-stock-editor{margin-top:.8rem;border-top:1px solid var(--line);padding-top:.8rem}.size-stock-head{display:flex;justify-content:space-between;align-items:center;gap:.6rem;margin-bottom:.55rem}.size-row{display:grid;grid-template-columns:1fr 1fr auto;gap:.5rem;margin:.45rem 0}.size-row input{min-width:0}.size-help{display:block;color:var(--muted);font-size:.68rem;line-height:1.45;margin-top:.45rem}
   .mini-btn:hover{border-color:var(--gold);color:var(--gold)}
-  @media(max-width:700px){header{padding:1rem;align-items:flex-start;gap:.8rem}header h1{font-size:1.05rem}.admin-account{flex-wrap:wrap;justify-content:flex-end}.admin-account span{width:100%;text-align:right}.tabs{padding:1rem 1rem 0;overflow-x:auto}.tab-btn{white-space:nowrap;padding:.7rem .9rem}main{padding:1rem}.form-row,.variant-grid{grid-template-columns:1fr}.modal-box{padding:1.2rem}}
+  @media(max-width:700px){header{padding:1rem;align-items:flex-start;gap:.8rem}header h1{font-size:1.05rem}.admin-account{flex-wrap:wrap;justify-content:flex-end}.admin-account span{width:100%;text-align:right}.tabs{position:relative;z-index:20;overflow-x:auto;-webkit-overflow-scrolling:touch;padding:1rem 1rem 0;overflow-x:auto}.tab-btn{white-space:nowrap;padding:.7rem .9rem}main{padding:1rem}.form-row,.variant-grid{grid-template-columns:1fr}.modal-box{padding:1.2rem}}
   .empty{color:var(--muted);text-align:center;padding:2rem;font-size:.85rem}
 
   .dashboard-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem}
@@ -272,6 +272,18 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 
   .admin-form-card{background:var(--panel);border:1px solid var(--line);padding:1.2rem;margin-bottom:1rem}.admin-form-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.7rem}.admin-form-grid input,.admin-form-grid select,.admin-form-grid textarea{width:100%}.notify-btn{border:1px solid var(--gold);background:transparent;color:var(--gold);padding:.55rem .8rem}.message-text{white-space:normal;min-width:260px;max-width:480px}.photo-preview{width:70px;height:70px;object-fit:cover}@media(max-width:800px){.admin-form-grid{grid-template-columns:1fr}}
 
+
+  /* Interactive Live Chat inbox */
+  .chat-subtitle{color:var(--muted);font-size:.8rem;margin-top:.2rem}
+  .chat-tools{display:flex;gap:.6rem;align-items:center}.chat-tools input{min-width:230px}
+  .live-chat-admin{display:grid;grid-template-columns:330px minmax(0,1fr);height:min(680px,calc(100vh - 240px));min-height:500px;border:1px solid var(--line);background:var(--panel)}
+  .chat-inbox{border-right:1px solid var(--line);min-width:0;display:flex;flex-direction:column}.chat-inbox-title{display:flex;justify-content:space-between;align-items:center;padding:1rem;border-bottom:1px solid var(--line)}.chat-inbox-title span{font-size:.68rem;color:var(--gold)}
+  .chat-conversation-list{overflow:auto;flex:1}.chat-conversation{width:100%;display:block;text-align:left;background:transparent;color:var(--cream);padding:1rem;border-bottom:1px solid var(--line);position:relative}.chat-conversation:hover,.chat-conversation.active{background:rgba(201,161,90,.1)}.chat-conversation.unread:before{content:'';position:absolute;left:6px;top:50%;width:6px;height:6px;border-radius:50%;background:var(--gold)}.chat-conversation-top{display:flex;justify-content:space-between;gap:.8rem}.chat-conversation strong{font-size:.9rem}.chat-conversation time{font-size:.62rem;color:var(--muted)}.chat-conversation p{color:var(--muted);font-size:.75rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:.35rem}.chat-conversation small{display:block;color:var(--gold);font-size:.65rem;margin-top:.3rem;text-transform:uppercase;letter-spacing:.06em}
+  .chat-room{min-width:0;display:flex;flex-direction:column}.chat-room-empty{height:100%;display:grid;place-content:center;text-align:center;padding:2rem;color:var(--muted)}.chat-room-empty span{font-size:2.4rem}.chat-room-empty h3{color:var(--cream);font-size:1.5rem;margin:.6rem 0}.chat-room-active,#chatRoomActive{height:100%;min-height:0;display:flex;flex-direction:column}.chat-room-head{position:static;background:var(--panel-soft);padding:1rem 1.2rem;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:1rem}.chat-room-head h3{color:var(--gold-bright);font-size:1.35rem}.chat-room-head p{color:var(--muted);font-size:.72rem;margin-top:.2rem}.chat-room-actions{display:flex;gap:.5rem;flex-wrap:wrap}.chat-room-actions .btn-outline{padding:.5rem .7rem;text-decoration:none}
+  .chat-thread{flex:1;overflow:auto;padding:1.2rem;display:flex;flex-direction:column;gap:.7rem;background:linear-gradient(rgba(10,9,8,.94),rgba(10,9,8,.94))}.chat-bubble{max-width:min(75%,620px);padding:.75rem .9rem;border:1px solid var(--line);background:var(--panel-soft);border-radius:14px 14px 14px 3px;align-self:flex-start}.chat-bubble.admin{align-self:flex-end;background:var(--gold);color:var(--black);border-radius:14px 14px 3px 14px}.chat-bubble p{white-space:pre-wrap;overflow-wrap:anywhere;font-size:.86rem;line-height:1.5}.chat-bubble time{display:block;font-size:.6rem;opacity:.7;margin-top:.3rem;text-align:right}
+  .admin-chat-reply{display:grid;grid-template-columns:1fr auto;gap:.6rem;padding:1rem;border-top:1px solid var(--line);background:var(--panel-soft)}.admin-chat-reply textarea{resize:none;min-height:54px;max-height:130px;background:var(--black);border:1px solid var(--line);color:var(--cream);padding:.75rem;outline:none}.admin-chat-reply textarea:focus{border-color:var(--gold)}.admin-chat-reply .btn-gold{width:auto;padding:0 1.4rem}.chat-send-status{min-height:1.2em;padding:0 1rem .5rem;color:var(--muted);font-size:.7rem;background:var(--panel-soft)}
+  body.light-mode .live-chat-admin,body.light-mode .chat-room,body.light-mode .chat-conversation{color:#261f19}body.light-mode .chat-thread{background:#f7f2e9}body.light-mode .chat-bubble{background:#fff}body.light-mode .chat-bubble.admin{background:var(--gold);color:#16110c}body.light-mode .chat-room-head,body.light-mode .admin-chat-reply{background:#efe8dc}body.light-mode .admin-chat-reply textarea{background:#fff;color:#261f19}
+  @media(max-width:800px){.chat-tools{width:100%}.chat-tools input{min-width:0;flex:1}.live-chat-admin{grid-template-columns:1fr;height:auto;min-height:0}.chat-inbox{border-right:0;border-bottom:1px solid var(--line);max-height:280px}.chat-room{min-height:520px}.chat-room-head{align-items:flex-start;flex-direction:column}.chat-bubble{max-width:88%}.admin-chat-reply{grid-template-columns:1fr}.admin-chat-reply .btn-gold{width:100%;padding:.8rem}}
 </style>
 </head>
 <body>
@@ -311,7 +323,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <button class="tab-btn" data-tab="orders">Commandes</button>
     <button class="tab-btn" data-tab="reviews">Avis</button>
     <button class="tab-btn" data-tab="promos">Promos</button>
-    <button class="tab-btn" data-tab="messages">Messages</button>
+    <button class="tab-btn" data-tab="messages">Live Chat</button>
   </div>
 
   <main>
@@ -429,7 +441,21 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
     <section class="tab-panel" id="tab-reviews"><div class="toolbar"><h2>Avis clients</h2><button class="notify-btn" id="enableNotifications">Activer les notifications</button></div><div class="table-wrap"><table><thead><tr><th>Photo</th><th>Cliente</th><th>Note</th><th>Avis</th><th>Statut</th><th></th></tr></thead><tbody id="reviewsTableBody"></tbody></table></div></section>
     <section class="tab-panel" id="tab-promos"><div class="toolbar"><h2>Codes promo</h2></div><form class="admin-form-card" id="promoAdminForm"><div class="admin-form-grid"><input id="promoAdminCode" required placeholder="CODE"><select id="promoAdminType"><option value="percent">Pourcentage</option><option value="fixed">Montant fixe</option></select><input id="promoAdminValue" type="number" required min="1" placeholder="Valeur"><input id="promoAdminMin" type="number" min="0" placeholder="Commande minimum"></div><button class="btn-outline" style="margin-top:.7rem">Créer le code</button></form><div class="table-wrap"><table><thead><tr><th>Code</th><th>Réduction</th><th>Minimum</th><th>Actif</th><th></th></tr></thead><tbody id="promosTableBody"></tbody></table></div></section>
-    <section class="tab-panel" id="tab-messages"><div class="toolbar"><h2>Live chat / Support</h2></div><div class="table-wrap"><table><thead><tr><th>Date</th><th>Cliente</th><th>Téléphone</th><th>Message</th><th>Statut</th><th></th></tr></thead><tbody id="messagesTableBody"></tbody></table></div></section>
+    <section class="tab-panel" id="tab-messages">
+      <div class="toolbar"><div><h2>Live Chat</h2><p class="chat-subtitle">Conversations clientes en temps réel</p></div><div class="chat-tools"><input id="chatSearch" type="search" placeholder="Rechercher une cliente…"><button class="btn-outline" id="refreshChats" type="button">Actualiser</button></div></div>
+      <div class="live-chat-admin">
+        <aside class="chat-inbox"><div class="chat-inbox-title"><strong>Conversations</strong><span id="unreadChatCount">0 non lue</span></div><div id="chatConversationList" class="chat-conversation-list"><div class="empty">Chargement…</div></div></aside>
+        <section class="chat-room" id="chatRoom">
+          <div class="chat-room-empty" id="chatRoomEmpty"><span>💬</span><h3>Sélectionnez une conversation</h3><p>Cliquez sur une cliente pour lire et répondre directement.</p></div>
+          <div id="chatRoomActive" hidden>
+            <header class="chat-room-head"><div><h3 id="activeChatName">Cliente</h3><p id="activeChatMeta"></p></div><div class="chat-room-actions"><a id="activeChatWhatsapp" class="btn-outline" target="_blank" rel="noopener" hidden>WhatsApp</a><button id="toggleChatStatus" class="btn-outline" type="button">Marquer résolue</button></div></header>
+            <div class="chat-thread" id="adminChatThread"></div>
+            <form class="admin-chat-reply" id="adminChatReplyForm"><textarea id="adminChatReply" required maxlength="1500" placeholder="Écrivez votre réponse…"></textarea><button class="btn-gold" type="submit">Envoyer</button></form>
+            <div id="adminChatStatus" class="chat-send-status"></div>
+          </div>
+        </section>
+      </div>
+    </section>
 
   </main>
 </div>
@@ -550,7 +576,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
       document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
       btn.classList.add('active');
-      document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+      const panel=document.getElementById('tab-' + btn.dataset.tab);
+      if(panel) panel.classList.add('active');
+      if(btn.dataset.tab==='messages') loadMessagesAdmin();
     });
   });
 
@@ -1009,9 +1037,53 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   window.approveReview=async(id,value)=>{await db.from('product_reviews').update({is_approved:value}).eq('id',id);loadReviewsAdmin()};window.deleteReview=async id=>{if(confirm('Supprimer cet avis ?')){await db.from('product_reviews').delete().eq('id',id);loadReviewsAdmin()}};
   async function loadPromosAdmin(){const body=document.getElementById('promosTableBody');const {data,error}=await db.from('promo_codes').select('*').order('created_at',{ascending:false});if(error){body.innerHTML='<tr><td colspan="5" class="empty">Exécutez customer-experience-migration.sql.</td></tr>';return}body.innerHTML=(data||[]).map(p=>`<tr><td>${escapeHtml(p.code)}</td><td>${p.discount_type==='percent'?p.discount_value+'%':money(p.discount_value)}</td><td>${money(p.min_order||0)}</td><td>${p.is_active?'Oui':'Non'}</td><td><button class="icon-link" onclick="togglePromo('${p.id}',${!p.is_active})">${p.is_active?'Désactiver':'Activer'}</button><button class="icon-link danger" onclick="deletePromo('${p.id}')">Supprimer</button></td></tr>`).join('')||'<tr><td colspan="5" class="empty">Aucun code.</td></tr>'}
   document.getElementById('promoAdminForm').addEventListener('submit',async e=>{e.preventDefault();const {error}=await db.from('promo_codes').insert({code:document.getElementById('promoAdminCode').value.trim().toUpperCase(),discount_type:document.getElementById('promoAdminType').value,discount_value:Number(document.getElementById('promoAdminValue').value),min_order:Number(document.getElementById('promoAdminMin').value||0),is_active:true});if(error)return alert(error.message);e.target.reset();loadPromosAdmin()});window.togglePromo=async(id,v)=>{await db.from('promo_codes').update({is_active:v}).eq('id',id);loadPromosAdmin()};window.deletePromo=async id=>{if(confirm('Supprimer ce code ?')){await db.from('promo_codes').delete().eq('id',id);loadPromosAdmin()}};
-  async function loadMessagesAdmin(){const body=document.getElementById('messagesTableBody');const {data,error}=await db.from('support_messages').select('*').order('created_at',{ascending:false});if(error){body.innerHTML='<tr><td colspan="6" class="empty">Exécutez customer-experience-migration.sql.</td></tr>';return}body.innerHTML=(data||[]).map(m=>`<tr><td>${new Date(m.created_at).toLocaleString('fr-FR')}</td><td>${escapeHtml(m.customer_name)}</td><td>${escapeHtml(m.customer_phone||'—')}</td><td class="message-text">${escapeHtml(m.message)}</td><td>${escapeHtml(m.status)}</td><td><button class="icon-link" onclick="closeMessage('${m.id}')">Traité</button></td></tr>`).join('')||'<tr><td colspan="6" class="empty">Aucun message.</td></tr>'}window.closeMessage=async id=>{await db.from('support_messages').update({status:'closed'}).eq('id',id);loadMessagesAdmin()};
+  let chatConversations=[];
+  let activeConversationId=null;
+  let chatRefreshTimer=null;
+
+  function chatTime(value){return value?new Date(value).toLocaleString('fr-FR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}):''}
+  function normalizePhone(value){let p=String(value||'').replace(/\D/g,'');if(p.startsWith('0'))p='213'+p.slice(1);return p}
+
+  async function loadMessagesAdmin(preserveSelection=true){
+    const list=document.getElementById('chatConversationList');
+    if(!db){list.innerHTML='<div class="empty">Supabase n’est pas configuré.</div>';return}
+    const {data,error}=await db.from('support_conversations').select('*').order('last_message_at',{ascending:false});
+    if(error){list.innerHTML='<div class="empty">Exécutez LIVE-CHAT-MIGRATION.sql.<br>'+escapeHtml(error.message)+'</div>';return}
+    chatConversations=data||[];
+    renderConversationList();
+    if(preserveSelection&&activeConversationId&&chatConversations.some(c=>c.id===activeConversationId)) await openConversation(activeConversationId,false);
+  }
+
+  function renderConversationList(){
+    const q=(document.getElementById('chatSearch').value||'').trim().toLowerCase();
+    const rows=chatConversations.filter(c=>(`${c.customer_name||''} ${c.customer_phone||''} ${c.last_message||''}`).toLowerCase().includes(q));
+    document.getElementById('unreadChatCount').textContent=`${chatConversations.filter(c=>Number(c.unread_admin||0)>0).length} non lue${chatConversations.filter(c=>Number(c.unread_admin||0)>0).length>1?'s':''}`;
+    document.getElementById('chatConversationList').innerHTML=rows.map(c=>`<button class="chat-conversation ${c.id===activeConversationId?'active':''} ${Number(c.unread_admin||0)>0?'unread':''}" data-chat-id="${c.id}"><div class="chat-conversation-top"><strong>${escapeHtml(c.customer_name||'Cliente')}</strong><time>${chatTime(c.last_message_at)}</time></div><p>${escapeHtml(c.last_message||'Nouvelle conversation')}</p><small>${c.status==='closed'?'Résolue':'Ouverte'}${Number(c.unread_admin||0)>0?' · '+c.unread_admin+' nouveau':''}</small></button>`).join('')||'<div class="empty">Aucune conversation.</div>';
+  }
+
+  async function openConversation(id,markRead=true){
+    activeConversationId=id;renderConversationList();
+    const conv=chatConversations.find(c=>c.id===id);if(!conv)return;
+    document.getElementById('chatRoomEmpty').hidden=true;document.getElementById('chatRoomActive').hidden=false;
+    document.getElementById('activeChatName').textContent=conv.customer_name||'Cliente';
+    document.getElementById('activeChatMeta').textContent=[conv.customer_phone,conv.status==='closed'?'Conversation résolue':'Conversation ouverte'].filter(Boolean).join(' · ');
+    const wa=document.getElementById('activeChatWhatsapp'),phone=normalizePhone(conv.customer_phone);wa.hidden=!phone;if(phone)wa.href=`https://wa.me/${phone}?text=${encodeURIComponent('Bonjour '+(conv.customer_name||'')+', nous vous contactons depuis NARI’S WEAR.')}`;
+    document.getElementById('toggleChatStatus').textContent=conv.status==='closed'?'Rouvrir':'Marquer résolue';
+    const {data,error}=await db.from('chat_messages').select('*').eq('conversation_id',id).order('created_at',{ascending:true});
+    const thread=document.getElementById('adminChatThread');
+    if(error){thread.innerHTML='<div class="empty">'+escapeHtml(error.message)+'</div>';return}
+    thread.innerHTML=(data||[]).map(m=>`<div class="chat-bubble ${m.sender==='admin'?'admin':''}"><p>${escapeHtml(m.message)}</p><time>${chatTime(m.created_at)}</time></div>`).join('')||'<div class="empty">Aucun message.</div>';
+    thread.scrollTop=thread.scrollHeight;
+    if(markRead&&Number(conv.unread_admin||0)>0){await db.from('support_conversations').update({unread_admin:0}).eq('id',id);conv.unread_admin=0;renderConversationList()}
+  }
+
+  document.getElementById('chatConversationList').addEventListener('click',e=>{const b=e.target.closest('[data-chat-id]');if(b)openConversation(b.dataset.chatId)});
+  document.getElementById('chatSearch').addEventListener('input',renderConversationList);
+  document.getElementById('refreshChats').addEventListener('click',()=>loadMessagesAdmin());
+  document.getElementById('adminChatReplyForm').addEventListener('submit',async e=>{e.preventDefault();if(!activeConversationId)return;const input=document.getElementById('adminChatReply'),message=input.value.trim(),status=document.getElementById('adminChatStatus');if(!message)return;status.textContent='Envoi…';const {error}=await db.from('chat_messages').insert({conversation_id:activeConversationId,sender:'admin',message});if(error){status.textContent='Erreur : '+error.message;return}await db.from('support_conversations').update({last_message:message,last_message_at:new Date().toISOString(),unread_customer:1,status:'open'}).eq('id',activeConversationId);input.value='';status.textContent='Réponse envoyée.';await loadMessagesAdmin();setTimeout(()=>status.textContent='',1800)});
+  document.getElementById('toggleChatStatus').addEventListener('click',async()=>{const conv=chatConversations.find(c=>c.id===activeConversationId);if(!conv)return;const next=conv.status==='closed'?'open':'closed';const {error}=await db.from('support_conversations').update({status:next}).eq('id',conv.id);if(error)return alert(error.message);conv.status=next;openConversation(conv.id,false)});
   document.getElementById('enableNotifications').addEventListener('click',async()=>{const permission=await Notification.requestPermission();showToast(permission==='granted'?'Notifications activées.':'Permission refusée.')});
-  function startOrderNotifications(){if(!db)return;db.channel('admin-new-orders').on('postgres_changes',{event:'INSERT',schema:'public',table:'orders'},payload=>{loadOrders();loadOverview();if(Notification.permission==='granted')new Notification('Nouvelle commande NARI’S WEAR',{body:`${payload.new.customer_name||'Cliente'} — ${payload.new.product_name||'Article'}`,icon:'../assets/favicon.svg'});showToast('Nouvelle commande reçue !')}).subscribe();db.channel('admin-support').on('postgres_changes',{event:'INSERT',schema:'public',table:'support_messages'},()=>{loadMessagesAdmin();if(Notification.permission==='granted')new Notification('Nouveau message client')}).subscribe()}
+  function startOrderNotifications(){if(!db||window.__nariRealtimeStarted)return;window.__nariRealtimeStarted=true;db.channel('admin-new-orders').on('postgres_changes',{event:'INSERT',schema:'public',table:'orders'},payload=>{loadOrders();loadOverview();if(Notification.permission==='granted')new Notification('Nouvelle commande NARI’S WEAR',{body:`${payload.new.customer_name||'Cliente'} — ${payload.new.product_name||'Article'}`,icon:'../assets/favicon.svg'});showToast('Nouvelle commande reçue !')}).subscribe();db.channel('admin-live-chat').on('postgres_changes',{event:'*',schema:'public',table:'chat_messages'},payload=>{loadMessagesAdmin();if(payload.eventType==='INSERT'&&payload.new?.sender==='customer'){if(Notification.permission==='granted')new Notification('Nouveau message client');showToast('Nouveau message Live Chat')}}).on('postgres_changes',{event:'*',schema:'public',table:'support_conversations'},()=>loadMessagesAdmin()).subscribe();clearInterval(chatRefreshTimer);chatRefreshTimer=setInterval(()=>{if(document.getElementById('tab-messages').classList.contains('active'))loadMessagesAdmin()},8000)}
   const originalShowApp=showApp;showApp=function(){originalShowApp();loadReviewsAdmin();loadPromosAdmin();loadMessagesAdmin();startOrderNotifications()};
 
   document.getElementById('analyticsRange').addEventListener('change', loadAnalytics);
