@@ -269,6 +269,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     line-height:1;
   }
 
+
+  .admin-form-card{background:var(--panel);border:1px solid var(--line);padding:1.2rem;margin-bottom:1rem}.admin-form-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.7rem}.admin-form-grid input,.admin-form-grid select,.admin-form-grid textarea{width:100%}.notify-btn{border:1px solid var(--gold);background:transparent;color:var(--gold);padding:.55rem .8rem}.message-text{white-space:normal;min-width:260px;max-width:480px}.photo-preview{width:70px;height:70px;object-fit:cover}@media(max-width:800px){.admin-form-grid{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -306,6 +309,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <button class="tab-btn" data-tab="analytics">Analytics</button>
     <button class="tab-btn" data-tab="products">Produits</button>
     <button class="tab-btn" data-tab="orders">Commandes</button>
+    <button class="tab-btn" data-tab="reviews">Avis</button>
+    <button class="tab-btn" data-tab="promos">Promos</button>
+    <button class="tab-btn" data-tab="messages">Messages</button>
   </div>
 
   <main>
@@ -420,6 +426,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         </table>
       </div>
     </section>
+
+    <section class="tab-panel" id="tab-reviews"><div class="toolbar"><h2>Avis clients</h2><button class="notify-btn" id="enableNotifications">Activer les notifications</button></div><div class="table-wrap"><table><thead><tr><th>Photo</th><th>Cliente</th><th>Note</th><th>Avis</th><th>Statut</th><th></th></tr></thead><tbody id="reviewsTableBody"></tbody></table></div></section>
+    <section class="tab-panel" id="tab-promos"><div class="toolbar"><h2>Codes promo</h2></div><form class="admin-form-card" id="promoAdminForm"><div class="admin-form-grid"><input id="promoAdminCode" required placeholder="CODE"><select id="promoAdminType"><option value="percent">Pourcentage</option><option value="fixed">Montant fixe</option></select><input id="promoAdminValue" type="number" required min="1" placeholder="Valeur"><input id="promoAdminMin" type="number" min="0" placeholder="Commande minimum"></div><button class="btn-outline" style="margin-top:.7rem">Créer le code</button></form><div class="table-wrap"><table><thead><tr><th>Code</th><th>Réduction</th><th>Minimum</th><th>Actif</th><th></th></tr></thead><tbody id="promosTableBody"></tbody></table></div></section>
+    <section class="tab-panel" id="tab-messages"><div class="toolbar"><h2>Live chat / Support</h2></div><div class="table-wrap"><table><thead><tr><th>Date</th><th>Cliente</th><th>Téléphone</th><th>Message</th><th>Statut</th><th></th></tr></thead><tbody id="messagesTableBody"></tbody></table></div></section>
+
   </main>
 </div>
 
@@ -991,6 +1002,17 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       ? topWilayas.map(([w,count]) => `<div class="mini-list-item"><span>${w}</span><span>${count} commande${count>1?'s':''}</span></div>`).join('')
       : `<p style="color:var(--muted);font-size:.82rem">Aucune donnée pour le moment.</p>`;
   }
+
+
+  // Customer experience administration
+  async function loadReviewsAdmin(){const body=document.getElementById('reviewsTableBody');const {data,error}=await db.from('product_reviews').select('*').order('created_at',{ascending:false});if(error){body.innerHTML='<tr><td colspan="6" class="empty">Exécutez customer-experience-migration.sql.</td></tr>';return}body.innerHTML=(data||[]).map(r=>`<tr><td>${r.photo_url?`<img class="photo-preview" src="${r.photo_url}">`:'—'}</td><td>${escapeHtml(r.customer_name)}</td><td>${'★'.repeat(r.rating||5)}</td><td class="message-text">${escapeHtml(r.comment)}</td><td>${r.is_approved?'Publié':'En attente'}</td><td><button class="icon-link" onclick="approveReview('${r.id}',${!r.is_approved})">${r.is_approved?'Masquer':'Publier'}</button><button class="icon-link danger" onclick="deleteReview('${r.id}')">Supprimer</button></td></tr>`).join('')||'<tr><td colspan="6" class="empty">Aucun avis.</td></tr>'}
+  window.approveReview=async(id,value)=>{await db.from('product_reviews').update({is_approved:value}).eq('id',id);loadReviewsAdmin()};window.deleteReview=async id=>{if(confirm('Supprimer cet avis ?')){await db.from('product_reviews').delete().eq('id',id);loadReviewsAdmin()}};
+  async function loadPromosAdmin(){const body=document.getElementById('promosTableBody');const {data,error}=await db.from('promo_codes').select('*').order('created_at',{ascending:false});if(error){body.innerHTML='<tr><td colspan="5" class="empty">Exécutez customer-experience-migration.sql.</td></tr>';return}body.innerHTML=(data||[]).map(p=>`<tr><td>${escapeHtml(p.code)}</td><td>${p.discount_type==='percent'?p.discount_value+'%':money(p.discount_value)}</td><td>${money(p.min_order||0)}</td><td>${p.is_active?'Oui':'Non'}</td><td><button class="icon-link" onclick="togglePromo('${p.id}',${!p.is_active})">${p.is_active?'Désactiver':'Activer'}</button><button class="icon-link danger" onclick="deletePromo('${p.id}')">Supprimer</button></td></tr>`).join('')||'<tr><td colspan="5" class="empty">Aucun code.</td></tr>'}
+  document.getElementById('promoAdminForm').addEventListener('submit',async e=>{e.preventDefault();const {error}=await db.from('promo_codes').insert({code:document.getElementById('promoAdminCode').value.trim().toUpperCase(),discount_type:document.getElementById('promoAdminType').value,discount_value:Number(document.getElementById('promoAdminValue').value),min_order:Number(document.getElementById('promoAdminMin').value||0),is_active:true});if(error)return alert(error.message);e.target.reset();loadPromosAdmin()});window.togglePromo=async(id,v)=>{await db.from('promo_codes').update({is_active:v}).eq('id',id);loadPromosAdmin()};window.deletePromo=async id=>{if(confirm('Supprimer ce code ?')){await db.from('promo_codes').delete().eq('id',id);loadPromosAdmin()}};
+  async function loadMessagesAdmin(){const body=document.getElementById('messagesTableBody');const {data,error}=await db.from('support_messages').select('*').order('created_at',{ascending:false});if(error){body.innerHTML='<tr><td colspan="6" class="empty">Exécutez customer-experience-migration.sql.</td></tr>';return}body.innerHTML=(data||[]).map(m=>`<tr><td>${new Date(m.created_at).toLocaleString('fr-FR')}</td><td>${escapeHtml(m.customer_name)}</td><td>${escapeHtml(m.customer_phone||'—')}</td><td class="message-text">${escapeHtml(m.message)}</td><td>${escapeHtml(m.status)}</td><td><button class="icon-link" onclick="closeMessage('${m.id}')">Traité</button></td></tr>`).join('')||'<tr><td colspan="6" class="empty">Aucun message.</td></tr>'}window.closeMessage=async id=>{await db.from('support_messages').update({status:'closed'}).eq('id',id);loadMessagesAdmin()};
+  document.getElementById('enableNotifications').addEventListener('click',async()=>{const permission=await Notification.requestPermission();showToast(permission==='granted'?'Notifications activées.':'Permission refusée.')});
+  function startOrderNotifications(){if(!db)return;db.channel('admin-new-orders').on('postgres_changes',{event:'INSERT',schema:'public',table:'orders'},payload=>{loadOrders();loadOverview();if(Notification.permission==='granted')new Notification('Nouvelle commande NARI’S WEAR',{body:`${payload.new.customer_name||'Cliente'} — ${payload.new.product_name||'Article'}`,icon:'../assets/favicon.svg'});showToast('Nouvelle commande reçue !')}).subscribe();db.channel('admin-support').on('postgres_changes',{event:'INSERT',schema:'public',table:'support_messages'},()=>{loadMessagesAdmin();if(Notification.permission==='granted')new Notification('Nouveau message client')}).subscribe()}
+  const originalShowApp=showApp;showApp=function(){originalShowApp();loadReviewsAdmin();loadPromosAdmin();loadMessagesAdmin();startOrderNotifications()};
 
   document.getElementById('analyticsRange').addEventListener('change', loadAnalytics);
 
