@@ -1558,6 +1558,8 @@ body.light-theme .optional-delivery-note span{color:#554a43}
     margin:1rem -1.2rem -1rem!important;
   }
 }
+
+.customer-chat-head{display:flex;justify-content:space-between;align-items:center;gap:.6rem;margin-bottom:.7rem}.customer-chat-head strong{color:var(--gold-bright)}.customer-chat-head button{background:transparent;color:var(--gold);font-size:.68rem;text-decoration:underline}.customer-chat-thread{max-height:280px;min-height:170px;padding:.25rem}.customer-chat-thread .cx-msg.admin{margin-right:18%;background:rgba(201,161,90,.12)}.customer-chat-thread .cx-msg.user{margin-left:18%}.customer-chat-thread time{display:block;font-size:.58rem;opacity:.65;margin-top:.25rem}.live-chat-form input,.live-chat-form textarea{font-size:16px}
 </style>
 </head>
 
@@ -2158,7 +2160,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
  <div class="cx-head"><strong>Conseillère Nari’s Wear</strong><button id="cxClose" class="icon-btn">✕</button></div>
  <div class="cx-tabs"><button class="active" data-cx-tab="assistant">Assistant taille & style</button><button data-cx-tab="chat">Live chat</button></div>
  <div class="cx-body" id="cxAssistant"><div class="cx-messages" id="cxMessages"><div class="cx-msg">Bonjour ✨ Dites-moi ce que vous cherchez ou demandez-moi une recommandation de taille.</div></div><div class="cx-quick"><button data-ai="robe">Je cherche une robe</button><button data-ai="size">Aide pour la taille</button><button data-ai="budget">Selon mon budget</button></div><div class="cx-input"><input id="cxQuestion" placeholder="Ex. robe noire, budget 6000 DA"><button class="btn-solid" id="cxSend">Envoyer</button></div></div>
- <div class="cx-body" id="cxChat" hidden><form class="live-chat-form" id="liveChatForm"><input id="chatName" required placeholder="Votre nom"><input id="chatPhone" placeholder="Téléphone / WhatsApp"><textarea id="chatMessage" required placeholder="Comment pouvons-nous vous aider ?"></textarea><button class="wa-btn" type="submit">Envoyer au support</button><a class="btn-outline" href="https://wa.me/213552080462" target="_blank" rel="noopener" style="text-align:center">Chat immédiat sur WhatsApp</a><div class="review-status" id="chatStatus"></div></form></div>
+ <div class="cx-body" id="cxChat" hidden>
+   <div id="chatStartView"><form class="live-chat-form" id="liveChatForm"><input id="chatName" required placeholder="Votre nom"><input id="chatPhone" required placeholder="Téléphone / WhatsApp"><textarea id="chatMessage" required maxlength="1500" placeholder="Comment pouvons-nous vous aider ?"></textarea><button class="wa-btn" type="submit">Démarrer le Live Chat</button><div class="review-status" id="chatStatus"></div></form></div>
+   <div id="customerChatView" hidden><div class="customer-chat-head"><strong id="customerChatTitle">Live Chat</strong><button type="button" id="newChatBtn">Nouvelle conversation</button></div><div class="cx-messages customer-chat-thread" id="customerChatThread"></div><form class="cx-input" id="customerChatReplyForm"><input id="customerChatReply" required maxlength="1500" placeholder="Écrivez votre message…"><button class="btn-solid" type="submit">Envoyer</button></form><div class="review-status" id="customerChatStatus"></div></div>
+   <a class="btn-outline" href="https://wa.me/213552080462" target="_blank" rel="noopener" style="display:block;text-align:center;margin-top:.7rem">Continuer sur WhatsApp</a>
+  </div>
 </aside>
 
 <div class="modal" id="orderModal" role="dialog" aria-modal="true" aria-labelledby="modalProductTitle">
@@ -2968,23 +2974,17 @@ Merci de confirmer la disponibilité et le tarif de livraison.`;
   function aiReply(q){const text=q.toLowerCase();if(/taille|size|morph/.test(text))return 'Pour vous conseiller précisément, indiquez votre taille habituelle, votre hauteur et si vous préférez une coupe près du corps ou ample. Les tailles disponibles apparaissent sur chaque produit.';const budget=(text.match(/\d{4,6}/)||[])[0];let list=products.filter(p=>!budget||Number(p.price)<=Number(budget));if(/robe/.test(text))list=list.filter(p=>/robe/i.test(p.category+' '+p.name));if(/noir/.test(text))list=list.filter(p=>normalizeProductVariants(p).some(v=>/noir/i.test(v.name)));list=list.slice(0,3);return list.length?'Je vous recommande : '+list.map(p=>`${p.name} (${money(p.price)})`).join(', ')+'. Touchez le produit dans la collection pour voir les couleurs et tailles.':'Je n’ai pas trouvé une correspondance exacte. Essayez une catégorie, une couleur ou un budget différent.'}
   function sendAi(q){if(!q.trim())return;$('#cxMessages').insertAdjacentHTML('beforeend',`<div class="cx-msg user">${esc(q)}</div><div class="cx-msg">${esc(aiReply(q))}</div>`);$('#cxMessages').scrollTop=$('#cxMessages').scrollHeight;$('#cxQuestion').value=''}
   $('#cxSend').onclick=()=>sendAi($('#cxQuestion').value);$('#cxQuestion').addEventListener('keydown',e=>{if(e.key==='Enter')sendAi(e.target.value)});$$('[data-ai]').forEach(b=>b.onclick=()=>sendAi(b.textContent));
-  $('#liveChatForm').addEventListener('submit',async e=>{
-    e.preventDefault();
-    const payload={customer_name:$('#chatName').value.trim(),customer_phone:$('#chatPhone').value.trim(),message:$('#chatMessage').value.trim(),status:'new'};
-    const status=$('#chatStatus');
-    status.textContent='Envoi…';
-    if(db){
-      const {error}=await db.from('support_messages').insert(payload);
-      if(error){status.textContent='Impossible d’envoyer : '+error.message;return}
-      status.textContent='Message envoyé au tableau de bord. Nous vous répondrons rapidement.';
-    }else{
-      const saved=JSON.parse(localStorage.getItem('naris-support-messages')||'[]');
-      saved.unshift({...payload,created_at:new Date().toISOString()});
-      localStorage.setItem('naris-support-messages',JSON.stringify(saved));
-      status.textContent='Message enregistré sur cet appareil. Configurez Supabase pour le recevoir dans le tableau de bord.';
-    }
-    e.target.reset();
-  });
+  const CHAT_STORAGE_KEY='naris-live-chat-session';
+  let customerChatSession=null;
+  let customerChatPoll=null;
+  try{customerChatSession=JSON.parse(localStorage.getItem(CHAT_STORAGE_KEY)||'null')}catch(e){}
+  function customerChatTime(v){return new Date(v).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}
+  function showCustomerChat(){const active=!!customerChatSession;$('#chatStartView').hidden=active;$('#customerChatView').hidden=!active;if(active){$('#customerChatTitle').textContent='Live Chat · '+(customerChatSession.name||'NARI’S WEAR');loadCustomerChat();clearInterval(customerChatPoll);customerChatPoll=setInterval(loadCustomerChat,5000)}}
+  async function loadCustomerChat(){if(!db||!customerChatSession)return;const {data,error}=await db.rpc('customer_get_chat',{p_conversation_id:customerChatSession.id,p_access_token:customerChatSession.token});if(error){$('#customerChatStatus').textContent='Connexion au chat impossible.';return}const thread=$('#customerChatThread');thread.innerHTML=(data||[]).map(m=>`<div class="cx-msg ${m.sender==='customer'?'user':'admin'}">${esc(m.message)}<time>${customerChatTime(m.created_at)}</time></div>`).join('')||'<div class="cx-msg">Votre conversation est prête.</div>';thread.scrollTop=thread.scrollHeight}
+  $('#liveChatForm').addEventListener('submit',async e=>{e.preventDefault();const status=$('#chatStatus'),name=$('#chatName').value.trim(),phone=$('#chatPhone').value.trim(),message=$('#chatMessage').value.trim();status.textContent='Connexion…';if(!db){status.textContent='Le Live Chat nécessite la configuration Supabase.';return}const {data,error}=await db.rpc('customer_start_chat',{p_customer_name:name,p_customer_phone:phone,p_message:message});if(error){status.textContent='Impossible de démarrer : '+error.message;return}const row=Array.isArray(data)?data[0]:data;customerChatSession={id:row.conversation_id,token:row.access_token,name};localStorage.setItem(CHAT_STORAGE_KEY,JSON.stringify(customerChatSession));status.textContent='';e.target.reset();showCustomerChat()});
+  $('#customerChatReplyForm').addEventListener('submit',async e=>{e.preventDefault();if(!customerChatSession)return;const input=$('#customerChatReply'),message=input.value.trim(),status=$('#customerChatStatus');if(!message)return;status.textContent='Envoi…';const {error}=await db.rpc('customer_send_chat',{p_conversation_id:customerChatSession.id,p_access_token:customerChatSession.token,p_message:message});if(error){status.textContent='Erreur : '+error.message;return}input.value='';status.textContent='';loadCustomerChat()});
+  $('#newChatBtn').addEventListener('click',()=>{if(!confirm('Démarrer une nouvelle conversation ?'))return;localStorage.removeItem(CHAT_STORAGE_KEY);customerChatSession=null;clearInterval(customerChatPoll);showCustomerChat()});
+  showCustomerChat();
 
   const originalLoadProducts=loadProducts;loadProducts=async function(){await originalLoadProducts();populateSmartFilters();renderProducts();loadPublicReviews()};
 
