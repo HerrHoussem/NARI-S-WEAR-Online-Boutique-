@@ -1,0 +1,2 @@
+[functions.notify-live-chat]
+verify_jwt = false
