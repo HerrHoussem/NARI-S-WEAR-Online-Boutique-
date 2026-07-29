@@ -1,17 +1,15 @@
-import { createClient } from 'npm:@supabase/supabase-js@2'
-
 type WebhookPayload = {
   type?: string
   table?: string
   schema?: string
   record?: {
     id?: string
-    conversation_id?: string
-    sender?: string
+    customer_name?: string
+    customer_phone?: string
     message?: string
+    status?: string
     created_at?: string
   }
-  old_record?: Record<string, unknown> | null
 }
 
 const json = (body: unknown, status = 200) =>
@@ -37,129 +35,76 @@ Deno.serve(async (req) => {
 
   console.log('Live Chat webhook received', {
     type: payload.type,
-    schema: payload.schema,
     table: payload.table,
-    sender: payload.record?.sender,
-    conversationId: payload.record?.conversation_id,
+    schema: payload.schema,
+    record: payload.record,
   })
 
   /*
-   * Accept only new rows inserted into public.support_messages.
+   * Only process new rows from public.support_messages.
    */
-  if (
-    payload.type &&
-    payload.type.toUpperCase() !== 'INSERT'
-  ) {
+  if (payload.type && payload.type.toUpperCase() !== 'INSERT') {
     return json({
       skipped: true,
-      reason: 'Webhook event is not INSERT',
+      reason: 'Event is not INSERT',
     })
   }
 
-  if (
-    payload.table &&
-    payload.table !== 'support_messages'
-  ) {
+  if (payload.table && payload.table !== 'support_messages') {
     return json({
       skipped: true,
-      reason: 'Webhook is not from support_messages',
+      reason: 'Wrong database table',
     })
   }
 
-  if (
-    payload.schema &&
-    payload.schema !== 'public'
-  ) {
+  if (payload.schema && payload.schema !== 'public') {
     return json({
       skipped: true,
-      reason: 'Webhook is not from public schema',
+      reason: 'Wrong database schema',
     })
   }
 
-  const message = payload.record
+  const supportMessage = payload.record
 
-  if (!message) {
+  if (!supportMessage) {
     return json({
       skipped: true,
       reason: 'Message record is missing',
     })
   }
 
-  if (message.sender !== 'customer') {
-    return json({
-      skipped: true,
-      reason: 'Message was not sent by a customer',
-    })
-  }
-
-  if (!message.conversation_id) {
-    return json({
-      skipped: true,
-      reason: 'conversation_id is missing',
-    })
-  }
-
-  const supabaseUrl = Deno.env.get('SUPABASE_URL')
-  const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
-
-  if (!supabaseUrl || !serviceRoleKey) {
-    return json(
-      {
-        error: 'Supabase server credentials are unavailable',
-      },
-      500,
-    )
-  }
-
-  const supabase = createClient(
-    supabaseUrl,
-    serviceRoleKey,
-    {
-      auth: {
-        persistSession: false,
-        autoRefreshToken: false,
-      },
-    },
-  )
-
-  const { data: conversation, error: conversationError } =
-    await supabase
-      .from('support_conversations')
-      .select('customer_name, customer_phone')
-      .eq('id', message.conversation_id)
-      .single()
-
-  if (conversationError) {
-    console.error(
-      'Conversation lookup failed:',
-      conversationError,
-    )
-
-    return json(
-      {
-        error: `Conversation lookup failed: ${conversationError.message}`,
-      },
-      500,
-    )
-  }
-
   const customerName =
-    conversation?.customer_name?.trim() || 'Cliente'
+    String(supportMessage.customer_name || '').trim() || 'Cliente'
 
   const customerPhone =
-    conversation?.customer_phone?.trim() ||
+    String(supportMessage.customer_phone || '').trim() ||
     'Non renseigné'
 
   const customerMessage =
-    String(message.message || '')
-      .trim()
-      .slice(0, 1200) || 'Message vide'
+    String(supportMessage.message || '').trim().slice(0, 1200)
 
-  const adminUrl =
-    Deno.env.get('ADMIN_LIVE_CHAT_URL') || ''
+  if (!customerMessage) {
+    return json({
+      skipped: true,
+      reason: 'Message is empty',
+    })
+  }
 
-  const digitsOnlyPhone =
-    customerPhone.replace(/\D/g, '')
+  const telegramToken = Deno.env.get('TELEGRAM_BOT_TOKEN')
+  const telegramChatId = Deno.env.get('TELEGRAM_CHAT_ID')
+  const adminUrl = Deno.env.get('ADMIN_LIVE_CHAT_URL') || ''
+
+  if (!telegramToken || !telegramChatId) {
+    return json(
+      {
+        error:
+          'Missing TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID',
+      },
+      500,
+    )
+  }
+
+  const digitsOnlyPhone = customerPhone.replace(/\D/g, '')
 
   const whatsappUrl = digitsOnlyPhone
     ? `https://wa.me/${digitsOnlyPhone}`
@@ -171,224 +116,99 @@ Deno.serve(async (req) => {
     `👤 Cliente : ${customerName}`,
     `📞 Téléphone : ${customerPhone}`,
     '',
-    `💬 Message :`,
+    '💬 Message :',
     customerMessage,
-  ].join('\n')
+    '',
+    supportMessage.created_at
+      ? `🕒 Date : ${supportMessage.created_at}`
+      : '',
+  ]
+    .filter(Boolean)
+    .join('\n')
 
-  const results: Record<string, unknown> = {}
+  const inlineKeyboard: Array<
+    Array<{ text: string; url: string }>
+  > = []
 
-  /*
-   * Telegram notification
-   */
-  const telegramToken =
-    Deno.env.get('TELEGRAM_BOT_TOKEN')
-
-  const telegramChatId =
-    Deno.env.get('TELEGRAM_CHAT_ID')
-
-  if (telegramToken && telegramChatId) {
-    try {
-      const inlineKeyboard: Array<
-        Array<{ text: string; url: string }>
-      > = []
-
-      if (adminUrl) {
-        inlineKeyboard.push([
-          {
-            text: '💬 Ouvrir Live Chat',
-            url: adminUrl,
-          },
-        ])
-      }
-
-      if (whatsappUrl) {
-        inlineKeyboard.push([
-          {
-            text: '📱 Répondre sur WhatsApp',
-            url: whatsappUrl,
-          },
-        ])
-      }
-
-      const telegramResponse = await fetch(
-        `https://api.telegram.org/bot${telegramToken}/sendMessage`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            chat_id: telegramChatId,
-            text: telegramText,
-            disable_web_page_preview: true,
-            ...(inlineKeyboard.length > 0
-              ? {
-                  reply_markup: {
-                    inline_keyboard: inlineKeyboard,
-                  },
-                }
-              : {}),
-          }),
-        },
-      )
-
-      if (telegramResponse.ok) {
-        const telegramResult =
-          await telegramResponse.json()
-
-        results.telegram = {
-          sent: true,
-          message_id:
-            telegramResult?.result?.message_id,
-        }
-      } else {
-        const errorBody =
-          await telegramResponse.text()
-
-        console.error(
-          'Telegram API error:',
-          telegramResponse.status,
-          errorBody,
-        )
-
-        results.telegram = {
-          sent: false,
-          status: telegramResponse.status,
-          body: errorBody,
-        }
-      }
-    } catch (error) {
-      console.error(
-        'Telegram request failed:',
-        error,
-      )
-
-      results.telegram = {
-        sent: false,
-        reason:
-          error instanceof Error
-            ? error.message
-            : String(error),
-      }
-    }
-  } else {
-    results.telegram = {
-      sent: false,
-      reason:
-        'Missing TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID',
-    }
+  if (adminUrl) {
+    inlineKeyboard.push([
+      {
+        text: '💬 Ouvrir Live Chat',
+        url: adminUrl,
+      },
+    ])
   }
 
-  /*
-   * Optional email fallback through Resend
-   */
-  const resendApiKey =
-    Deno.env.get('RESEND_API_KEY')
+  if (whatsappUrl) {
+    inlineKeyboard.push([
+      {
+        text: '📱 Répondre sur WhatsApp',
+        url: whatsappUrl,
+      },
+    ])
+  }
 
-  const notificationEmail =
-    Deno.env.get('NOTIFICATION_EMAIL')
-
-  const emailFrom =
-    Deno.env.get('NOTIFICATION_EMAIL_FROM')
-
-  if (
-    resendApiKey &&
-    notificationEmail &&
-    emailFrom
-  ) {
-    try {
-      const emailResponse = await fetch(
-        'https://api.resend.com/emails',
-        {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${resendApiKey}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            from: emailFrom,
-            to: [notificationEmail],
-            subject:
-              `Nouveau Live Chat — ${customerName}`,
-            html: `
-              <h2>Nouveau message NARI’S WEAR</h2>
-
-              <p>
-                <strong>Cliente :</strong>
-                ${escapeHtml(customerName)}
-              </p>
-
-              <p>
-                <strong>Téléphone :</strong>
-                ${escapeHtml(customerPhone)}
-              </p>
-
-              <p>
-                <strong>Message :</strong><br>
-                ${escapeHtml(customerMessage).replaceAll(
-                  '\n',
-                  '<br>',
-                )}
-              </p>
-
-              ${
-                adminUrl
-                  ? `
-                    <p>
-                      <a href="${escapeHtml(adminUrl)}">
-                        Ouvrir le Live Chat
-                      </a>
-                    </p>
-                  `
-                  : ''
+  try {
+    const telegramResponse = await fetch(
+      `https://api.telegram.org/bot${telegramToken}/sendMessage`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          chat_id: telegramChatId,
+          text: telegramText,
+          disable_web_page_preview: true,
+          ...(inlineKeyboard.length
+            ? {
+                reply_markup: {
+                  inline_keyboard: inlineKeyboard,
+                },
               }
-            `,
-          }),
-        },
-      )
+            : {}),
+        }),
+      },
+    )
 
-      results.email = emailResponse.ok
-        ? { sent: true }
-        : {
-            sent: false,
-            status: emailResponse.status,
-            body: await emailResponse.text(),
-          }
-    } catch (error) {
-      results.email = {
-        sent: false,
-        reason:
+    const telegramBody = await telegramResponse.json()
+
+    if (!telegramResponse.ok) {
+      console.error('Telegram API error', telegramBody)
+
+      return json(
+        {
+          error: 'Telegram notification failed',
+          telegram: telegramBody,
+        },
+        502,
+      )
+    }
+
+    console.log('Telegram notification sent', {
+      messageId: telegramBody?.result?.message_id,
+      customerName,
+    })
+
+    return json({
+      ok: true,
+      telegram: {
+        sent: true,
+        message_id: telegramBody?.result?.message_id,
+      },
+      support_message_id: supportMessage.id,
+    })
+  } catch (error) {
+    console.error('Telegram request failed', error)
+
+    return json(
+      {
+        error:
           error instanceof Error
             ? error.message
-            : String(error),
-      }
-    }
-  } else {
-    results.email = {
-      sent: false,
-      reason: 'Email fallback is not configured',
-    }
+            : 'Telegram request failed',
+      },
+      500,
+    )
   }
-
-  console.log('Notification result:', results)
-
-  return json({
-    ok: true,
-    conversation_id: message.conversation_id,
-    results,
-  })
 })
-
-function escapeHtml(value: string): string {
-  return value.replace(
-    /[&<>'"]/g,
-    (character) =>
-      ({
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        "'": '&#39;',
-        '"': '&quot;',
-      })[character]!,
-  )
-}
