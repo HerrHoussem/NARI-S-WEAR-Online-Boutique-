@@ -1,18 +1,20 @@
+import { createClient } from 'npm:@supabase/supabase-js@2'
+
 type WebhookPayload = {
   type?: string
   table?: string
   schema?: string
   record?: {
     id?: string
-    customer_name?: string
-    customer_phone?: string
+    conversation_id?: string
+    sender?: string
     message?: string
-    status?: string
     created_at?: string
   }
+  old_record?: Record<string, unknown> | null
 }
 
-const json = (body: unknown, status = 200) =>
+const jsonResponse = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), {
     status,
     headers: {
@@ -22,89 +24,181 @@ const json = (body: unknown, status = 200) =>
 
 Deno.serve(async (req) => {
   if (req.method !== 'POST') {
-    return json({ error: 'Method not allowed' }, 405)
+    return jsonResponse(
+      { error: 'Method not allowed' },
+      405,
+    )
   }
 
+  /*
+   * The Database Webhook calls this function directly.
+   * Verify JWT must be OFF in the Edge Function settings.
+   */
   let payload: WebhookPayload
 
   try {
     payload = await req.json()
   } catch {
-    return json({ error: 'Invalid JSON payload' }, 400)
+    return jsonResponse(
+      { error: 'Invalid JSON payload' },
+      400,
+    )
   }
 
   console.log('Live Chat webhook received', {
     type: payload.type,
-    table: payload.table,
     schema: payload.schema,
-    record: payload.record,
+    table: payload.table,
+    sender: payload.record?.sender,
+    conversationId: payload.record?.conversation_id,
   })
 
   /*
-   * Only process new rows from public.support_messages.
+   * Only accept INSERT events from public.chat_messages.
    */
-  if (payload.type && payload.type.toUpperCase() !== 'INSERT') {
-    return json({
+  if (
+    payload.type &&
+    payload.type.toUpperCase() !== 'INSERT'
+  ) {
+    return jsonResponse({
       skipped: true,
-      reason: 'Event is not INSERT',
+      reason: 'Webhook event is not INSERT',
     })
   }
 
-  if (payload.table && payload.table !== 'support_messages') {
-    return json({
+  if (
+    payload.table &&
+    payload.table !== 'chat_messages'
+  ) {
+    return jsonResponse({
       skipped: true,
       reason: 'Wrong database table',
+      received_table: payload.table,
     })
   }
 
-  if (payload.schema && payload.schema !== 'public') {
-    return json({
+  if (
+    payload.schema &&
+    payload.schema !== 'public'
+  ) {
+    return jsonResponse({
       skipped: true,
       reason: 'Wrong database schema',
+      received_schema: payload.schema,
     })
   }
 
-  const supportMessage = payload.record
+  const message = payload.record
 
-  if (!supportMessage) {
-    return json({
+  if (!message) {
+    return jsonResponse({
       skipped: true,
       reason: 'Message record is missing',
     })
   }
 
-  const customerName =
-    String(supportMessage.customer_name || '').trim() || 'Cliente'
-
-  const customerPhone =
-    String(supportMessage.customer_phone || '').trim() ||
-    'Non renseigné'
-
-  const customerMessage =
-    String(supportMessage.message || '').trim().slice(0, 1200)
-
-  if (!customerMessage) {
-    return json({
+  /*
+   * Do not notify for messages sent by the admin.
+   */
+  if (message.sender !== 'customer') {
+    return jsonResponse({
       skipped: true,
-      reason: 'Message is empty',
+      reason: 'Message was not sent by a customer',
     })
   }
 
-  const telegramToken = Deno.env.get('TELEGRAM_BOT_TOKEN')
-  const telegramChatId = Deno.env.get('TELEGRAM_CHAT_ID')
-  const adminUrl = Deno.env.get('ADMIN_LIVE_CHAT_URL') || ''
+  if (!message.conversation_id) {
+    return jsonResponse({
+      skipped: true,
+      reason: 'conversation_id is missing',
+    })
+  }
 
-  if (!telegramToken || !telegramChatId) {
-    return json(
+  const customerMessage = String(
+    message.message || '',
+  )
+    .trim()
+    .slice(0, 1200)
+
+  if (!customerMessage) {
+    return jsonResponse({
+      skipped: true,
+      reason: 'Customer message is empty',
+    })
+  }
+
+  const supabaseUrl =
+    Deno.env.get('SUPABASE_URL')
+
+  const serviceRoleKey =
+    Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')
+
+  if (!supabaseUrl || !serviceRoleKey) {
+    return jsonResponse(
       {
         error:
-          'Missing TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID',
+          'SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY is unavailable',
       },
       500,
     )
   }
 
-  const digitsOnlyPhone = customerPhone.replace(/\D/g, '')
+  const supabase = createClient(
+    supabaseUrl,
+    serviceRoleKey,
+    {
+      auth: {
+        persistSession: false,
+        autoRefreshToken: false,
+      },
+    },
+  )
+
+  /*
+   * Load the customer details using conversation_id.
+   */
+  const {
+    data: conversation,
+    error: conversationError,
+  } = await supabase
+    .from('support_conversations')
+    .select('customer_name, customer_phone')
+    .eq('id', message.conversation_id)
+    .single()
+
+  if (conversationError) {
+    console.error(
+      'Conversation lookup failed:',
+      conversationError,
+    )
+
+    return jsonResponse(
+      {
+        error:
+          `Conversation lookup failed: ${conversationError.message}`,
+        conversation_id:
+          message.conversation_id,
+      },
+      500,
+    )
+  }
+
+  const customerName =
+    String(
+      conversation?.customer_name || 'Cliente',
+    ).trim()
+
+  const customerPhone =
+    String(
+      conversation?.customer_phone ||
+      'Non renseigné',
+    ).trim()
+
+  const adminUrl =
+    Deno.env.get('ADMIN_LIVE_CHAT_URL') || ''
+
+  const digitsOnlyPhone =
+    customerPhone.replace(/\D/g, '')
 
   const whatsappUrl = digitsOnlyPhone
     ? `https://wa.me/${digitsOnlyPhone}`
@@ -118,16 +212,29 @@ Deno.serve(async (req) => {
     '',
     '💬 Message :',
     customerMessage,
-    '',
-    supportMessage.created_at
-      ? `🕒 Date : ${supportMessage.created_at}`
-      : '',
-  ]
-    .filter(Boolean)
-    .join('\n')
+  ].join('\n')
+
+  const telegramToken =
+    Deno.env.get('TELEGRAM_BOT_TOKEN')
+
+  const telegramChatId =
+    Deno.env.get('TELEGRAM_CHAT_ID')
+
+  if (!telegramToken || !telegramChatId) {
+    return jsonResponse(
+      {
+        error:
+          'Missing TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID',
+      },
+      500,
+    )
+  }
 
   const inlineKeyboard: Array<
-    Array<{ text: string; url: string }>
+    Array<{
+      text: string
+      url: string
+    }>
   > = []
 
   if (adminUrl) {
@@ -160,7 +267,7 @@ Deno.serve(async (req) => {
           chat_id: telegramChatId,
           text: telegramText,
           disable_web_page_preview: true,
-          ...(inlineKeyboard.length
+          ...(inlineKeyboard.length > 0
             ? {
                 reply_markup: {
                   inline_keyboard: inlineKeyboard,
@@ -171,37 +278,53 @@ Deno.serve(async (req) => {
       },
     )
 
-    const telegramBody = await telegramResponse.json()
+    const telegramResult =
+      await telegramResponse.json()
 
     if (!telegramResponse.ok) {
-      console.error('Telegram API error', telegramBody)
+      console.error(
+        'Telegram API error:',
+        telegramResult,
+      )
 
-      return json(
+      return jsonResponse(
         {
           error: 'Telegram notification failed',
-          telegram: telegramBody,
+          telegram_status:
+            telegramResponse.status,
+          telegram_response:
+            telegramResult,
         },
         502,
       )
     }
 
     console.log('Telegram notification sent', {
-      messageId: telegramBody?.result?.message_id,
+      messageId:
+        telegramResult?.result?.message_id,
+      conversationId:
+        message.conversation_id,
       customerName,
     })
 
-    return json({
+    return jsonResponse({
       ok: true,
       telegram: {
         sent: true,
-        message_id: telegramBody?.result?.message_id,
+        message_id:
+          telegramResult?.result?.message_id,
       },
-      support_message_id: supportMessage.id,
+      chat_message_id: message.id,
+      conversation_id:
+        message.conversation_id,
     })
   } catch (error) {
-    console.error('Telegram request failed', error)
+    console.error(
+      'Telegram request failed:',
+      error,
+    )
 
-    return json(
+    return jsonResponse(
       {
         error:
           error instanceof Error
