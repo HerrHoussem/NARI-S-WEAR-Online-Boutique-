@@ -273,6 +273,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
   .admin-form-card{background:var(--panel);border:1px solid var(--line);padding:1.2rem;margin-bottom:1rem}.admin-form-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:.7rem}.admin-form-grid input,.admin-form-grid select,.admin-form-grid textarea{width:100%}.notify-btn{border:1px solid var(--gold);background:transparent;color:var(--gold);padding:.55rem .8rem}.message-text{white-space:normal;min-width:260px;max-width:480px}.photo-preview{width:70px;height:70px;object-fit:cover}@media(max-width:800px){.admin-form-grid{grid-template-columns:1fr}}
 
 
+
+  .tab-unread-badge{display:inline-grid;place-items:center;min-width:19px;height:19px;padding:0 5px;margin-left:6px;border-radius:999px;background:var(--gold);color:#17120d;font-size:.65rem;font-weight:800;vertical-align:middle}.tab-unread-badge[hidden]{display:none}
+
   /* Interactive Live Chat inbox */
   .chat-subtitle{color:var(--muted);font-size:.8rem;margin-top:.2rem}
   .chat-tools{display:flex;gap:.6rem;align-items:center}.chat-tools input{min-width:230px}
@@ -323,7 +326,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <button class="tab-btn" data-tab="orders">Commandes</button>
     <button class="tab-btn" data-tab="reviews">Avis</button>
     <button class="tab-btn" data-tab="promos">Promos</button>
-    <button class="tab-btn" data-tab="messages">Live Chat</button>
+    <button class="tab-btn" data-tab="messages">Live Chat <span id="liveChatTabBadge" class="tab-unread-badge" hidden>0</span></button>
   </div>
 
   <main>
@@ -442,7 +445,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <section class="tab-panel" id="tab-reviews"><div class="toolbar"><h2>Avis clients</h2><button class="notify-btn" id="enableNotifications">Activer les notifications</button></div><div class="table-wrap"><table><thead><tr><th>Photo</th><th>Cliente</th><th>Note</th><th>Avis</th><th>Statut</th><th></th></tr></thead><tbody id="reviewsTableBody"></tbody></table></div></section>
     <section class="tab-panel" id="tab-promos"><div class="toolbar"><h2>Codes promo</h2></div><form class="admin-form-card" id="promoAdminForm"><div class="admin-form-grid"><input id="promoAdminCode" required placeholder="CODE"><select id="promoAdminType"><option value="percent">Pourcentage</option><option value="fixed">Montant fixe</option></select><input id="promoAdminValue" type="number" required min="1" placeholder="Valeur"><input id="promoAdminMin" type="number" min="0" placeholder="Commande minimum"></div><button class="btn-outline" style="margin-top:.7rem">Créer le code</button></form><div class="table-wrap"><table><thead><tr><th>Code</th><th>Réduction</th><th>Minimum</th><th>Actif</th><th></th></tr></thead><tbody id="promosTableBody"></tbody></table></div></section>
     <section class="tab-panel" id="tab-messages">
-      <div class="toolbar"><div><h2>Live Chat</h2><p class="chat-subtitle">Conversations clientes en temps réel</p></div><div class="chat-tools"><input id="chatSearch" type="search" placeholder="Rechercher une cliente…"><button class="btn-outline" id="refreshChats" type="button">Actualiser</button></div></div>
+      <div class="toolbar"><div><h2>Live Chat</h2><p class="chat-subtitle">Conversations clientes en temps réel</p></div><div class="chat-tools"><input id="chatSearch" type="search" placeholder="Rechercher une cliente…"><button class="btn-outline" id="enableChatNotifications" type="button">Activer les notifications</button><button class="btn-outline" id="refreshChats" type="button">Actualiser</button></div></div>
       <div class="live-chat-admin">
         <aside class="chat-inbox"><div class="chat-inbox-title"><strong>Conversations</strong><span id="unreadChatCount">0 non lue</span></div><div id="chatConversationList" class="chat-conversation-list"><div class="empty">Chargement…</div></div></aside>
         <section class="chat-room" id="chatRoom">
@@ -1040,6 +1043,28 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   let chatConversations=[];
   let activeConversationId=null;
   let chatRefreshTimer=null;
+  let previousUnreadChatTotal=null;
+  let notificationAudioContext=null;
+  const originalAdminTitle=document.title;
+
+  function playChatNotificationSound(){
+    try{
+      notificationAudioContext=notificationAudioContext||new (window.AudioContext||window.webkitAudioContext)();
+      const ctx=notificationAudioContext,osc=ctx.createOscillator(),gain=ctx.createGain();
+      osc.type='sine';osc.frequency.setValueAtTime(880,ctx.currentTime);osc.frequency.exponentialRampToValueAtTime(660,ctx.currentTime+.16);
+      gain.gain.setValueAtTime(.0001,ctx.currentTime);gain.gain.exponentialRampToValueAtTime(.16,ctx.currentTime+.02);gain.gain.exponentialRampToValueAtTime(.0001,ctx.currentTime+.25);
+      osc.connect(gain);gain.connect(ctx.destination);osc.start();osc.stop(ctx.currentTime+.26);
+    }catch(error){console.warn('Notification sound unavailable',error)}
+  }
+
+  function updateLiveChatBadge(){
+    const total=chatConversations.reduce((sum,c)=>sum+Number(c.unread_admin||0),0);
+    const badge=document.getElementById('liveChatTabBadge');
+    if(badge){badge.textContent=String(total);badge.hidden=total<1}
+    document.title=total>0?`(${total}) ${originalAdminTitle}`:originalAdminTitle;
+    if(previousUnreadChatTotal!==null&&total>previousUnreadChatTotal)playChatNotificationSound();
+    previousUnreadChatTotal=total;
+  }
 
   function chatTime(value){return value?new Date(value).toLocaleString('fr-FR',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}):''}
   function normalizePhone(value){let p=String(value||'').replace(/\D/g,'');if(p.startsWith('0'))p='213'+p.slice(1);return p}
@@ -1050,6 +1075,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     const {data,error}=await db.from('support_conversations').select('*').order('last_message_at',{ascending:false});
     if(error){list.innerHTML='<div class="empty">Exécutez LIVE-CHAT-MIGRATION.sql.<br>'+escapeHtml(error.message)+'</div>';return}
     chatConversations=data||[];
+    updateLiveChatBadge();
     renderConversationList();
     if(preserveSelection&&activeConversationId&&chatConversations.some(c=>c.id===activeConversationId)) await openConversation(activeConversationId,false);
   }
@@ -1082,8 +1108,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
   document.getElementById('refreshChats').addEventListener('click',()=>loadMessagesAdmin());
   document.getElementById('adminChatReplyForm').addEventListener('submit',async e=>{e.preventDefault();if(!activeConversationId)return;const input=document.getElementById('adminChatReply'),message=input.value.trim(),status=document.getElementById('adminChatStatus');if(!message)return;status.textContent='Envoi…';const {error}=await db.from('chat_messages').insert({conversation_id:activeConversationId,sender:'admin',message});if(error){status.textContent='Erreur : '+error.message;return}await db.from('support_conversations').update({last_message:message,last_message_at:new Date().toISOString(),unread_customer:1,status:'open'}).eq('id',activeConversationId);input.value='';status.textContent='Réponse envoyée.';await loadMessagesAdmin();setTimeout(()=>status.textContent='',1800)});
   document.getElementById('toggleChatStatus').addEventListener('click',async()=>{const conv=chatConversations.find(c=>c.id===activeConversationId);if(!conv)return;const next=conv.status==='closed'?'open':'closed';const {error}=await db.from('support_conversations').update({status:next}).eq('id',conv.id);if(error)return alert(error.message);conv.status=next;openConversation(conv.id,false)});
-  document.getElementById('enableNotifications').addEventListener('click',async()=>{const permission=await Notification.requestPermission();showToast(permission==='granted'?'Notifications activées.':'Permission refusée.')});
-  function startOrderNotifications(){if(!db||window.__nariRealtimeStarted)return;window.__nariRealtimeStarted=true;db.channel('admin-new-orders').on('postgres_changes',{event:'INSERT',schema:'public',table:'orders'},payload=>{loadOrders();loadOverview();if(Notification.permission==='granted')new Notification('Nouvelle commande NARI’S WEAR',{body:`${payload.new.customer_name||'Cliente'} — ${payload.new.product_name||'Article'}`,icon:'../assets/favicon.svg'});showToast('Nouvelle commande reçue !')}).subscribe();db.channel('admin-live-chat').on('postgres_changes',{event:'*',schema:'public',table:'chat_messages'},payload=>{loadMessagesAdmin();if(payload.eventType==='INSERT'&&payload.new?.sender==='customer'){if(Notification.permission==='granted')new Notification('Nouveau message client');showToast('Nouveau message Live Chat')}}).on('postgres_changes',{event:'*',schema:'public',table:'support_conversations'},()=>loadMessagesAdmin()).subscribe();clearInterval(chatRefreshTimer);chatRefreshTimer=setInterval(()=>{if(document.getElementById('tab-messages').classList.contains('active'))loadMessagesAdmin()},8000)}
+  async function requestAdminNotifications(){if(!('Notification' in window)){showToast('Notifications non prises en charge par ce navigateur.');return}const permission=await Notification.requestPermission();if(notificationAudioContext?.state==='suspended')await notificationAudioContext.resume();showToast(permission==='granted'?'Notifications et son activés.':'Permission refusée.')}
+  document.getElementById('enableNotifications').addEventListener('click',requestAdminNotifications);
+  document.getElementById('enableChatNotifications').addEventListener('click',requestAdminNotifications);
+  function startOrderNotifications(){if(!db||window.__nariRealtimeStarted)return;window.__nariRealtimeStarted=true;db.channel('admin-new-orders').on('postgres_changes',{event:'INSERT',schema:'public',table:'orders'},payload=>{loadOrders();loadOverview();if(Notification.permission==='granted')new Notification('Nouvelle commande NARI’S WEAR',{body:`${payload.new.customer_name||'Cliente'} — ${payload.new.product_name||'Article'}`,icon:'../assets/favicon.svg'});showToast('Nouvelle commande reçue !')}).subscribe();db.channel('admin-live-chat').on('postgres_changes',{event:'*',schema:'public',table:'chat_messages'},payload=>{loadMessagesAdmin();if(payload.eventType==='INSERT'&&payload.new?.sender==='customer'){playChatNotificationSound();if(Notification.permission==='granted')new Notification('Nouveau message NARI’S WEAR',{body:payload.new.message||'Une cliente vous a écrit.',icon:'../assets/favicon.svg',tag:'naris-live-chat'});showToast('Nouveau message Live Chat')}}).on('postgres_changes',{event:'*',schema:'public',table:'support_conversations'},()=>loadMessagesAdmin()).subscribe();clearInterval(chatRefreshTimer);chatRefreshTimer=setInterval(()=>{if(document.getElementById('tab-messages').classList.contains('active'))loadMessagesAdmin()},8000)}
   const originalShowApp=showApp;showApp=function(){originalShowApp();loadReviewsAdmin();loadPromosAdmin();loadMessagesAdmin();startOrderNotifications()};
 
   document.getElementById('analyticsRange').addEventListener('change', loadAnalytics);
