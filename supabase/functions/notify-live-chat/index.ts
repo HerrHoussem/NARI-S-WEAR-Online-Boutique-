@@ -22,9 +22,23 @@ const json = (body: unknown, status = 200) =>
 Deno.serve(async (req) => {
   if (req.method !== 'POST') return json({ error: 'Method not allowed' }, 405)
 
-  const expectedSecret = Deno.env.get('NOTIFICATION_WEBHOOK_SECRET')
-  const receivedSecret = req.headers.get('x-webhook-secret')
-  if (!expectedSecret || receivedSecret !== expectedSecret) {
+  // Accept calls from Supabase Database Webhooks securely.
+  // The built-in "Supabase Edge Functions" webhook destination sends the
+  // project's service-role key in the Authorization header. A custom
+  // x-webhook-secret remains supported as an optional fallback for HTTP webhooks.
+  const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || ''
+  const authorization = req.headers.get('authorization') || ''
+  const expectedWebhookSecret = Deno.env.get('NOTIFICATION_WEBHOOK_SECRET') || ''
+  const receivedWebhookSecret = req.headers.get('x-webhook-secret') || ''
+
+  const authorizedByServiceRole = Boolean(
+    serviceRoleKey && authorization === `Bearer ${serviceRoleKey}`
+  )
+  const authorizedByWebhookSecret = Boolean(
+    expectedWebhookSecret && receivedWebhookSecret === expectedWebhookSecret
+  )
+
+  if (!authorizedByServiceRole && !authorizedByWebhookSecret) {
     return json({ error: 'Unauthorized' }, 401)
   }
 
@@ -41,7 +55,9 @@ Deno.serve(async (req) => {
   }
 
   const supabaseUrl = Deno.env.get('SUPABASE_URL')!
-  const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+  if (!supabaseUrl || !serviceRoleKey) {
+    return json({ error: 'Supabase server credentials are unavailable' }, 500)
+  }
   const supabase = createClient(supabaseUrl, serviceRoleKey, {
     auth: { persistSession: false },
   })
