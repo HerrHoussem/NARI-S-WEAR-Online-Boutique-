@@ -1,1 +1,0 @@
-Fixed phone header overlap. Theme and language controls move into the mobile menu, while wishlist, cart and menu remain in the header. Desktop header is unchanged.
