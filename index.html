@@ -651,28 +651,40 @@
     .review-author strong{display:block;color:var(--cream)}
     .review-author span{font-size:.75rem;color:var(--muted)}
 .instagram-grid{
-      display:grid;
-      grid-template-columns:repeat(3,minmax(0,1fr));
-      gap:1rem;
+      display:flex;
+      gap:.85rem;
+      max-width:100%;
+      overflow-x:auto;
+      padding:.35rem max(1px,calc((100% - 5 * 188px - 4 * .85rem)/2)) 1rem;
+      scroll-snap-type:x proximity;
+      overscroll-behavior-inline:contain;
+      scrollbar-width:thin;
+      scrollbar-color:var(--gold) transparent;
+      -webkit-overflow-scrolling:touch;
     }
+    .instagram-grid::-webkit-scrollbar{height:5px}
+    .instagram-grid::-webkit-scrollbar-track{background:transparent}
+    .instagram-grid::-webkit-scrollbar-thumb{background:var(--gold);border-radius:999px}
     .instagram-reel{
       position:relative;
-      min-width:0;
+      flex:0 0 188px;
+      width:188px;
       overflow:hidden;
+      scroll-snap-align:start;
       border:1px solid var(--line);
       background:linear-gradient(145deg,rgba(201,161,90,.1),rgba(255,255,255,.025));
-      box-shadow:var(--shadow);
+      box-shadow:0 12px 30px rgba(0,0,0,.2);
       transition:transform .3s ease,border-color .3s ease,box-shadow .3s ease;
     }
     .instagram-reel:hover{
-      transform:translateY(-5px);
+      transform:translateY(-3px);
       border-color:rgba(201,161,90,.7);
-      box-shadow:0 22px 50px rgba(0,0,0,.38);
+      box-shadow:0 18px 38px rgba(0,0,0,.3);
     }
     .instagram-reel-frame{
       position:relative;
       width:100%;
-      aspect-ratio:9/14;
+      aspect-ratio:9/16;
       overflow:hidden;
       background:#fff;
     }
@@ -682,18 +694,19 @@
       border:0;
       display:block;
       background:#fff;
+      pointer-events:none;
     }
     .instagram-reel-link{
       display:flex;
       align-items:center;
       justify-content:space-between;
       gap:.75rem;
-      min-height:54px;
-      padding:.85rem 1rem;
+      min-height:44px;
+      padding:.6rem .7rem;
       color:var(--cream);
       border-top:1px solid var(--line);
-      font-size:.72rem;
-      letter-spacing:.12em;
+      font-size:.6rem;
+      letter-spacing:.08em;
       text-transform:uppercase;
       transition:background .25s ease,color .25s ease;
     }
@@ -702,22 +715,27 @@
       color:var(--gold-bright);
     }
     .instagram-reel-icon{
-      width:30px;
-      height:30px;
+      width:25px;
+      height:25px;
       display:grid;
       place-items:center;
       border:1px solid rgba(201,161,90,.55);
       border-radius:50%;
       color:var(--gold-bright);
-      flex:0 0 30px;
+      flex:0 0 25px;
     }
     .instagram-cta{text-align:center;margin-top:2rem}
-    @media(max-width:1020px){
-      .instagram-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-    }
     @media(max-width:700px){
-      .instagram-grid{grid-template-columns:1fr}
-      .instagram-reel-frame{aspect-ratio:9/13}
+      #instagram{padding-block:4rem}
+      #instagram .section-head{margin-bottom:2rem}
+      .instagram-grid{
+        margin-inline:-4vw;
+        padding:.25rem 4vw .85rem;
+        gap:.7rem;
+        scroll-snap-type:x mandatory;
+      }
+      .instagram-reel{flex-basis:150px;width:150px}
+      .instagram-reel-link{min-height:40px;padding:.5rem .6rem}
     }
 @media(max-width:1020px){
       .featured-collections{grid-template-columns:repeat(2,1fr)}
@@ -1832,60 +1850,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <p data-i18n="review3">Une belle qualité et un emballage soigné. Je commanderai encore.</p>
           <div class="review-author"><div class="review-avatar">M</div><div><strong>Meriem</strong><span>Constantine</span></div></div>
         </article>
-      </div>
-    </div>
-  </section>
-
-  <section id="delivery-info">
-    <div class="container">
-      <div class="delivery-panel reveal">
-        <div class="delivery-copy">
-          <div class="eyebrow" data-i18n="deliveryEyebrow">Livraison & paiement</div>
-          <h2 data-i18n="deliveryTitle">Nous livrons dans les 58 wilayas</h2>
-          <p data-i18n="deliveryDesc">Votre commande est confirmée sur WhatsApp avant l’expédition.</p>
-
-          <div class="delivery-cards">
-            <div class="delivery-card">
-              <div class="delivery-card-icon">⌖</div>
-              <div>
-                <span data-i18n="deliveryCoverage">Couverture</span>
-                <strong data-i18n="allWilayas">58 wilayas</strong>
-              </div>
-            </div>
-
-            <div class="delivery-card">
-              <div class="delivery-card-icon">↗</div>
-              <div>
-                <span data-i18n="deliveryTime">Délai estimé</span>
-                <strong data-i18n="deliveryDays">2 à 5 jours ouvrables</strong>
-              </div>
-            </div>
-
-            <div class="delivery-card">
-              <div class="delivery-card-icon">◇</div>
-              <div>
-                <span data-i18n="paymentMethod">Paiement</span>
-                <strong data-i18n="cashDelivery">À la livraison</strong>
-              </div>
-            </div>
-
-            <div class="delivery-card">
-              <div class="delivery-card-icon">◉</div>
-              <div>
-                <span data-i18n="orderConfirmation">Confirmation</span>
-                <strong>WhatsApp</strong>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="delivery-visual">
-          <img
-            src="./assets/images/delivery-banner.png?v=6"
-            alt="Livraison Nari's Wear dans les 58 wilayas"
-            loading="lazy"
-            decoding="async">
-        </div>
       </div>
     </div>
   </section>
