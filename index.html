@@ -1721,6 +1721,180 @@ body.light-theme .optional-delivery-note span{color:#554a43}
     max-height:calc(100dvh - 7rem)!important;
   }
 }
+
+/* NARI'S LOOK FINDER — compact personal shopping innovation */
+.look-finder{
+  position:relative;
+  overflow:hidden;
+  display:grid;
+  grid-template-columns:1fr auto;
+  align-items:center;
+  gap:2rem;
+  max-width:1100px;
+  margin:0 auto 1.5rem;
+  padding:1.35rem 1.5rem;
+  border:1px solid rgba(201,161,90,.46);
+  border-radius:20px;
+  background:
+    radial-gradient(circle at 92% 20%,rgba(201,161,90,.2),transparent 28%),
+    linear-gradient(120deg,rgba(92,36,48,.34),rgba(201,161,90,.07) 54%,rgba(255,255,255,.025));
+  box-shadow:0 18px 44px rgba(0,0,0,.18);
+}
+.look-finder::before{
+  content:"N";
+  position:absolute;
+  inset-inline-end:8rem;
+  top:50%;
+  transform:translateY(-53%);
+  font:600 9rem/1 "Cormorant Garamond",serif;
+  color:rgba(234,210,157,.045);
+  pointer-events:none;
+}
+.look-finder-copy{position:relative;z-index:1}
+.look-finder-copy .eyebrow{font-size:.62rem}
+.look-finder-copy h3{
+  margin:.25rem 0 .2rem;
+  color:var(--gold-bright);
+  font-size:clamp(1.55rem,2.4vw,2.2rem);
+  line-height:1;
+}
+.look-finder-copy p{color:var(--muted);font-size:.82rem}
+.look-finder-open{
+  position:relative;
+  z-index:1;
+  min-width:180px;
+  min-height:50px;
+  border-radius:999px;
+}
+.look-finder-open svg{
+  width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;
+  stroke-linecap:round;stroke-linejoin:round;
+}
+.look-quiz{
+  position:fixed;
+  inset:0;
+  z-index:3400;
+  display:grid;
+  place-items:center;
+  padding:1rem;
+  background:rgba(8,7,6,.82);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  opacity:0;
+  visibility:hidden;
+  transition:.25s ease;
+}
+.look-quiz.active{opacity:1;visibility:visible}
+.look-quiz-card{
+  position:relative;
+  width:min(760px,96vw);
+  max-height:min(88dvh,760px);
+  overflow:auto;
+  padding:2rem;
+  border:1px solid var(--line);
+  border-radius:24px;
+  background:
+    radial-gradient(circle at 100% 0,rgba(201,161,90,.17),transparent 30%),
+    linear-gradient(180deg,var(--panel-soft),var(--panel));
+  box-shadow:0 30px 90px rgba(0,0,0,.48);
+}
+.look-quiz-close{
+  position:absolute;
+  top:1rem;
+  inset-inline-end:1rem;
+  width:40px;height:40px;
+  border:1px solid var(--line);
+  border-radius:50%;
+  background:rgba(0,0,0,.16);
+  color:var(--cream);
+  cursor:pointer;
+}
+.look-quiz-head{padding-inline-end:3rem;margin-bottom:1.4rem}
+.look-quiz-head h3{
+  margin:.35rem 0;
+  color:var(--gold-bright);
+  font-size:clamp(2rem,4vw,3.1rem);
+  line-height:.95;
+}
+.look-quiz-head p{color:var(--muted);font-size:.86rem}
+.look-question{margin-top:1rem}
+.look-question-title{
+  display:flex;
+  align-items:center;
+  gap:.55rem;
+  margin-bottom:.55rem;
+  color:var(--cream);
+  font-size:.72rem;
+  font-weight:600;
+  letter-spacing:.09em;
+  text-transform:uppercase;
+}
+.look-question-title span{
+  width:24px;height:24px;
+  display:grid;place-items:center;
+  border:1px solid var(--gold);
+  border-radius:50%;
+  color:var(--gold);
+  font-size:.62rem;
+}
+.look-options{display:flex;flex-wrap:wrap;gap:.55rem}
+.look-option{
+  min-height:42px;
+  padding:.65rem .9rem;
+  border:1px solid var(--line);
+  border-radius:999px;
+  background:rgba(255,255,255,.025);
+  color:var(--cream);
+  cursor:pointer;
+  transition:.2s ease;
+}
+.look-option:hover,.look-option.active{
+  border-color:var(--gold);
+  background:var(--gold);
+  color:var(--black);
+}
+.look-find-action{width:100%;min-height:50px;margin-top:1.3rem;border-radius:12px}
+.look-results{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:.7rem;
+  margin-top:1.2rem;
+}
+.look-result-title{grid-column:1/-1;color:var(--gold-bright);font-size:.8rem}
+.look-result-card{
+  overflow:hidden;
+  border:1px solid var(--line);
+  border-radius:14px;
+  background:rgba(255,255,255,.025);
+  color:var(--cream);
+  text-align:start;
+  cursor:pointer;
+  transition:.22s ease;
+}
+.look-result-card:hover{transform:translateY(-4px);border-color:var(--gold)}
+.look-result-card img{width:100%;aspect-ratio:3/4;object-fit:cover}
+.look-result-card div{padding:.7rem}
+.look-result-card strong{display:block;font-size:.82rem}
+.look-result-card span{display:block;color:var(--gold-bright);font-size:.74rem;margin-top:.2rem}
+body.light-theme .look-quiz-card{background:linear-gradient(180deg,#fffdf8,#f4e7d8)}
+body[dir="rtl"] .look-finder-copy,body[dir="rtl"] .look-quiz-card{text-align:right}
+@media(max-width:700px){
+  .look-finder{
+    grid-template-columns:1fr;
+    gap:1rem;
+    padding:1.2rem;
+    border-radius:18px;
+  }
+  .look-finder-open{width:100%}
+  .look-quiz{padding:.55rem;place-items:end center}
+  .look-quiz-card{
+    width:100%;
+    max-height:88dvh;
+    padding:1.35rem;
+    border-radius:22px 22px 14px 14px;
+  }
+  .look-results{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
 </style>
 </head>
 
@@ -1849,7 +2023,19 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <h2><span data-i18n="newThisWeek">Nouveautés de la semaine</span></h2>
         <p><span data-i18n="collectionDesc">Des pièces élégantes en quantités limitées. Choisissez votre modèle, votre taille et commandez directement.</span></p>
       </div>
-<div class="catalog-tools reveal">
+      <div class="look-finder reveal">
+        <div class="look-finder-copy">
+          <div class="eyebrow" data-i18n="finderEyebrow">Conseillère express</div>
+          <h3 data-i18n="finderTitle">Trouvez votre look en 30 secondes</h3>
+          <p data-i18n="finderDesc">Trois choix simples, puis une sélection personnalisée parmi nos pièces disponibles.</p>
+        </div>
+        <button class="btn-solid look-finder-open" id="lookFinderOpen" type="button">
+          <span data-i18n="finderCta">Trouver mon look</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"/><path d="M19 12v7H5V5h9"/></svg>
+        </button>
+      </div>
+
+      <div class="catalog-tools reveal">
         <input id="productSearch" type="search" placeholder="Rechercher un article…" aria-label="Rechercher un article">
         <select id="productSort" aria-label="Trier les produits">
           <option value="newest">Plus récents</option>
@@ -2262,6 +2448,49 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
    <a class="btn-outline" href="https://wa.me/213552080462" target="_blank" rel="noopener" style="display:block;text-align:center;margin-top:.7rem">Continuer sur WhatsApp</a>
   </div>
 </aside>
+
+<div class="look-quiz" id="lookQuiz" role="dialog" aria-modal="true" aria-labelledby="lookQuizTitle" aria-hidden="true">
+  <div class="look-quiz-card">
+    <button class="look-quiz-close" id="lookQuizClose" type="button" aria-label="Fermer">✕</button>
+    <div class="look-quiz-head">
+      <div class="eyebrow" data-i18n="finderEyebrow">Conseillère express</div>
+      <h3 id="lookQuizTitle" data-i18n="quizTitle">Quelle tenue vous ressemble ?</h3>
+      <p data-i18n="quizDesc">Choisissez vos préférences et découvrez immédiatement nos meilleures suggestions.</p>
+    </div>
+
+    <div class="look-question">
+      <div class="look-question-title"><span>1</span><b data-i18n="quizOccasion">Pour quelle occasion ?</b></div>
+      <div class="look-options" data-look-group="occasion">
+        <button class="look-option" type="button" data-value="evening" data-i18n="quizEvening">Soirée</button>
+        <button class="look-option" type="button" data-value="ceremony" data-i18n="quizCeremony">Cérémonie</button>
+        <button class="look-option" type="button" data-value="daily" data-i18n="quizDaily">Tous les jours</button>
+      </div>
+    </div>
+
+    <div class="look-question">
+      <div class="look-question-title"><span>2</span><b data-i18n="quizColor">Votre couleur préférée ?</b></div>
+      <div class="look-options" data-look-group="color">
+        <button class="look-option" type="button" data-value="" data-i18n="quizAny">Peu importe</button>
+        <button class="look-option" type="button" data-value="noir" data-i18n="quizBlack">Noir</button>
+        <button class="look-option" type="button" data-value="beige" data-i18n="quizBeige">Beige</button>
+        <button class="look-option" type="button" data-value="bordeaux" data-i18n="quizWine">Bordeaux</button>
+      </div>
+    </div>
+
+    <div class="look-question">
+      <div class="look-question-title"><span>3</span><b data-i18n="quizBudget">Votre budget maximum ?</b></div>
+      <div class="look-options" data-look-group="budget">
+        <button class="look-option" type="button" data-value="4000">4 000 DA</button>
+        <button class="look-option" type="button" data-value="6000">6 000 DA</button>
+        <button class="look-option" type="button" data-value="8000">8 000 DA</button>
+        <button class="look-option" type="button" data-value="0" data-i18n="quizAny">Peu importe</button>
+      </div>
+    </div>
+
+    <button class="btn-solid look-find-action" id="lookFindAction" type="button" data-i18n="quizShow">Voir ma sélection</button>
+    <div class="look-results" id="lookResults" aria-live="polite"></div>
+  </div>
+</div>
 
 <div class="modal" id="orderModal" role="dialog" aria-modal="true" aria-labelledby="modalProductTitle">
   <div class="modal-card">
@@ -2879,7 +3108,15 @@ Merci de confirmer la disponibilité et le tarif de livraison.`;
       selection:'La sélection',newThisWeek:'Nouveautés de la semaine',
       collectionDesc:'Des pièces élégantes en quantités limitées. Choisissez votre modèle, votre taille et commandez directement.',
       madeInAlgiers:'Fait à Alger, pensé pour vous',readyOrder:'Prête à commander ?',
-      themeLabel:'Thème',langLabel:'Langue'
+      themeLabel:'Thème',langLabel:'Langue',
+      finderEyebrow:'Conseillère express',finderTitle:'Trouvez votre look en 30 secondes',
+      finderDesc:'Trois choix simples, puis une sélection personnalisée parmi nos pièces disponibles.',
+      finderCta:'Trouver mon look',quizTitle:'Quelle tenue vous ressemble ?',
+      quizDesc:'Choisissez vos préférences et découvrez immédiatement nos meilleures suggestions.',
+      quizOccasion:'Pour quelle occasion ?',quizEvening:'Soirée',quizCeremony:'Cérémonie',
+      quizDaily:'Tous les jours',quizColor:'Votre couleur préférée ?',quizAny:'Peu importe',
+      quizBlack:'Noir',quizBeige:'Beige',quizWine:'Bordeaux',
+      quizBudget:'Votre budget maximum ?',quizShow:'Voir ma sélection'
     },
     ar:{
       featuredEyebrow:'المجموعات المميزة',featuredTitle:'إطلالة لكل مناسبة',
@@ -2914,7 +3151,15 @@ Merci de confirmer la disponibilité et le tarif de livraison.`;
       selection:'مختاراتنا',newThisWeek:'جديد هذا الأسبوع',
       collectionDesc:'قطع أنيقة بكميات محدودة. اختاري الموديل والمقاس واطلبي مباشرة.',
       madeInAlgiers:'من الجزائر، صُممت من أجلك',readyOrder:'جاهزة للطلب؟',
-      themeLabel:'المظهر',langLabel:'اللغة'
+      themeLabel:'المظهر',langLabel:'اللغة',
+      finderEyebrow:'مستشارة سريعة',finderTitle:'اكتشفي إطلالتك في 30 ثانية',
+      finderDesc:'ثلاثة اختيارات بسيطة ثم اقتراحات شخصية من القطع المتوفرة.',
+      finderCta:'اختاري إطلالتي',quizTitle:'ما هي الإطلالة التي تشبهك؟',
+      quizDesc:'اختاري تفضيلاتك واكتشفي فوراً أفضل اقتراحاتنا.',
+      quizOccasion:'ما هي المناسبة؟',quizEvening:'سهرة',quizCeremony:'حفل',
+      quizDaily:'يومي',quizColor:'ما هو لونك المفضل؟',quizAny:'لا يهم',
+      quizBlack:'أسود',quizBeige:'بيج',quizWine:'خمري',
+      quizBudget:'ما هي ميزانيتك القصوى؟',quizShow:'عرض اقتراحاتي'
     }
   };
 
@@ -3040,6 +3285,59 @@ Merci de confirmer la disponibilité et le tarif de livraison.`;
     });
   };
   smartFilterIds.forEach(id=>$('#'+id)?.addEventListener(id==='visualMaxPrice'?'input':'change',renderProducts));
+
+  // NARI'S Look Finder — scores the real catalog without another database table.
+  const lookChoices={occasion:'',color:'',budget:0};
+  function setLookQuiz(open){
+    $('#lookQuiz').classList.toggle('active',open);
+    $('#lookQuiz').setAttribute('aria-hidden',String(!open));
+    document.body.classList.toggle('modal-open',open);
+    if(open)setTimeout(()=>$('#lookQuizClose').focus(),40);
+  }
+  $('#lookFinderOpen').addEventListener('click',()=>setLookQuiz(true));
+  $('#lookQuizClose').addEventListener('click',()=>setLookQuiz(false));
+  $('#lookQuiz').addEventListener('click',e=>{if(e.target===$('#lookQuiz'))setLookQuiz(false)});
+  $$('#lookQuiz [data-look-group]').forEach(group=>group.addEventListener('click',e=>{
+    const option=e.target.closest('.look-option');if(!option)return;
+    group.querySelectorAll('.look-option').forEach(x=>x.classList.toggle('active',x===option));
+    const key=group.dataset.lookGroup;
+    lookChoices[key]=key==='budget'?Number(option.dataset.value||0):option.dataset.value;
+  }));
+  function lookFinderScore(p){
+    const text=`${p.name||''} ${p.category||''} ${p.description||''}`.toLocaleLowerCase('fr');
+    const occasionWords={
+      evening:['robe','soirée','ensemble','tailleur'],
+      ceremony:['robe','cérémonie','bridal','abaya','ensemble'],
+      daily:['haut','chemis','jupe','ensemble','abaya']
+    };
+    let score=0;
+    if(lookChoices.occasion&&(occasionWords[lookChoices.occasion]||[]).some(word=>text.includes(word)))score+=4;
+    if(lookChoices.color&&normalizeProductVariants(p).some(v=>String(v.name||'').toLocaleLowerCase('fr').includes(lookChoices.color)))score+=3;
+    if(lookChoices.budget){
+      if(Number(p.price)<=lookChoices.budget)score+=2;
+      else score-=4;
+    }
+    if(p.featured)score+=1;
+    if(Number(p.stock||0)>0)score+=1;
+    return score;
+  }
+  $('#lookFindAction').addEventListener('click',()=>{
+    const available=products.filter(p=>Number(p.stock||0)>0);
+    const ranked=(available.length?available:products)
+      .map(p=>({p,score:lookFinderScore(p)}))
+      .sort((a,b)=>b.score-a.score||Number(a.p.price)-Number(b.p.price))
+      .slice(0,3)
+      .map(x=>x.p);
+    const title=currentLang==='ar'?'اختياراتنا المناسبة لك':'Notre sélection pour vous';
+    $('#lookResults').innerHTML=`<div class="look-result-title">${title}</div>`+
+      (ranked.length?ranked.map(p=>`<button class="look-result-card" type="button" data-look-product="${esc(p.id)}"><img src="${esc(shopImage(p))}" alt="${esc(p.name)}"><div><strong>${esc(p.name)}</strong><span>${money(p.price)}</span></div></button>`).join(''):`<div class="grid-status">${currentLang==='ar'?'لا توجد منتجات متوفرة حالياً.':'Aucun produit disponible actuellement.'}</div>`);
+  });
+  $('#lookResults').addEventListener('click',e=>{
+    const card=e.target.closest('[data-look-product]');if(!card)return;
+    const product=products.find(p=>String(p.id)===String(card.dataset.lookProduct));
+    if(product){setLookQuiz(false);openModal(product)}
+  });
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('#lookQuiz').classList.contains('active'))setLookQuiz(false)});
 
   function renderRecommendations(){
     if(!currentProduct)return; const same=products.filter(p=>String(p.id)!==String(currentProduct.id)&&p.category===currentProduct.category).slice(0,3);
