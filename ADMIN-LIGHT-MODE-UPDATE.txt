@@ -1,5 +1,0 @@
-Admin dashboard light mode added.
-- Light mode is enabled by default.
-- A theme button allows switching between light and dark modes.
-- The selected mode is remembered in the browser.
-- No Supabase or database changes are required.
