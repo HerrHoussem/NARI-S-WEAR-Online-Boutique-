@@ -1,0 +1,3444 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <!-- Google Tag Manager -->
+  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-KTWNT69Q');</script>
+  <!-- End Google Tag Manager -->
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-4WZMB4VPYY"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-4WZMB4VPYY');
+  </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Nari's Wear — prêt-à-porter féminin à Alger. Robes, ensembles, abayas et pièces élégantes avec livraison partout en Algérie.">
+  <meta name="theme-color" content="#0a0908">
+  <meta name="robots" content="index,follow">
+  <meta name="format-detection" content="telephone=no">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <meta property="og:title" content="Nari's Wear — Alger">
+  <meta property="og:description" content="Élégance contemporaine pensée pour la femme algérienne.">
+  <meta property="og:type" content="website">
+  <title>Nari's Wear — Prêt-à-porter féminin à Alger</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500;600&family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+
+  <style>
+    :root{
+      --black:#171310;
+      --panel:#211b17;
+      --panel-soft:#2b231d;
+      --gold:#c9a15a;
+      --gold-bright:#ead29d;
+      --wine:#5c2430;
+      --cream:#fff8ea;
+      --muted:#c9bcae;
+      --line:rgba(218,180,109,.28);
+      --white:#fff;
+      --success:#25d366;
+      --shadow:0 24px 70px rgba(0,0,0,.24);
+      --radius:22px;
+      --header-h:82px;
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth;scroll-padding-top:100px}
+    body{
+      background:linear-gradient(180deg,#171310 0%,#211a16 48%,#171310 100%);
+      color:var(--cream);
+      font-family:'Jost',sans-serif;
+      font-weight:300;
+      overflow-x:hidden;
+      line-height:1.6;
+    }
+    body.modal-open{overflow:hidden}
+    img{display:block;max-width:100%}
+    button,input,select{font:inherit}
+    button{border:0}
+    a{color:inherit;text-decoration:none}
+    h1,h2,h3,.serif{font-family:'Cormorant Garamond',serif}
+    ::selection{background:var(--gold);color:var(--black)}
+
+    .skip-link{
+      position:fixed;top:12px;left:12px;z-index:9999;
+      transform:translateY(-180%);
+      background:var(--gold);color:var(--black);
+      padding:.7rem 1rem;font-weight:600;
+    }
+    .skip-link:focus{transform:translateY(0)}
+
+    .container{width:min(1180px,88vw);margin-inline:auto}
+    .eyebrow{
+      font-size:.72rem;letter-spacing:.34em;text-transform:uppercase;color:var(--gold);
+    }
+    .section-head{text-align:center;max-width:680px;margin:0 auto 3.4rem}
+    .section-head h2{
+      font-size:clamp(2.4rem,5vw,4.15rem);
+      line-height:1.02;margin-top:.8rem;
+    }
+    .section-head p{color:var(--muted);margin-top:1rem}
+
+    .announcement{
+      position:relative;z-index:60;
+      min-height:34px;display:flex;align-items:center;justify-content:center;
+      padding:.35rem 1rem;text-align:center;
+      background:var(--gold);color:var(--black);
+      font-size:.72rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;
+    }
+
+    header{
+      position:sticky;top:0;z-index:50;
+      min-height:var(--header-h);
+      background:rgba(23,19,16,.90);
+      backdrop-filter:blur(15px);
+      border-bottom:1px solid var(--line);
+    }
+    .nav-wrap{
+      min-height:var(--header-h);
+      display:flex;align-items:center;justify-content:space-between;gap:2rem;
+    }
+    .logo{
+      display:flex;align-items:center;gap:.8rem;
+      font-size:1.1rem;letter-spacing:.18em;white-space:nowrap;
+    }
+    .logo-mark{
+      width:42px;height:42px;border:1px solid var(--gold);
+      border-radius:50%;display:grid;place-items:center;
+      color:var(--gold);font-family:'Cormorant Garamond',serif;font-size:1.25rem;
+    }
+    .logo b{color:var(--gold);font-weight:600}
+    nav{display:flex;align-items:center;gap:2rem}
+    nav a{
+      position:relative;font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;
+      color:var(--muted);transition:.25s ease;
+    }
+    nav a::after{
+      content:"";position:absolute;left:0;right:0;bottom:-8px;height:1px;
+      background:var(--gold);transform:scaleX(0);transition:.25s ease;
+    }
+    nav a:hover,nav a:focus-visible{color:var(--gold-bright)}
+    nav a:hover::after,nav a:focus-visible::after{transform:scaleX(1)}
+
+    .nav-actions{display:flex;align-items:center;gap:.75rem}
+    .icon-btn,.menu-btn{
+      width:42px;height:42px;border:1px solid var(--line);
+      color:var(--cream);background:transparent;cursor:pointer;
+      display:grid;place-items:center;transition:.25s ease;
+    }
+    .icon-btn:hover,.menu-btn:hover{border-color:var(--gold);color:var(--gold)}
+    .menu-btn{display:none}
+    .nav-cta,.btn-solid,.btn-outline,.wa-btn{
+      display:inline-flex;align-items:center;justify-content:center;gap:.65rem;
+      padding:.88rem 1.55rem;
+      font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;font-weight:500;
+      transition:.25s ease;cursor:pointer;
+    }
+    .nav-cta,.btn-outline{
+      border:1px solid var(--gold);color:var(--gold);background:transparent;
+    }
+    .nav-cta:hover,.btn-outline:hover{background:var(--gold);color:var(--black)}
+    .btn-solid,.wa-btn{background:var(--gold);color:var(--black)}
+    .btn-solid:hover,.wa-btn:hover{background:var(--gold-bright);transform:translateY(-2px)}
+
+
+    .utility-controls{
+      display:flex;align-items:center;gap:.55rem;
+    }
+    .utility-btn{
+      min-width:42px;height:42px;padding:0 .75rem;
+      border:1px solid var(--line);background:rgba(255,255,255,.03);
+      color:var(--cream);cursor:pointer;
+      font-size:.72rem;letter-spacing:.08em;text-transform:uppercase;
+      transition:.25s ease;
+    }
+    .utility-btn:hover,.utility-btn.active{
+      background:var(--gold);color:var(--black);border-color:var(--gold);
+    }
+    body.light-theme{
+      --black:#f7efe3;
+      --panel:#fffaf3;
+      --panel-soft:#f1e3d3;
+      --cream:#2a211b;
+      --muted:#6f6257;
+      --line:rgba(132,95,45,.22);
+      --shadow:0 24px 70px rgba(70,47,25,.14);
+      background:linear-gradient(180deg,#fffaf3 0%,#f6eadb 52%,#fffaf3 100%);
+      color:var(--cream);
+    }
+    body.light-theme header{background:rgba(255,250,243,.92)}
+    body.light-theme .announcement{background:#b9853e;color:white}
+    body.light-theme .hero{
+      background:
+        radial-gradient(circle at 20% 10%,rgba(185,133,62,.14),transparent 32%),
+        radial-gradient(circle at 90% 70%,rgba(92,36,48,.10),transparent 35%);
+    }
+    body.light-theme .product-card,
+    body.light-theme .benefit,
+    body.light-theme .modal-card,
+    body.light-theme footer{
+      background:rgba(255,250,243,.92);
+    }
+    body.light-theme .form-control,
+    body.light-theme .catalog-tools input,
+    body.light-theme .catalog-tools select{
+      background:#fffdf8;color:#2a211b;
+    }
+    body.light-theme .mobile-drawer{background:#fffaf3}
+    body[dir="rtl"]{
+      font-family:'Cairo','Jost',sans-serif;
+    }
+    body[dir="rtl"] .hero-copy,
+    body[dir="rtl"] .story-copy,
+    body[dir="rtl"] .footer-grid,
+    body[dir="rtl"] .modal-content{
+      text-align:right;
+    }
+    body[dir="rtl"] .nav-wrap,
+    body[dir="rtl"] .product-row,
+    body[dir="rtl"] .footer-bottom{
+      direction:rtl;
+    }
+    body[dir="rtl"] .hero-note span::before{
+      margin-right:0;margin-left:.6rem;
+    }
+    .lang-label{font-weight:600}
+
+    .mobile-panel{
+      position:fixed;inset:0;z-index:100;
+      visibility:hidden;opacity:0;transition:.25s ease;
+      background:rgba(0,0,0,.66);
+    }
+    .mobile-panel.active{visibility:visible;opacity:1}
+    .mobile-drawer{
+      margin-left:auto;width:min(86vw,360px);height:100%;
+      background:linear-gradient(180deg,#241d18,#1d1714);padding:1.5rem;
+      transform:translateX(100%);transition:.3s ease;
+      border-left:1px solid var(--line);
+    }
+    .mobile-panel.active .mobile-drawer{transform:translateX(0)}
+    .drawer-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem}
+    .drawer-links{display:grid;gap:.25rem}
+    .drawer-links a{
+      padding:1rem 0;border-bottom:1px solid var(--line);
+      font-family:'Cormorant Garamond',serif;font-size:1.65rem;
+    }
+    .drawer-admin-link{display:flex!important;align-items:center;justify-content:space-between;gap:1rem;color:var(--gold-bright)}
+    .drawer-admin-link small{font-family:'Jost',sans-serif;font-size:.62rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+    body[dir="rtl"] header .nav-wrap{direction:ltr}
+    body[dir="rtl"] header .logo{direction:ltr}
+    body[dir="rtl"] .mobile-drawer{direction:rtl;margin-left:0;margin-right:auto;transform:translateX(-100%);border-left:0;border-right:1px solid var(--line)}
+    body[dir="rtl"] .mobile-panel.active .mobile-drawer{transform:translateX(0)}
+    body[dir="rtl"] .drawer-admin-link{flex-direction:row-reverse}
+    body[dir="rtl"] .section-head,body[dir="rtl"] .announcement{text-align:center}
+
+    .hero{
+      position:relative;min-height:calc(100vh - 116px);
+      display:grid;grid-template-columns:1.05fr .95fr;align-items:center;gap:5vw;
+      padding:6rem 0 4.5rem;
+      background:
+        radial-gradient(circle at 20% 10%,rgba(201,161,90,.11),transparent 32%),
+        radial-gradient(circle at 90% 70%,rgba(92,36,48,.18),transparent 35%);
+      overflow:hidden;
+    }
+    .hero::before{
+      content:"NARI'S";position:absolute;right:-2vw;top:10%;
+      font-family:'Cormorant Garamond',serif;font-size:clamp(8rem,22vw,22rem);
+      color:rgba(242,234,217,.018);line-height:.8;pointer-events:none;
+    }
+    .hero-copy{position:relative;z-index:2}
+    .hero h1{
+      font-size:clamp(4rem,8vw,7.9rem);
+      color:var(--gold-bright);line-height:.82;letter-spacing:-.03em;margin-top:1.15rem;
+    }
+    .hero h1 span{
+      display:block;font-family:'Jost',sans-serif;font-size:.19em;
+      letter-spacing:.52em;color:var(--cream);margin-top:1.2rem;font-weight:400;
+    }
+    .hero p{max-width:590px;color:var(--muted);font-size:1.03rem;margin:2rem 0 2.2rem}
+    .hero-ctas{display:flex;gap:1rem;flex-wrap:wrap}
+    .hero-note{
+      margin-top:2.1rem;display:flex;gap:1.5rem;flex-wrap:wrap;
+      color:var(--muted);font-size:.76rem;text-transform:uppercase;letter-spacing:.09em;
+    }
+    .hero-note span::before{content:"◆";color:var(--gold);font-size:.55rem;margin-right:.6rem}
+
+    .hero-visual{position:relative;min-height:620px}
+    .fashion-frame{
+      position:absolute;inset:0 5% 0 12%;
+      border:1px solid rgba(201,161,90,.38);
+      border-radius:200px 200px 24px 24px;
+      overflow:hidden;
+      background:#17120f;
+      box-shadow:0 32px 90px rgba(0,0,0,.52);
+    }
+    .fashion-frame img{
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      object-position:50% 12%;
+      display:block;
+    }
+    .fashion-frame::before{
+      content:"";
+      position:absolute;inset:0;z-index:2;
+      background:
+        linear-gradient(180deg,rgba(0,0,0,.02) 35%,rgba(0,0,0,.68) 100%),
+        linear-gradient(90deg,rgba(10,9,8,.14),transparent 42%);
+      pointer-events:none;
+    }
+    .fashion-frame::after{
+      content:"BRIDAL & EVENING";
+      position:absolute;left:50%;bottom:2rem;z-index:3;
+      transform:translateX(-50%);
+      width:max-content;
+      color:rgba(244,236,220,.76);
+      font-size:.64rem;letter-spacing:.34em;text-transform:uppercase;
+    }
+    .visual-card{
+      position:absolute;padding:1rem 1.2rem;background:rgba(19,17,16,.9);
+      border:1px solid var(--line);backdrop-filter:blur(8px);box-shadow:var(--shadow);
+    }
+    .visual-card strong{display:block;font-family:'Cormorant Garamond',serif;font-size:1.55rem;color:var(--gold-bright)}
+    .visual-card span{font-size:.68rem;color:var(--muted);letter-spacing:.12em;text-transform:uppercase}
+    .visual-card.one{left:0;bottom:10%}
+    .visual-card.two{right:0;top:18%}
+
+    section{position:relative;padding:7.5rem 0}
+    .marquee{
+      width:100%;
+      overflow:hidden;
+      border-block:1px solid var(--line);
+      background:linear-gradient(180deg,#241d18,#1d1714);
+      padding:1rem 0;
+      position:relative;
+    }
+    .marquee-track{
+      display:flex;
+      align-items:center;
+      width:max-content;
+      min-width:max-content;
+      gap:0;
+      will-change:transform;
+      animation:narisTicker 26s linear infinite;
+    }
+    .marquee-group{
+      display:flex;
+      align-items:center;
+      flex-shrink:0;
+      white-space:nowrap;
+    }
+    .marquee-track span{
+      flex-shrink:0;
+      padding-left:3rem;
+      font-family:'Cormorant Garamond',serif;
+      font-size:1.25rem;
+      color:var(--gold-bright);
+      white-space:nowrap;
+    }
+    .marquee-track span::after{
+      content:"✦";
+      margin-left:3rem;
+      color:var(--gold);
+    }
+    .marquee:hover .marquee-track{
+      animation-play-state:paused;
+    }
+    @keyframes narisTicker{
+      from{transform:translate3d(0,0,0)}
+      to{transform:translate3d(-50%,0,0)}
+    }
+
+
+    .catalog-tools{display:grid;grid-template-columns:1fr auto;gap:1rem;max-width:900px;margin:0 auto 1.4rem}
+    .catalog-tools input,.catalog-tools select{min-height:48px;background:linear-gradient(180deg,#241d18,#1d1714);border:1px solid var(--line);color:var(--cream);padding:.8rem 1rem;outline:none}
+    .catalog-tools input:focus,.catalog-tools select:focus{border-color:var(--gold)}
+    .result-count{text-align:center;color:var(--muted);font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:1.2rem}
+    .stock-note{font-size:.68rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-top:.5rem}
+    .stock-note.low{color:var(--gold-bright)} .stock-note.out{color:#f0a0a0}
+    .quick-btn:disabled{opacity:.55;cursor:not-allowed;transform:none!important}
+    .toast{position:fixed;left:50%;bottom:1.3rem;z-index:400;transform:translate(-50%,130%);opacity:0;width:min(92vw,520px);padding:1rem;background:var(--cream);color:var(--black);box-shadow:var(--shadow);text-align:center;transition:.25s}
+    .toast.show{transform:translate(-50%,0);opacity:1}.toast.error{background:#f4dada;color:#4e1111}
+
+    .filters{
+      display:flex;flex-wrap:wrap;justify-content:center;gap:.65rem;margin-bottom:2.5rem;
+    }
+    .filter-btn{
+      padding:.7rem 1.15rem;border:1px solid var(--line);
+      color:var(--muted);background:transparent;cursor:pointer;
+      font-size:.72rem;letter-spacing:.11em;text-transform:uppercase;transition:.25s ease;
+    }
+    .filter-btn:hover,.filter-btn.active{background:var(--gold);border-color:var(--gold);color:var(--black)}
+
+    .product-grid{
+      display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;
+    }
+    .product-card{
+      position:relative;background:linear-gradient(180deg,#241d18,#1d1714);border:1px solid transparent;
+      transition:.3s ease;overflow:hidden;
+    }
+    .product-card:hover{transform:translateY(-7px);border-color:var(--line);box-shadow:var(--shadow)}
+    .product-media img{transition:transform .45s ease,filter .45s ease}
+    .product-card:hover .product-media img{transform:scale(1.035);filter:brightness(.88)}
+    .product-media{
+      aspect-ratio:3/4;position:relative;overflow:hidden;
+      background:
+        linear-gradient(180deg,transparent 45%,rgba(0,0,0,.75)),
+        radial-gradient(circle at 50% 30%,rgba(201,161,90,.12),transparent 25%),
+        linear-gradient(145deg,#28231f,#12100f 68%);
+    }
+    .product-media::before{
+      content:"Photo produit";position:absolute;inset:0;display:grid;place-items:center;
+      color:rgba(244,236,220,.24);font-size:.64rem;letter-spacing:.18em;text-transform:uppercase;
+    }
+    .product-media.has-image::before{content:none}
+    .product-media img{width:100%;height:100%;object-fit:cover;position:relative;z-index:1}
+    .grid-status{
+      grid-column:1/-1;text-align:center;padding:3rem 1rem;color:var(--muted);
+      font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;
+    }
+    .skeleton-card{background:var(--panel);border:1px solid var(--line);overflow:hidden}
+    .skeleton-media{aspect-ratio:3/4}
+    .skeleton-media,.skeleton-line{
+      background:linear-gradient(100deg,var(--panel) 30%,var(--panel-soft) 50%,var(--panel) 70%);
+      background-size:200% 100%;animation:skeletonShine 1.5s ease-in-out infinite;
+    }
+    .skeleton-lines{padding:.9rem}
+    .skeleton-line{height:11px;margin-bottom:.55rem}
+    .skeleton-line.w60{width:60%}
+    .skeleton-line.w40{width:40%}
+    @keyframes skeletonShine{0%{background-position:200% 0}100%{background-position:-200% 0}}
+
+    /* Mobile product modal: full image, visible close button and usable order action */
+    body.modal-open{overflow:hidden}
+    body.modal-open .mobile-bottom-nav,
+    body.modal-open .floating-wa,
+    body.modal-open .to-top,
+    body.modal-open .cx-fab,
+    body.modal-open .cx-panel{display:none!important}
+
+    @media (max-width:700px){
+      .modal{padding:0;place-items:stretch;background:#0f0d0c}
+      .modal-card{width:100%;max-width:none;height:100dvh;max-height:100dvh;border:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+      .modal-grid{display:block;min-height:100%}
+      .modal-gallery{background:#0f0d0c}
+      .modal-media{height:auto;min-height:0;aspect-ratio:3/4;background:#0f0d0c}
+      .modal-media img{width:100%;height:100%;object-fit:contain;object-position:center;background:#0f0d0c}
+      .gallery-thumbs{position:relative;z-index:2}
+      .modal-content{padding:1.35rem 1.35rem 7.5rem}
+      .modal-close{position:fixed;top:calc(.75rem + env(safe-area-inset-top));right:.75rem;z-index:2300;width:44px;height:44px;border-radius:50%;background:rgba(12,10,9,.78);border:1px solid rgba(255,255,255,.55);color:#fff;box-shadow:0 8px 24px rgba(0,0,0,.35);font-size:1.2rem}
+      .modal-actions{position:fixed;left:0;right:0;bottom:0;z-index:2200;margin:0;padding:.75rem 1rem calc(.75rem + env(safe-area-inset-bottom));grid-template-columns:.7fr 1.3fr;background:rgba(29,23,20,.97);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 -12px 30px rgba(0,0,0,.42)}
+      .modal-actions button{min-height:52px}
+      body.light-theme .modal-actions{background:rgba(255,250,243,.97)}
+    }
+
+    @media (prefers-reduced-motion:reduce){.skeleton-media,.skeleton-line{animation:none}}
+    .product-badge{
+      position:absolute;top:.7rem;left:.7rem;z-index:2;
+      background:rgba(23,19,16,.55);color:var(--gold-bright);
+      border:1px solid rgba(234,210,157,.5);
+      backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+      border-radius:999px;
+      padding:.28rem .65rem;font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;
+      box-shadow:0 4px 14px rgba(0,0,0,.25);
+    }
+    .quick-btn{
+      position:absolute;
+      left:1rem;
+      right:1rem;
+      bottom:1rem;
+      z-index:4;
+      background:rgba(244,236,220,.96);
+      color:#171310;
+      padding:.8rem 1rem;
+      text-align:center;
+      font-size:.7rem;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+      font-weight:600;
+      transform:translateY(calc(100% + 1.2rem));
+      opacity:0;
+      transition:transform .28s ease,opacity .28s ease,background .2s ease;
+      cursor:pointer;
+      box-shadow:0 10px 24px rgba(0,0,0,.22);
+    }
+    .product-card:hover .quick-btn,
+    .product-card:focus-within .quick-btn{
+      transform:translateY(0);
+      opacity:1;
+    }
+    .quick-btn:hover{
+      background:var(--gold-bright);
+    }
+    .product-info{
+      position:relative;
+      z-index:2;
+      background:var(--panel);
+    }
+    .product-info{padding:1.25rem}
+    .product-meta{font-size:.64rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold)}
+    .product-info h3{font-size:1.55rem;margin:.3rem 0 .2rem}
+    .product-row{display:flex;align-items:center;justify-content:space-between;gap:1rem}
+    .price{color:var(--gold-bright);font-weight:500}
+    .colors{display:flex;gap:.35rem}
+    .swatch{width:12px;height:12px;border-radius:50%;border:1px solid rgba(255,255,255,.35)}
+    .swatch.black{background:#111}
+    .swatch.beige{background:#d8c6aa}
+    .swatch.wine{background:var(--wine)}
+    .swatch.cream{background:var(--cream)}
+
+    .story-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:6vw;align-items:center}
+    .story-visual{
+      min-height:620px;border:1px solid var(--line);
+      background:
+        linear-gradient(180deg,transparent 55%,rgba(0,0,0,.78)),
+        linear-gradient(145deg,#211c18,#0e0d0c);
+      position:relative;overflow:hidden;
+    }
+    .story-visual::before{
+      content:"Photo de la boutique / de l'atelier";
+      position:absolute;inset:0;display:grid;place-items:center;padding:2rem;
+      color:rgba(244,236,220,.26);font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;
+    }
+    .story-visual::after{
+      content:"Depuis Alger";position:absolute;left:1.5rem;bottom:1.5rem;
+      font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--gold-bright);
+    }
+    .story-copy h2{font-size:clamp(2.7rem,5vw,4.2rem);line-height:1.03;margin:1rem 0 1.5rem}
+    .story-copy p{color:var(--muted);margin-bottom:1.1rem}
+    .signature{font-family:'Cormorant Garamond',serif;font-size:2rem;color:var(--gold);font-style:italic;margin-top:1.6rem}
+
+    .benefits{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
+    .benefit{background:linear-gradient(180deg,#241d18,#1d1714);padding:2rem 1.5rem;text-align:center}
+    .benefit-icon{font-size:1.65rem;color:var(--gold);margin-bottom:.7rem}
+    .benefit h3{font-size:1.35rem}
+    .benefit p{font-size:.85rem;color:var(--muted);margin-top:.35rem}
+
+    .lookbook{display:grid;grid-template-columns:1.35fr .65fr .65fr;grid-template-rows:repeat(2,280px);gap:1rem}
+    .look{
+      position:relative;overflow:hidden;background:linear-gradient(145deg,#24201c,#111);
+      border:1px solid var(--line);
+    }
+    .look:first-child{grid-row:1/3}
+    .look::before{
+      content:"Photo lookbook";position:absolute;inset:0;display:grid;place-items:center;
+      color:rgba(244,236,220,.22);font-size:.64rem;letter-spacing:.18em;text-transform:uppercase;
+    }
+    .look span{
+      position:absolute;left:1.2rem;bottom:1rem;
+      font-family:'Cormorant Garamond',serif;font-size:1.35rem;color:var(--gold-bright);
+    }
+
+
+    .campaign-art{
+      padding-top:1rem;
+    }
+    .campaign-art-card{
+      position:relative;
+      overflow:hidden;
+      border:1px solid var(--line);
+      background:linear-gradient(180deg,#241d18,#1d1714);
+      box-shadow:var(--shadow);
+    }
+    .campaign-art-card img{
+      width:100%;
+      height:auto;
+      display:block;
+    }
+    .campaign-art-overlay{
+      position:absolute;inset:0;
+      background:linear-gradient(180deg,transparent 70%,rgba(0,0,0,.38));
+      pointer-events:none;
+    }
+
+
+    .featured-collections{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:1rem;
+    }
+    .collection-card{
+      position:relative;
+      min-height:420px;
+      overflow:hidden;
+      border:1px solid var(--line);
+      background:linear-gradient(145deg,#4a382b,#1e1713 70%);
+      box-shadow:var(--shadow);
+      transition:.35s ease;
+    }
+    .collection-card::after{
+      content:"";position:absolute;inset:0;z-index:1;
+      background:linear-gradient(180deg,transparent 42%,rgba(0,0,0,.78));
+      pointer-events:none;
+    }
+    .collection-card img{
+      position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;
+      transition:transform .5s ease,filter .5s ease;
+    }
+    .collection-card:hover img{transform:scale(1.06);filter:brightness(.85)}
+    .collection-card-gallery{position:absolute;inset:0;z-index:0}
+    .collection-card-gallery img{
+      position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+      opacity:0;transition:opacity 1s ease,transform 6s ease,filter .5s ease;
+      transform:scale(1.04);
+    }
+    .collection-card-gallery img.active{opacity:1;transform:scale(1)}
+    .collection-card:hover .collection-card-gallery img.active{transform:scale(1.08);filter:brightness(.85)}
+    .collection-card-dots{
+      position:absolute;left:1.2rem;bottom:5.4rem;z-index:2;display:flex;gap:.35rem;
+    }
+    .collection-card-dots span{
+      width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.4);
+      transition:.3s ease;
+    }
+    .collection-card-dots span.active{background:var(--gold-bright);width:16px;border-radius:3px}
+    .collection-card:hover{transform:translateY(-8px)}
+    .collection-card::before{
+      content:"Photo collection";
+      position:absolute;inset:0;display:grid;place-items:center;
+      color:rgba(255,255,255,.22);font-size:.66rem;letter-spacing:.18em;text-transform:uppercase;
+    }
+    .collection-card-content{
+      position:absolute;left:1.2rem;right:1.2rem;bottom:1.2rem;z-index:2;
+    }
+    .collection-card h3{
+      font-size:2rem;color:var(--gold-bright);line-height:1;margin:.35rem 0;
+    }
+    .collection-card p{color:#e8ddd1;font-size:.84rem}
+    .collection-card a{
+      display:inline-flex;margin-top:.9rem;
+      font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold-bright);
+    }
+
+    #why-naris{
+      overflow:hidden;
+      background:
+        radial-gradient(circle at 12% 18%,rgba(201,161,90,.11),transparent 28%),
+        radial-gradient(circle at 88% 85%,rgba(92,36,48,.14),transparent 30%);
+    }
+    #why-naris .section-head{margin-bottom:2.35rem}
+    #why-naris .section-head h2{max-width:760px;margin-inline:auto;font-size:clamp(2.6rem,4.6vw,4rem)}
+    .why-grid{
+      display:grid;
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:1rem;
+      background:transparent;
+      border:0;
+    }
+    .why-card{
+      position:relative;
+      min-height:205px;
+      overflow:hidden;
+      display:grid;
+      grid-template-rows:auto auto 1fr;
+      align-content:start;
+      padding:1.4rem;
+      text-align:start;
+      border:1px solid var(--line);
+      border-radius:20px;
+      background:
+        linear-gradient(155deg,rgba(201,161,90,.11),transparent 42%),
+        linear-gradient(180deg,var(--panel-soft),var(--panel));
+      box-shadow:0 16px 38px rgba(0,0,0,.16);
+      transition:transform .3s ease,border-color .3s ease,box-shadow .3s ease;
+    }
+    .why-card::before{
+      content:"0" counter(why-card);
+      position:absolute;
+      top:1.25rem;
+      inset-inline-end:1.25rem;
+      color:rgba(234,210,157,.38);
+      font-size:.65rem;
+      font-weight:600;
+      letter-spacing:.16em;
+    }
+    .why-grid{counter-reset:why-card}
+    .why-card{counter-increment:why-card}
+    .why-card::after{
+      content:"";
+      position:absolute;
+      inset-inline-end:-54px;
+      top:-54px;
+      width:118px;
+      height:118px;
+      border:1px solid rgba(201,161,90,.18);
+      border-radius:50%;
+      transition:transform .4s ease,border-color .3s ease;
+    }
+    .why-card:hover{
+      transform:translateY(-6px);
+      border-color:rgba(201,161,90,.7);
+      box-shadow:0 24px 52px rgba(0,0,0,.26);
+    }
+    .why-card:hover::after{transform:scale(1.18);border-color:rgba(201,161,90,.38)}
+    .why-icon{
+      width:44px;
+      height:44px;
+      margin-bottom:1.2rem;
+      display:grid;
+      place-items:center;
+      border:1px solid rgba(201,161,90,.55);
+      border-radius:50%;
+      background:rgba(201,161,90,.08);
+      color:var(--gold-bright);
+      box-shadow:inset 0 0 0 5px rgba(201,161,90,.035);
+    }
+    .why-icon svg{
+      width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.7;
+      stroke-linecap:round;stroke-linejoin:round;
+    }
+    .why-card h3{font-size:1.5rem;line-height:1.1;margin:0}
+    .why-card p{color:var(--muted);font-size:.82rem;line-height:1.6;margin-top:.55rem;max-width:28ch}
+    body[dir="rtl"] .why-card{text-align:right}
+    body[dir="rtl"] .why-card p{margin-left:auto}
+    body.light-theme .why-card{
+      background:
+        linear-gradient(155deg,rgba(185,133,62,.1),transparent 42%),
+        linear-gradient(180deg,#fffdf8,#f7ecdf);
+      box-shadow:0 16px 34px rgba(70,47,25,.1);
+    }
+
+    .reviews-grid{
+      display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;
+    }
+    .review-card{
+      background:var(--panel);border:1px solid var(--line);
+      padding:1.7rem;box-shadow:var(--shadow);
+    }
+    .review-stars{color:var(--gold);letter-spacing:.15em}
+    .review-card p{color:var(--muted);margin:1rem 0;line-height:1.75}
+    .review-author{
+      display:flex;align-items:center;gap:.8rem;
+    }
+    .review-avatar{
+      width:44px;height:44px;border-radius:50%;
+      border:1px solid var(--gold);display:grid;place-items:center;
+      color:var(--gold);font-weight:600;
+    }
+    .review-author strong{display:block;color:var(--cream)}
+    .review-author span{font-size:.75rem;color:var(--muted)}
+    #instagram{overflow:hidden}
+    .instagram-studio{
+      position:relative;
+      display:grid;
+      grid-template-columns:minmax(260px,360px) minmax(0,1fr);
+      gap:clamp(1.4rem,4vw,4rem);
+      align-items:center;
+      max-width:980px;
+      margin-inline:auto;
+      padding:clamp(1rem,2.5vw,2rem);
+      border:1px solid var(--line);
+      background:
+        radial-gradient(circle at 12% 20%,rgba(201,161,90,.18),transparent 34%),
+        linear-gradient(145deg,var(--panel-soft),var(--panel));
+      box-shadow:var(--shadow);
+      isolation:isolate;
+    }
+    .instagram-studio::before{
+      content:"@NARIS_WEAR";
+      position:absolute;right:-.12em;bottom:-.15em;z-index:-1;
+      font:600 clamp(4.5rem,12vw,10rem)/.8 "Cormorant Garamond",serif;
+      color:rgba(201,161,90,.035);
+      letter-spacing:-.04em;white-space:nowrap;pointer-events:none;
+    }
+    .instagram-phone{
+      position:relative;
+      width:min(100%,310px);
+      margin-inline:auto;
+      padding:9px;
+      border:1px solid rgba(234,210,157,.46);
+      border-radius:34px;
+      background:#0d0b0a;
+      box-shadow:0 28px 65px rgba(0,0,0,.42);
+    }
+    .instagram-phone::before{
+      content:"";
+      position:absolute;top:14px;left:50%;z-index:3;
+      width:54px;height:5px;transform:translateX(-50%);
+      border-radius:999px;background:rgba(255,255,255,.3);
+      pointer-events:none;
+    }
+    .instagram-stage{
+      position:relative;aspect-ratio:9/14.5;overflow:hidden;
+      border-radius:26px;background:#fff;
+    }
+    .instagram-stage iframe{width:100%;height:100%;border:0;display:block;background:#fff}
+    .instagram-copy{position:relative;z-index:1}
+    .instagram-live{
+      display:inline-flex;align-items:center;gap:.45rem;
+      margin-bottom:1rem;color:var(--gold-bright);
+      font-size:.65rem;letter-spacing:.18em;text-transform:uppercase;
+    }
+    .instagram-live::before{
+      content:"";width:7px;height:7px;border-radius:50%;background:#ef6d72;
+      box-shadow:0 0 0 5px rgba(239,109,114,.12);
+    }
+    .instagram-copy h3{
+      max-width:520px;font-size:clamp(2.3rem,4vw,4rem);
+      line-height:.95;color:var(--gold-bright);
+    }
+    .instagram-copy>p{max-width:520px;margin-top:1rem;color:var(--muted)}
+    .instagram-selector{
+      display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:.65rem;margin-top:1.5rem;
+    }
+    .instagram-select{
+      min-height:64px;padding:.65rem .75rem;
+      display:flex;align-items:center;gap:.65rem;
+      border:1px solid var(--line);background:rgba(255,255,255,.025);
+      color:var(--cream);text-align:left;cursor:pointer;transition:.25s ease;
+    }
+    .instagram-select:hover,.instagram-select.active{
+      border-color:var(--gold);background:rgba(201,161,90,.11);
+      transform:translateY(-2px);
+    }
+    .instagram-select strong{
+      width:30px;height:30px;flex:0 0 30px;display:grid;place-items:center;
+      border-radius:50%;border:1px solid var(--line);color:var(--gold);
+      font-size:.68rem;
+    }
+    .instagram-select span{font-size:.66rem;line-height:1.3;letter-spacing:.07em;text-transform:uppercase}
+    .instagram-actions{display:flex;align-items:center;gap:.75rem;flex-wrap:wrap;margin-top:1.5rem}
+    .instagram-current-link{
+      display:inline-flex;align-items:center;gap:.55rem;
+      color:var(--gold-bright);font-size:.7rem;letter-spacing:.11em;text-transform:uppercase;
+    }
+    .instagram-current-link:hover{color:var(--gold)}
+    .instagram-swipe-note{color:var(--muted);font-size:.68rem}
+    body[dir="rtl"] .instagram-select{text-align:right}
+    body.light-theme .instagram-studio{background:linear-gradient(145deg,#fffdf8,#f3e5d5)}
+    @media(max-width:760px){
+      #instagram{padding-block:4rem}
+      #instagram .section-head{margin-bottom:2rem}
+      .instagram-studio{grid-template-columns:1fr;padding:1rem;gap:1.6rem}
+      .instagram-phone{width:min(72vw,260px)}
+      .instagram-copy{text-align:center}
+      .instagram-copy h3,.instagram-copy>p{margin-inline:auto}
+      .instagram-selector{
+        display:flex;overflow-x:auto;margin-inline:-1rem;padding:.25rem 1rem .65rem;
+        scroll-snap-type:x mandatory;scrollbar-width:none;
+      }
+      .instagram-selector::-webkit-scrollbar{display:none}
+      .instagram-select{flex:0 0 128px;scroll-snap-align:center}
+      .instagram-actions{justify-content:center}
+    }
+@media(max-width:1020px){
+      .featured-collections{grid-template-columns:repeat(2,1fr)}
+      .why-grid{grid-template-columns:repeat(2,1fr)}
+      .reviews-grid{grid-template-columns:1fr 1fr}
+      .delivery-panel{grid-template-columns:1fr}
+    }
+    @media(max-width:700px){
+      .featured-collections{grid-template-columns:1fr}
+      .collection-card{min-height:360px}
+      .why-grid{grid-template-columns:1fr}
+      #why-naris .section-head{margin-bottom:2rem}
+      .why-card{min-height:170px;padding:1.25rem}
+      .why-card h3{font-size:1.45rem}
+      .why-icon{width:42px;height:42px;margin-bottom:1rem}
+      .reviews-grid{grid-template-columns:1fr}
+      .delivery-copy{padding:1.5rem}
+    }
+
+
+    .delivery-panel{
+      display:grid;
+      grid-template-columns:45% 55%;
+      border:1px solid var(--line);
+      background:linear-gradient(135deg,rgba(201,161,90,.08),transparent 62%);
+      overflow:hidden;
+      box-shadow:var(--shadow);
+    }
+    .delivery-copy{
+      padding:2.5rem;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+    }
+    .delivery-copy h2{
+      font-size:clamp(2.5rem,4.5vw,4.2rem);
+      line-height:1;
+      margin:1rem 0;
+    }
+    .delivery-copy p{
+      color:var(--muted);
+      max-width:560px;
+      margin-bottom:1.5rem;
+    }
+    .delivery-cards{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:.85rem;
+    }
+    .delivery-card{
+      display:flex;
+      align-items:center;
+      gap:.85rem;
+      padding:1rem;
+      border:1px solid var(--line);
+      background:rgba(255,255,255,.035);
+      min-height:92px;
+      transition:.25s ease;
+    }
+    .delivery-card:hover{
+      transform:translateY(-3px);
+      border-color:var(--gold);
+      background:rgba(201,161,90,.08);
+    }
+    .delivery-card-icon{
+      width:42px;
+      height:42px;
+      flex:0 0 42px;
+      display:grid;
+      place-items:center;
+      border:1px solid var(--gold);
+      color:var(--gold);
+      font-size:1.1rem;
+    }
+    .delivery-card span{
+      display:block;
+      color:var(--muted);
+      font-size:.66rem;
+      letter-spacing:.1em;
+      text-transform:uppercase;
+      margin-bottom:.2rem;
+    }
+    .delivery-card strong{
+      display:block;
+      color:var(--gold-bright);
+      font-size:.88rem;
+      line-height:1.35;
+      font-weight:500;
+    }
+    .delivery-visual{
+      min-height:520px;
+      background:#efe3d3;
+      border-left:1px solid var(--line);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+      padding:1rem;
+    }
+    .delivery-visual img{
+      width:100%;
+      height:100%;
+      max-height:520px;
+      display:block;
+      object-fit:contain;
+      object-position:center;
+    }
+
+    
+    @media(max-width:700px){
+      .delivery-panel{
+        display:flex;
+        flex-direction:column;
+      }
+      .delivery-copy{
+        padding:1.25rem;
+      }
+      .delivery-copy h2{
+        font-size:2.2rem;
+        line-height:1.05;
+      }
+      .delivery-cards{
+        grid-template-columns:1fr;
+      }
+      .delivery-card{
+        min-height:auto;
+      }
+      .delivery-visual{
+        order:-1;
+        min-height:auto;
+        padding:.75rem;
+        border-left:none;
+        border-bottom:1px solid var(--line);
+      }
+      .delivery-visual img{
+        width:100%;
+        height:auto;
+        max-height:none;
+      }
+    }
+
+    .shipping-calculator{margin-top:1.4rem;padding:1.2rem;border:1px solid var(--line);background:rgba(255,255,255,.025)}
+    .shipping-methods{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin-top:.65rem}
+    .shipping-choice{border:1px solid var(--line);padding:.9rem;cursor:pointer;background:rgba(255,255,255,.025);text-align:left;color:var(--cream);transition:.2s ease}
+    .shipping-choice.active{border-color:var(--gold);background:rgba(201,161,90,.09)}
+    .shipping-choice strong,.shipping-choice span{display:block}.shipping-choice span{font-size:.74rem;color:var(--muted);margin-top:.25rem}
+    .shipping-summary{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin-top:.8rem}
+    .shipping-summary div{border:1px solid var(--line);padding:.8rem}.shipping-summary span{display:block;color:var(--muted);font-size:.68rem;text-transform:uppercase;letter-spacing:.09em}.shipping-summary strong{display:block;color:var(--gold-bright);margin-top:.25rem}
+    body.light-theme .shipping-summary strong{color:var(--wine)}
+    .faq-grid{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:1.2rem;align-items:start}
+    .faq-intro{position:sticky;top:110px;padding:2rem;border:1px solid var(--line);background:linear-gradient(145deg,rgba(201,161,90,.09),transparent)}
+    .faq-intro h2{font-size:clamp(2.6rem,5vw,4.6rem);line-height:.98;margin:.7rem 0 1rem}.faq-intro p{color:var(--muted)}
+    .faq-list{display:grid;gap:.75rem}.faq-item{border:1px solid var(--line);background:var(--panel)}
+    .faq-question{width:100%;display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1.15rem 1.25rem;color:var(--cream);background:none;border:0;text-align:left;cursor:pointer;font:inherit}
+    .faq-question strong{font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:500}.faq-plus{color:var(--gold);font-size:1.4rem;transition:.25s ease}
+    .faq-item.active .faq-plus{transform:rotate(45deg)}.faq-answer{display:grid;grid-template-rows:0fr;transition:grid-template-rows .3s ease}.faq-answer>div{overflow:hidden}.faq-answer-content{padding:0 1.25rem;color:var(--muted);line-height:1.8}.faq-item.active .faq-answer{grid-template-rows:1fr}.faq-item.active .faq-answer-content{padding-bottom:1.25rem}
+    .store-map{margin-top:1rem;border:1px solid var(--line);overflow:hidden}.store-map iframe{display:block;width:100%;height:340px;border:0}.map-actions{display:flex;gap:.7rem;flex-wrap:wrap;margin-top:1rem}
+    .floating-wa svg{width:27px;height:27px;fill:#fff;position:relative;z-index:2}
+    .floating-wa{color:#fff;animation:waAttentionMove 6.5s ease-in-out infinite,waPulse 2.6s infinite;transform-origin:50% 100%}
+    .floating-wa::before{content:"";position:absolute;inset:-7px;border:2px solid rgba(37,211,102,.48);border-radius:50%;animation:waRing 2.8s ease-out infinite}
+    .floating-wa:hover{animation-play-state:paused;transform:translateY(-4px) scale(1.08)}
+    .wa-attention{position:absolute;right:58px;bottom:7px;width:max-content;max-width:190px;padding:.48rem .7rem;border-radius:999px;background:var(--panel);border:1px solid var(--line);color:var(--cream);font-size:.7rem;font-weight:500;letter-spacing:.02em;box-shadow:0 10px 28px rgba(0,0,0,.22);opacity:0;transform:translateX(10px);pointer-events:none;animation:waBubble 10s ease-in-out infinite}
+    .wa-attention::after{content:"";position:absolute;right:-6px;top:50%;width:10px;height:10px;background:var(--panel);border-top:1px solid var(--line);border-right:1px solid var(--line);transform:translateY(-50%) rotate(45deg)}
+    @keyframes waPulse{0%,70%,100%{box-shadow:0 14px 35px rgba(0,0,0,.35)}80%{box-shadow:0 0 0 12px rgba(37,211,102,0),0 14px 35px rgba(0,0,0,.35)}}
+    @keyframes waRing{0%{opacity:.8;transform:scale(.82)}72%,100%{opacity:0;transform:scale(1.38)}}
+    @keyframes waAttentionMove{
+      0%,68%,100%{transform:translateY(0) rotate(0) scale(1)}
+      72%{transform:translateY(-9px) rotate(-7deg) scale(1.05)}
+      76%{transform:translateY(0) rotate(7deg) scale(1.02)}
+      80%{transform:translateY(-5px) rotate(-4deg) scale(1.04)}
+      84%{transform:translateY(0) rotate(0) scale(1)}
+    }
+    @keyframes waBubble{0%,12%,48%,100%{opacity:0;transform:translateX(10px)}16%,42%{opacity:1;transform:translateX(0)}}
+    @media(max-width:700px){.shipping-methods,.shipping-summary,.faq-grid{grid-template-columns:1fr}.faq-intro{position:static;padding:1.35rem}.store-map iframe{height:280px}}
+
+.order-cta{
+      text-align:center;border-block:1px solid var(--line);
+      background:
+        radial-gradient(circle at 50% 50%,rgba(201,161,90,.11),transparent 40%),
+        var(--panel);
+    }
+    .order-cta h2{font-size:clamp(3rem,7vw,5.5rem);color:var(--gold-bright);line-height:.95}
+    .order-cta p{max-width:600px;color:var(--muted);margin:1.4rem auto 2.2rem}
+    .wa-btn{background:var(--success);color:#061d0e}
+    .wa-btn:hover{background:#49e77d}
+
+    footer{padding:5rem 0 2rem;border-top:1px solid var(--line)}
+    .footer-grid{display:grid;grid-template-columns:1.4fr repeat(3,1fr);gap:3rem}
+    .footer-brand p{color:var(--muted);max-width:320px;margin-top:1rem}
+    .foot-block h4{
+      font-size:.69rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;
+    }
+    .foot-block p,.foot-block a{display:block;color:var(--muted);font-size:.88rem;line-height:2}
+    .foot-block a:hover{color:var(--gold-bright)}
+    .footer-bottom{
+      display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;
+      border-top:1px solid var(--line);margin-top:3rem;padding-top:1.4rem;
+      color:rgba(168,158,148,.62);font-size:.7rem;letter-spacing:.11em;text-transform:uppercase;
+    }
+
+    .floating-wa,.to-top{
+      position:fixed;right:1.2rem;z-index:45;width:48px;height:48px;
+      display:grid;place-items:center;border-radius:50%;box-shadow:0 14px 35px rgba(0,0,0,.35);
+      transition:.25s ease;
+    }
+    .floating-wa{bottom:1.2rem;background:var(--success);color:#061d0e;font-size:1.15rem}
+    .to-top{
+      bottom:5.4rem;background:linear-gradient(180deg,#241d18,#1d1714);border:1px solid var(--line);color:var(--gold);
+      cursor:pointer;opacity:0;visibility:hidden;transform:translateY(10px);
+    }
+    .to-top.visible{opacity:1;visibility:visible;transform:translateY(0)}
+
+    .modal{
+      position:fixed;inset:0;z-index:200;display:grid;place-items:center;
+      background:rgba(0,0,0,.76);padding:1rem;
+      opacity:0;visibility:hidden;transition:.25s ease;
+    }
+    .modal.active{opacity:1;visibility:visible}
+    .modal-card{
+      width:min(920px,96vw);max-height:92vh;overflow:auto;
+      background:linear-gradient(180deg,#241d18,#1d1714);border:1px solid var(--line);box-shadow:var(--shadow);
+      transform:translateY(18px);transition:.25s ease;
+    }
+    .modal.active .modal-card{transform:translateY(0)}
+    .modal-grid{display:grid;grid-template-columns:1fr 1fr}
+    .modal-media{
+      min-height:580px;background:
+        radial-gradient(circle at 50% 30%,rgba(201,161,90,.13),transparent 25%),
+        linear-gradient(145deg,#2a241f,#12100f);
+      display:grid;place-items:center;color:rgba(244,236,220,.28);
+      font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;
+    }
+    .modal-gallery{min-width:0}
+    .modal-media{position:relative;overflow:hidden}
+    .modal-media img{width:100%;height:100%;object-fit:cover;display:block}
+    .gallery-nav{position:absolute;inset:50% .7rem auto;display:flex;justify-content:space-between;transform:translateY(-50%);pointer-events:none}
+    .gallery-nav button{pointer-events:auto;width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,.35);background:rgba(10,9,8,.68);color:white;cursor:pointer}
+    .gallery-thumbs{display:flex;gap:.55rem;padding:.7rem;background:#151210;overflow-x:auto}
+    .gallery-thumb{flex:0 0 58px;width:58px;height:72px;padding:0;border:1px solid var(--line);background:#211b17;cursor:pointer}
+    .gallery-thumb.active{border-color:var(--gold)}
+    .gallery-thumb img{width:100%;height:100%;object-fit:cover}
+    .color-option{display:inline-flex;align-items:center;gap:.5rem}
+    .color-dot{width:16px;height:16px;border-radius:50%;border:1px solid rgba(255,255,255,.45);box-shadow:0 0 0 1px rgba(0,0,0,.25)}
+    .option.disabled{opacity:.42;text-decoration:line-through;cursor:not-allowed}
+    .variant-stock{font-size:.75rem;color:var(--muted);margin-top:.55rem}
+    .variant-stock.low{color:var(--gold-bright)}
+    .variant-stock.out{color:#e87575}
+    .variant-favorite{width:100%;margin-top:.7rem;padding:.7rem .85rem;display:flex;align-items:center;justify-content:center;gap:.55rem;border:1px solid var(--line);background:rgba(255,255,255,.025);color:var(--cream);cursor:pointer;transition:.22s ease;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase}
+    .variant-favorite:hover,.variant-favorite.active{border-color:var(--gold);background:rgba(201,161,90,.12);color:var(--gold-bright)}
+    .variant-favorite svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8}
+    .variant-favorite.active svg{fill:currentColor}
+    .quantity-control{display:grid;grid-template-columns:46px minmax(70px,1fr) 46px;width:min(210px,100%);border:1px solid var(--line);background:var(--black)}
+    .quantity-control button{min-height:46px;background:transparent;color:var(--gold-bright);border-inline-end:1px solid var(--line);cursor:pointer;font-size:1.25rem}
+    .quantity-control button:last-child{border-inline-end:0;border-inline-start:1px solid var(--line)}
+    .quantity-control button:disabled{opacity:.35;cursor:not-allowed}
+    .quantity-control input{width:100%;min-width:0;border:0;background:transparent;color:var(--cream);text-align:center;outline:0;font-weight:600;-moz-appearance:textfield}
+    .quantity-control input::-webkit-outer-spin-button,.quantity-control input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+    .quantity-note{display:block;margin-top:.4rem;color:var(--muted);font-size:.7rem}
+    .option.disabled{opacity:.38;cursor:not-allowed;text-decoration:line-through}.size-stock-note{font-size:.7rem;color:var(--muted);margin-top:.45rem}
+    .modal-content{padding:2rem;position:relative}
+    .modal-close{
+      position:absolute;right:1rem;top:1rem;width:38px;height:38px;
+      background:transparent;border:1px solid var(--line);color:var(--cream);cursor:pointer;
+    }
+    .modal-content h3{font-size:2.7rem;line-height:1;margin:1rem 0 .5rem}
+    .modal-price{color:var(--gold-bright);font-size:1.15rem;margin-bottom:1.25rem}
+    .form-group{margin-top:1rem}
+    .form-group label{
+      display:block;font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;
+      color:var(--muted);margin-bottom:.45rem;
+    }
+    .form-control{
+      width:100%;background:var(--black);border:1px solid var(--line);
+      color:var(--cream);padding:.85rem 1rem;outline:none;
+    }
+    .form-control:focus{border-color:var(--gold)}
+    .option-row{display:flex;flex-wrap:wrap;gap:.55rem}
+    .option{
+      border:1px solid var(--line);background:transparent;color:var(--cream);
+      min-width:44px;padding:.6rem .85rem;cursor:pointer;
+    }
+    .option.active{background:var(--gold);border-color:var(--gold);color:var(--black)}
+    .modal-actions{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin-top:1.4rem}
+    .modal-actions .btn-outline,.modal-actions .wa-btn{width:100%}
+    .small-note{font-size:.75rem;color:var(--muted);margin-top:.8rem}
+
+    .reveal{opacity:0;transform:translateY(22px);transition:.7s ease}
+    .reveal.visible{opacity:1;transform:none}
+
+    @media (max-width:1020px){
+      nav,.nav-cta{display:none}
+      .menu-btn{display:grid}
+      .hero{grid-template-columns:1fr;min-height:auto;text-align:center}
+      .hero-copy{padding-top:2rem}
+      .hero p{margin-inline:auto}
+      .hero-ctas,.hero-note{justify-content:center}
+      .hero-visual{min-height:520px;width:min(620px,100%);margin-inline:auto}
+      .product-grid{grid-template-columns:repeat(2,1fr)}
+      .filters{
+        flex-wrap:nowrap;justify-content:flex-start;overflow-x:auto;
+        -webkit-overflow-scrolling:touch;scrollbar-width:none;
+        margin:0 -1rem 2rem;padding:0 1rem .3rem;
+      }
+      .filters::-webkit-scrollbar{display:none}
+      .filter-btn{flex:0 0 auto;white-space:nowrap}
+      .catalog-tools{grid-template-columns:1fr}
+      .story-grid{grid-template-columns:1fr}
+      .story-visual{min-height:500px}
+      .benefits{grid-template-columns:repeat(2,1fr)}
+      .footer-grid{grid-template-columns:repeat(2,1fr)}
+    }
+
+    @media (max-width:700px){
+      :root{--header-h:72px}
+      html{scroll-padding-top:150px}
+      .announcement{font-size:.62rem}
+      header .container.nav-wrap{
+        width:min(94vw,1180px);
+        display:grid;
+        grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);
+        align-items:center;
+        gap:.4rem;
+        direction:ltr!important;
+      }
+      header .logo{
+        grid-column:2;
+        justify-self:center;
+        font-size:.78rem;
+        letter-spacing:.1em;
+        gap:.45rem;
+        direction:ltr!important;
+      }
+      header .logo-mark{width:34px;height:34px;font-size:1.05rem}
+      header .nav-actions{grid-column:3;justify-self:end;direction:ltr!important}
+      header .utility-controls{gap:.3rem}
+      header .utility-btn,header .menu-btn{width:36px;min-width:36px;height:36px;padding:0}
+      body[dir="rtl"] header .nav-actions{direction:ltr!important}
+      .wa-attention{font-size:.66rem;right:56px;max-width:165px}
+      .container{width:min(92vw,1180px)}
+      section{padding:5rem 0}
+      .hero{padding:3rem 0}
+      .hero h1{font-size:clamp(3.5rem,19vw,5.5rem)}
+      .hero h1 span{letter-spacing:.4em}
+      .hero-visual{min-height:430px}
+      .fashion-frame{inset:0 8%}
+      .fashion-frame img{object-position:50% 10%}
+      .visual-card.two{right:0;top:12%}
+      .visual-card.one{left:0;bottom:6%}
+      .product-grid{gap:.65rem}
+      .product-info{padding:1rem}
+      .product-info h3{font-size:1.3rem}
+      .quick-btn{
+        transform:none;
+        opacity:1;
+        left:.75rem;
+        right:.75rem;
+        bottom:.75rem;
+      }
+      .benefits{grid-template-columns:1fr}
+      .lookbook{grid-template-columns:1fr 1fr;grid-template-rows:320px 220px 220px}
+      .look:first-child{grid-column:1/3;grid-row:auto}
+      .footer-grid{grid-template-columns:1fr}
+      .modal-grid{grid-template-columns:1fr}
+      .modal-media{min-height:260px}
+      .modal-content{padding:1.35rem}
+      .modal-content h3{font-size:2.2rem}
+      .modal-actions{grid-template-columns:1fr}
+      .modal-content{padding-bottom:.5rem}
+      .modal-actions{
+        position:sticky;bottom:-1px;z-index:6;
+        background:#1d1714;
+        margin:1rem -1.35rem -1.35rem;padding:.9rem 1.35rem calc(.9rem + env(safe-area-inset-bottom));
+        box-shadow:0 -10px 24px rgba(0,0,0,.35);
+      }
+      body.light-theme .modal-actions{background:var(--panel)}
+      .floating-wa{bottom:5.8rem}
+      .to-top{bottom:10.4rem}
+      .mobile-bottom-nav{
+        position:fixed;left:8px;right:8px;bottom:8px;z-index:2500;
+        display:grid;grid-template-columns:repeat(4,1fr);
+        min-height:60px;overflow:hidden;
+        border:1px solid var(--line);border-radius:16px;
+        background:rgba(23,19,16,.92);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+        box-shadow:0 18px 45px rgba(0,0,0,.34);
+        padding-bottom:env(safe-area-inset-bottom);
+      }
+      body.light-theme .mobile-bottom-nav{background:rgba(255,250,243,.92)}
+      .mobile-bottom-nav a,.mobile-bottom-nav button{
+        display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.2rem;
+        min-width:0;border:0;border-right:1px solid var(--line);
+        background:transparent;color:var(--cream);font:inherit;
+        font-size:.58rem;letter-spacing:.05em;text-transform:uppercase;cursor:pointer;
+      }
+      .mobile-bottom-nav > :last-child{border-right:0}
+      .mobile-bottom-nav strong{font-size:1.15rem;line-height:1;color:var(--gold)}
+      .mobile-bottom-nav a:active,.mobile-bottom-nav button:active{background:rgba(201,161,90,.13)}
+      footer{padding-bottom:6.5rem}
+    }
+    @media (min-width:701px){.mobile-bottom-nav{display:none}}
+
+
+    @media (max-width:430px){
+      header .container.nav-wrap{width:96vw}
+      header .logo{font-size:.72rem;letter-spacing:.08em;gap:.38rem}
+      header .logo-mark{width:32px;height:32px}
+      header .utility-btn,header .menu-btn{width:34px;min-width:34px;height:34px}
+      header .utility-controls{gap:.22rem}
+      header .nav-actions{gap:.28rem}
+    }
+
+
+    /* Mobile product modal: full image, visible close button and usable order action */
+    body.modal-open{overflow:hidden}
+    body.modal-open .mobile-bottom-nav,
+    body.modal-open .floating-wa,
+    body.modal-open .to-top,
+    body.modal-open .cx-fab,
+    body.modal-open .cx-panel{display:none!important}
+
+    @media (max-width:700px){
+      .modal{padding:0;place-items:stretch;background:#0f0d0c}
+      .modal-card{width:100%;max-width:none;height:100dvh;max-height:100dvh;border:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+      .modal-grid{display:block;min-height:100%}
+      .modal-gallery{background:#0f0d0c}
+      .modal-media{height:auto;min-height:0;aspect-ratio:3/4;background:#0f0d0c}
+      .modal-media img{width:100%;height:100%;object-fit:contain;object-position:center;background:#0f0d0c}
+      .gallery-thumbs{position:relative;z-index:2}
+      .modal-content{padding:1.35rem 1.35rem 7.5rem}
+      .modal-close{position:fixed;top:calc(.75rem + env(safe-area-inset-top));right:.75rem;z-index:2300;width:44px;height:44px;border-radius:50%;background:rgba(12,10,9,.78);border:1px solid rgba(255,255,255,.55);color:#fff;box-shadow:0 8px 24px rgba(0,0,0,.35);font-size:1.2rem}
+      .modal-actions{position:fixed;left:0;right:0;bottom:0;z-index:2200;margin:0;padding:.75rem 1rem calc(.75rem + env(safe-area-inset-bottom));grid-template-columns:.7fr 1.3fr;background:rgba(29,23,20,.97);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 -12px 30px rgba(0,0,0,.42)}
+      .modal-actions button{min-height:52px}
+      body.light-theme .modal-actions{background:rgba(255,250,243,.97)}
+    }
+
+    @media (prefers-reduced-motion:reduce){
+      *{scroll-behavior:auto!important;transition:none!important}
+      .reveal{opacity:1;transform:none}
+      .marquee-track{animation:narisTicker 32s linear infinite!important}
+      .floating-wa,.floating-wa::before,.wa-attention{animation:none!important}
+      .wa-attention{opacity:1;transform:none}
+    }
+  
+    .shipping-extra{display:grid;grid-template-columns:1fr 1fr;gap:.7rem;margin-top:.7rem}
+    .shipping-extra .form-group{margin:0}
+    @media(max-width:700px){.shipping-extra{grid-template-columns:1fr}}
+
+
+/* Controlled wishlist + cart merge. Existing delivery, map, WhatsApp and animations remain untouched. */
+.shop-action-btn{position:relative;min-width:42px;height:42px;padding:0 .72rem;border:1px solid var(--line);background:transparent;color:var(--cream);cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:.35rem}
+.shop-action-btn:hover{border-color:var(--gold);color:var(--gold-bright)}
+.shop-count{position:absolute;right:-5px;top:-7px;min-width:19px;height:19px;padding:0 5px;border-radius:999px;background:var(--gold);color:var(--black);display:grid;place-items:center;font-size:.62rem;font-weight:800}
+.product-card{position:relative}
+.favorite-btn{position:absolute;right:.7rem;top:.7rem;z-index:7;width:42px;height:42px;border-radius:50%;border:1px solid rgba(255,255,255,.5);background:rgba(15,12,10,.7);color:white;cursor:pointer;font-size:1.2rem;display:grid;place-items:center;backdrop-filter:blur(8px)}
+.favorite-btn.active{background:var(--gold);border-color:var(--gold);color:var(--black)}
+.shop-drawer-layer{position:fixed;inset:0;z-index:1200;visibility:hidden;pointer-events:none}
+.shop-drawer-layer.active{visibility:visible;pointer-events:auto}
+.shop-drawer-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.68);opacity:0;transition:.25s}
+.shop-drawer-layer.active .shop-drawer-backdrop{opacity:1}
+.shop-drawer{position:absolute;right:0;top:0;width:min(460px,100%);height:100%;background:var(--panel);border-left:1px solid var(--line);box-shadow:-30px 0 80px rgba(0,0,0,.35);transform:translateX(102%);transition:.28s;display:flex;flex-direction:column}
+.shop-drawer-layer.active .shop-drawer{transform:none}
+.shop-drawer-head{height:76px;flex:0 0 76px;padding:0 1rem;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line)}
+.shop-drawer-head h3{font-size:2rem;margin:0}
+.shop-drawer-close{width:44px;height:44px;border:1px solid var(--line);background:transparent;color:var(--cream);cursor:pointer;font-size:1.25rem;border-radius:50%}
+.shop-drawer-body{padding:1rem;overflow:auto;flex:1}
+.shop-empty{text-align:center;color:var(--muted);padding:4rem 1rem;line-height:1.7}.shop-empty strong{display:block;color:var(--cream);font-size:1.4rem;margin-bottom:.5rem}
+.shop-item{display:grid;grid-template-columns:82px 1fr;gap:.8rem;padding:.8rem 0;border-bottom:1px solid var(--line)}
+.shop-item img{width:82px;height:108px;object-fit:cover;background:#16110e}
+.shop-item-title{font-weight:700;margin:.15rem 0 .4rem}.shop-item-meta{color:var(--muted);font-size:.72rem;line-height:1.6}
+.shop-item-actions{display:flex;gap:.45rem;flex-wrap:wrap;margin-top:.65rem}.shop-mini{min-height:36px;padding:.45rem .72rem;border:1px solid var(--line);background:transparent;color:var(--cream);cursor:pointer;font-size:.69rem}.shop-mini.gold{background:var(--gold);border-color:var(--gold);color:var(--black)}
+.shop-drawer-foot{padding:1rem;border-top:1px solid var(--line)}
+#addCartButton{width:100%;margin-top:.7rem}
+@media(max-width:700px){
+ .nav-actions{gap:.35rem}.utility-controls{gap:.25rem}.shop-action-btn{width:38px;height:38px;min-width:38px;padding:0;font-size:.85rem}.nav-cta{display:none}
+ .shop-drawer{top:auto;bottom:0;height:min(88svh,760px);width:100%;border-left:0;border-top:1px solid var(--line);border-radius:22px 22px 0 0;transform:translateY(102%)}
+ .shop-drawer-layer.active .shop-drawer{transform:none}.shop-drawer-head{height:66px;flex-basis:66px}.shop-drawer-body{padding-bottom:2rem}
+ .favorite-btn{width:38px;height:38px}
+}
+
+
+/* Phone header overlap fix */
+@media (max-width:700px){
+  header .container.nav-wrap{
+    width:min(94vw,1180px);
+    display:grid;
+    grid-template-columns:minmax(0,1fr) auto;
+    align-items:center;
+    gap:.55rem;
+    direction:ltr!important;
+  }
+  header .logo{
+    grid-column:1;
+    justify-self:start;
+    min-width:0;
+    max-width:100%;
+    overflow:hidden;
+    font-size:.76rem;
+    letter-spacing:.08em;
+    gap:.42rem;
+  }
+  header .logo > span:last-child{
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+  }
+  header .nav-actions{
+    grid-column:2;
+    justify-self:end;
+    gap:.3rem;
+  }
+  header .utility-controls{gap:.28rem}
+  header #themeToggle,header #langToggle{display:none!important}
+  header .shop-action-btn,header .menu-btn{
+    width:38px;min-width:38px;height:38px;padding:0;
+  }
+  .mobile-pref-bar{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:.4rem;
+    padding:.5rem .9rem;
+    border-top:1px solid var(--line);
+    background:rgba(23,19,16,.72);
+  }
+  .mobile-pref-btn{
+    flex:1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:.45rem;
+    min-height:38px;
+    border:1px solid var(--line);
+    border-radius:999px;
+    background:transparent;
+    color:var(--cream);
+    font-size:.72rem;
+    letter-spacing:.05em;
+    text-transform:uppercase;
+    cursor:pointer;
+    transition:.2s ease;
+  }
+  .mobile-pref-btn:active{background:rgba(201,161,90,.14);border-color:var(--gold)}
+  .mobile-pref-icon{font-size:.95rem;line-height:1}
+  .mobile-pref-sep{width:1px;height:22px;background:var(--line)}
+  body.light-theme .mobile-pref-bar{background:rgba(255,255,255,.6)}
+}
+@media (min-width:701px){
+  .mobile-pref-bar{display:none}
+}
+@media (max-width:390px){
+  header .logo{font-size:.68rem;letter-spacing:.055em;gap:.34rem}
+  header .logo-mark{width:30px;height:30px;min-width:30px}
+  header .shop-action-btn,header .menu-btn{width:35px;min-width:35px;height:35px}
+  header .nav-actions{gap:.2rem}
+}
+
+
+/* Final 2026 UI upgrade */
+.modern-icon{
+  width:22px;height:22px;display:block;fill:none;stroke:currentColor;
+  stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;
+  transition:transform .25s ease,fill .25s ease,stroke .25s ease;
+}
+.shop-action-btn:hover .modern-icon{transform:translateY(-1px) scale(1.06)}
+.shop-action-btn.has-items .icon-heart{fill:currentColor}
+.shop-action-btn.has-items .icon-bag{transform:translateY(-1px)}
+.shop-count{
+  transition:transform .28s cubic-bezier(.2,.8,.2,1),background .2s ease;
+  box-shadow:0 4px 13px rgba(0,0,0,.22);
+}
+.shop-count.bump{animation:counterBump .38s cubic-bezier(.2,.8,.2,1)}
+@keyframes counterBump{0%,100%{transform:scale(1)}45%{transform:scale(1.36)}}
+.favorite-btn{font-size:0}
+.favorite-btn .modern-icon{width:21px;height:21px}
+.favorite-btn.active .modern-icon{fill:currentColor}
+.shop-empty-icon{
+  width:58px;height:58px;margin:0 auto 1rem;display:grid;place-items:center;
+  border:1px solid var(--line);border-radius:50%;color:var(--gold);
+}
+.shop-empty-icon .modern-icon{width:27px;height:27px}
+.newsletter-section{
+  position:relative;padding:5.5rem 0;
+  border-top:1px solid var(--line);
+  background:
+    radial-gradient(circle at 15% 20%,rgba(201,161,90,.14),transparent 32%),
+    linear-gradient(135deg,var(--panel),var(--bg));
+  overflow:hidden;
+}
+.newsletter-section::after{
+  content:"N";position:absolute;right:4vw;top:50%;transform:translateY(-52%);
+  font:700 clamp(15rem,28vw,30rem)/1 "Cormorant Garamond",serif;
+  color:rgba(201,161,90,.04);pointer-events:none;
+}
+.newsletter-shell{
+  position:relative;z-index:1;display:grid;grid-template-columns:1fr 1.05fr;
+  align-items:center;gap:clamp(2rem,6vw,6rem);
+}
+.newsletter-copy h2{
+  margin:.65rem 0 1rem;font:600 clamp(2.3rem,5vw,4.7rem)/.94 "Cormorant Garamond",serif;
+  max-width:620px;
+}
+.newsletter-copy p{color:var(--muted);max-width:530px;line-height:1.75}
+.newsletter-input-wrap{
+  display:grid;grid-template-columns:auto 1fr auto;align-items:center;
+  min-height:62px;border:1px solid var(--line);background:rgba(255,255,255,.035);
+  padding:.4rem;border-radius:999px;transition:border-color .2s,box-shadow .2s;
+}
+.newsletter-input-wrap:focus-within{
+  border-color:var(--gold);box-shadow:0 0 0 4px rgba(201,161,90,.10);
+}
+.newsletter-mail-icon{
+  width:21px;height:21px;margin-left:1rem;fill:none;stroke:var(--gold);
+  stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;
+}
+.newsletter-input-wrap input{
+  width:100%;height:50px;border:0;outline:0;background:transparent;color:var(--cream);
+  padding:0 .85rem;font:inherit;
+}
+.newsletter-input-wrap input::placeholder{color:var(--muted)}
+.newsletter-input-wrap button{
+  min-height:50px;padding:0 1.25rem;border:0;border-radius:999px;background:var(--gold);
+  color:var(--black);font-weight:800;cursor:pointer;display:flex;align-items:center;gap:.45rem;
+  transition:transform .2s,filter .2s;
+}
+.newsletter-input-wrap button:hover{transform:translateY(-1px);filter:brightness(1.06)}
+.newsletter-input-wrap button:disabled{opacity:.58;cursor:wait}
+.newsletter-input-wrap button svg{
+  width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;
+  stroke-linecap:round;stroke-linejoin:round;
+}
+.newsletter-note{font-size:.68rem!important;line-height:1.55!important;margin:.8rem .5rem 0!important;color:var(--muted)!important}
+.newsletter-status{min-height:1.4rem;margin:.55rem .5rem 0;font-size:.76rem;font-weight:700;color:#6fd697}
+.newsletter-status.error{color:#e77d7d}
+.sr-only{
+  position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;
+  overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important;
+}
+body.light-theme .newsletter-input-wrap{background:rgba(0,0,0,.025)}
+body.light-theme .newsletter-input-wrap input{color:var(--black)}
+@media(max-width:800px){
+  .newsletter-section{padding:4rem 0}
+  .newsletter-shell{grid-template-columns:1fr;gap:1.5rem;text-align:center}
+  .newsletter-copy p{margin-left:auto;margin-right:auto}
+  .newsletter-input-wrap{max-width:580px;margin:auto}
+}
+@media(max-width:520px){
+  .newsletter-section{padding:3.3rem 0}
+  .newsletter-copy h2{font-size:2.55rem}
+  .newsletter-input-wrap{
+    grid-template-columns:auto 1fr;min-height:58px;border-radius:16px;padding:.35rem;
+  }
+  .newsletter-input-wrap button{
+    grid-column:1/-1;width:100%;margin-top:.35rem;border-radius:12px;
+  }
+  .newsletter-mail-icon{margin-left:.65rem}
+  .newsletter-note{font-size:.62rem!important}
+  header .shop-action-btn .modern-icon{width:20px;height:20px}
+}
+
+
+.optional-field{
+  color:var(--muted);
+  font-size:.72em;
+  font-weight:500;
+  letter-spacing:0;
+  text-transform:none;
+  white-space:nowrap;
+}
+body.light-theme .optional-field{color:#6f6259}
+
+
+.optional-delivery-note{
+  margin:.15rem 0 1rem;
+  padding:.85rem 1rem;
+  border:1px solid rgba(201,161,90,.28);
+  background:rgba(201,161,90,.07);
+  display:grid;
+  gap:.25rem;
+  font-size:.76rem;
+  line-height:1.5;
+}
+.optional-delivery-note strong{color:var(--gold);font-size:.72rem;letter-spacing:.08em;text-transform:uppercase}
+.optional-delivery-note span{color:var(--muted)}
+body.light-theme .optional-delivery-note{background:#fff8e9;border-color:rgba(132,95,45,.25)}
+body.light-theme .optional-delivery-note span{color:#554a43}
+
+
+/* NARI'S WEAR customer experience suite */
+.smart-filter-panel{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.7rem;margin:0 auto 1.25rem;max-width:1100px}
+.smart-filter-panel select,.smart-filter-panel input{min-height:46px;background:var(--panel);border:1px solid var(--line);color:var(--cream);padding:.7rem .85rem;outline:none}
+.product-badge-stack{position:absolute;left:.65rem;top:.65rem;z-index:6;display:grid;gap:.35rem}.smart-badge{width:max-content;padding:.28rem .58rem;border-radius:999px;background:rgba(10,9,8,.78);border:1px solid var(--gold);color:var(--gold-bright);font-size:.58rem;letter-spacing:.09em;text-transform:uppercase;backdrop-filter:blur(7px)}
+.recommendations{margin-top:2rem;padding-top:1.25rem;border-top:1px solid var(--line)}.recommendations h4{font-family:'Cormorant Garamond',serif;font-size:1.65rem;color:var(--gold-bright);margin-bottom:.8rem}.recommendation-row{display:grid;grid-template-columns:repeat(3,1fr);gap:.65rem}.recommendation-card{border:1px solid var(--line);background:var(--panel);cursor:pointer;overflow:hidden;text-align:left;color:var(--cream)}.recommendation-card img{width:100%;aspect-ratio:3/4;object-fit:cover}.recommendation-card div{padding:.6rem}.recommendation-card strong{display:block;font-size:.78rem}.recommendation-card span{font-size:.7rem;color:var(--gold-bright)}
+.review-summary{display:flex;align-items:center;gap:.6rem;margin:.35rem 0 .7rem;color:var(--gold-bright);font-size:.78rem}.review-section{padding:5.5rem 0}.review-live-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}.review-live-card{border:1px solid var(--line);background:var(--panel);padding:1.1rem}.review-live-card img{width:100%;aspect-ratio:4/3;object-fit:cover;margin-top:.8rem}.review-form{max-width:720px;margin:2rem auto 0;border:1px solid var(--line);background:var(--panel);padding:1.2rem}.review-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:.7rem}.review-form textarea{min-height:110px;resize:vertical}.review-form input,.review-form select,.review-form textarea{width:100%;background:var(--black);border:1px solid var(--line);color:var(--cream);padding:.75rem}.review-status{min-height:1.2rem;margin-top:.6rem;color:var(--gold-bright);font-size:.78rem}
+.promo-box{margin-top:1rem;border:1px dashed var(--gold);padding:.85rem}.promo-row{display:grid;grid-template-columns:1fr auto;gap:.5rem}.promo-row input{min-width:0}.promo-result{font-size:.74rem;color:var(--muted);margin-top:.45rem}.promo-result.success{color:#70d89a}.promo-result.error{color:#ef8c86}
+.cx-fab{position:fixed;right:1.2rem;bottom:9.6rem;z-index:90;width:52px;height:52px;border-radius:50%;background:var(--gold);color:var(--black);display:grid;place-items:center;font-size:1.35rem;box-shadow:var(--shadow);cursor:pointer}
+@media(max-width:700px){.cx-fab{right:1rem;bottom:10.8rem;z-index:2600}.cx-panel{left:.75rem;right:.75rem;bottom:5.5rem;width:auto;max-height:calc(100dvh - 8rem);z-index:2700;border-radius:18px;overflow:hidden}.cx-body{padding-bottom:calc(1rem + env(safe-area-inset-bottom))}}.cx-panel{position:fixed;right:1.2rem;bottom:13.6rem;z-index:95;width:min(390px,calc(100vw - 2rem));max-height:70vh;background:var(--panel);border:1px solid var(--line);box-shadow:var(--shadow);display:none;flex-direction:column}.cx-panel.active{display:flex}.cx-head{padding:.9rem 1rem;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}.cx-head strong{color:var(--gold-bright)}.cx-tabs{display:grid;grid-template-columns:1fr 1fr}.cx-tabs button{padding:.7rem;background:transparent;color:var(--muted);border-bottom:1px solid var(--line)}.cx-tabs button.active{color:var(--gold);border-bottom-color:var(--gold)}.cx-body{padding:1rem;overflow:auto}.cx-messages{display:grid;gap:.55rem;max-height:250px;overflow:auto;margin-bottom:.7rem}.cx-msg{padding:.65rem .75rem;border-radius:14px;background:rgba(201,161,90,.10);font-size:.82rem}.cx-msg.user{background:var(--gold);color:var(--black);margin-left:18%}.cx-input{display:grid;grid-template-columns:1fr auto;gap:.45rem}.cx-input input,.cx-input textarea{width:100%;background:var(--black);border:1px solid var(--line);color:var(--cream);padding:.7rem}.cx-quick{display:flex;flex-wrap:wrap;gap:.4rem;margin-bottom:.7rem}.cx-quick button{padding:.45rem .65rem;border:1px solid var(--line);background:transparent;color:var(--cream);font-size:.7rem}.live-chat-form{display:grid;gap:.55rem}.live-chat-form input,.live-chat-form textarea{width:100%;background:var(--black);border:1px solid var(--line);color:var(--cream);padding:.7rem}.live-chat-form textarea{min-height:95px}
+@media(max-width:800px){.smart-filter-panel{grid-template-columns:1fr 1fr}.review-live-grid{grid-template-columns:1fr}.review-form-grid{grid-template-columns:1fr}.recommendation-row{grid-template-columns:repeat(2,1fr)}.cx-fab{bottom:15rem}.cx-panel{bottom:19.2rem}}
+
+
+/* Floating support controls: keep AI, back-to-top and WhatsApp separated */
+.floating-wa,.to-top,.cx-fab{right:max(1.2rem,env(safe-area-inset-right))}
+.cx-fab{font-family:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif;line-height:1}
+@media(max-width:800px){
+  .floating-wa{bottom:calc(5.8rem + env(safe-area-inset-bottom))}
+  .to-top{bottom:calc(10.4rem + env(safe-area-inset-bottom))}
+  .cx-fab{bottom:calc(15rem + env(safe-area-inset-bottom))}
+  .cx-panel{bottom:calc(19.2rem + env(safe-area-inset-bottom));max-height:min(58vh,520px)}
+}
+@media(max-width:420px){
+  .floating-wa,.to-top{width:48px;height:48px}
+  .cx-fab{width:52px;height:52px;font-size:1.45rem}
+  .wa-attention{display:none}
+}
+
+
+/* Product experience restoration — mobile gallery, modal and image click fixes */
+.product-media{cursor:pointer;touch-action:manipulation}
+.product-media .favorite-btn,.product-media .quick-btn{cursor:pointer}
+.gallery-nav{z-index:8;left:.7rem;right:.7rem;top:50%;bottom:auto;inset:auto .7rem auto .7rem;transform:translateY(-50%)}
+.gallery-nav button{
+  position:absolute;top:50%;transform:translateY(-50%);z-index:9;
+  display:grid;place-items:center;font-size:1.7rem;line-height:1;
+  touch-action:manipulation;-webkit-tap-highlight-color:transparent;
+}
+.gallery-nav #galleryPrev{left:0}
+.gallery-nav #galleryNext{right:0}
+.gallery-nav button:active{transform:translateY(-50%) scale(.94)}
+.modal-media img{user-select:none;-webkit-user-drag:none}
+
+@media (max-width:700px){
+  .modal{padding:0;place-items:stretch}
+  .modal-card{
+    width:100%;height:100dvh;max-height:100dvh;overflow:hidden;
+    border:0;display:flex;flex-direction:column;
+  }
+  .modal-grid{
+    min-height:0;height:100%;display:flex;flex-direction:column;overflow:hidden;
+  }
+  .modal-gallery{flex:0 0 auto;background:#151210}
+  .modal-media{min-height:0;height:min(43vh,390px);aspect-ratio:auto}
+  .gallery-thumbs{min-height:82px;padding:.5rem .75rem}
+  .gallery-thumb{flex-basis:54px;width:54px;height:68px}
+  .gallery-nav button{width:46px;height:46px;background:rgba(10,9,8,.82)}
+  .modal-content{
+    flex:1 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;
+    padding:1.25rem 1.2rem 0;
+    overscroll-behavior:contain;
+  }
+  .modal-close{position:fixed;right:.75rem;top:calc(.75rem + env(safe-area-inset-top));z-index:20;background:rgba(10,9,8,.8)}
+  .modal-actions{
+    position:sticky;left:0;right:0;bottom:0;z-index:15;
+    grid-template-columns:minmax(0,.72fr) minmax(0,1.28fr);
+    margin:1rem -1.2rem 0;padding:.85rem 1.2rem calc(.85rem + env(safe-area-inset-bottom));
+    background:#1d1714;box-shadow:0 -12px 28px rgba(0,0,0,.42);
+  }
+  .modal-actions button{min-height:50px}
+  #confirmWhatsApp{font-weight:700}
+  body.light-theme .modal-actions{background:var(--panel)}
+}
+
+@media (max-width:430px){
+  .modal-media{height:min(39vh,330px)}
+  .modal-content h3{font-size:1.95rem;padding-right:2.5rem}
+  .modal-actions{grid-template-columns:1fr}
+  .modal-actions #continueShopping{display:none}
+}
+
+
+/* FINAL MOBILE PRODUCT MODAL FIX — full uncropped image + always-visible close button */
+@media (max-width:700px){
+  #orderModal.modal{padding:0!important;overflow:hidden!important;}
+  #orderModal .modal-card{
+    display:block!important;
+    width:100%!important;
+    height:100dvh!important;
+    max-height:100dvh!important;
+    overflow-y:auto!important;
+    overflow-x:hidden!important;
+    -webkit-overflow-scrolling:touch!important;
+    overscroll-behavior:contain!important;
+  }
+  #orderModal .modal-grid{
+    display:block!important;
+    height:auto!important;
+    min-height:100%!important;
+    overflow:visible!important;
+  }
+  #orderModal .modal-gallery{
+    display:block!important;
+    width:100%!important;
+    background:#0f0d0c!important;
+    overflow:visible!important;
+  }
+  #orderModal .modal-media{
+    display:block!important;
+    width:100%!important;
+    height:auto!important;
+    min-height:0!important;
+    max-height:none!important;
+    aspect-ratio:auto!important;
+    overflow:visible!important;
+    background:#0f0d0c!important;
+    line-height:0!important;
+  }
+  #orderModal .modal-media img{
+    display:block!important;
+    width:100%!important;
+    height:auto!important;
+    min-height:0!important;
+    max-height:none!important;
+    object-fit:contain!important;
+    object-position:center top!important;
+    background:#0f0d0c!important;
+  }
+  #orderModal .gallery-thumbs{
+    position:relative!important;
+    min-height:0!important;
+  }
+  #orderModal .modal-content{
+    display:block!important;
+    min-height:0!important;
+    overflow:visible!important;
+    padding:1.25rem 1.2rem 1rem!important;
+  }
+  #orderModal .modal-close{
+    position:fixed!important;
+    top:calc(12px + env(safe-area-inset-top))!important;
+    right:12px!important;
+    z-index:99999!important;
+    display:grid!important;
+    place-items:center!important;
+    width:46px!important;
+    height:46px!important;
+    padding:0!important;
+    border-radius:50%!important;
+    border:2px solid #fff!important;
+    background:#d2a857!important;
+    color:#111!important;
+    opacity:1!important;
+    visibility:visible!important;
+    box-shadow:0 6px 22px rgba(0,0,0,.55)!important;
+    font-size:1.35rem!important;
+    font-weight:800!important;
+    line-height:1!important;
+    -webkit-appearance:none!important;
+    appearance:none!important;
+  }
+  #orderModal .modal-actions{
+    position:sticky!important;
+    left:auto!important;
+    right:auto!important;
+    bottom:0!important;
+    z-index:50!important;
+    margin:1rem -1.2rem -1rem!important;
+  }
+}
+
+.customer-chat-head{display:flex;justify-content:space-between;align-items:center;gap:.6rem;margin-bottom:.7rem}.customer-chat-head strong{color:var(--gold-bright)}.customer-chat-head button{background:transparent;color:var(--gold);font-size:.68rem;text-decoration:underline}.customer-chat-thread{max-height:280px;min-height:170px;padding:.25rem}.customer-chat-thread .cx-msg.admin{margin-right:18%;background:rgba(201,161,90,.12)}.customer-chat-thread .cx-msg.user{margin-left:18%}.customer-chat-thread time{display:block;font-size:.58rem;opacity:.65;margin-top:.25rem}.live-chat-form input,.live-chat-form textarea{font-size:16px}
+
+/* Discreet assistant launcher: separate from the right-side shopping controls */
+.cx-fab{
+  left:max(1.15rem,env(safe-area-inset-left))!important;
+  right:auto!important;
+  bottom:1.2rem!important;
+  width:46px!important;
+  height:46px!important;
+  overflow:visible;
+  border:1px solid rgba(234,210,157,.72);
+  background:linear-gradient(145deg,#d5ad63,#a97b34);
+  color:#171310;
+  box-shadow:0 12px 28px rgba(0,0,0,.3);
+  transition:transform .25s ease,box-shadow .25s ease,filter .25s ease;
+}
+.cx-fab::after{
+  content:"";
+  position:absolute;
+  inset:-5px;
+  border:1px solid rgba(201,161,90,.25);
+  border-radius:50%;
+  pointer-events:none;
+}
+.cx-fab:hover{
+  transform:translateY(-3px);
+  filter:brightness(1.06);
+  box-shadow:0 16px 34px rgba(0,0,0,.36);
+}
+.cx-fab svg{
+  width:27px;
+  height:27px;
+  fill:none;
+  stroke:currentColor;
+  stroke-width:1.55;
+  stroke-linecap:round;
+  stroke-linejoin:round;
+}
+.cx-fab .bot-spark{fill:rgba(255,248,234,.72);stroke-width:1.1}
+.cx-panel{
+  left:max(1.15rem,env(safe-area-inset-left))!important;
+  right:auto!important;
+  bottom:4.9rem!important;
+  border-radius:18px;
+  overflow:hidden;
+}
+@media(max-width:800px){
+  .cx-fab{
+    left:max(1rem,env(safe-area-inset-left))!important;
+    bottom:calc(5.8rem + env(safe-area-inset-bottom))!important;
+    width:44px!important;
+    height:44px!important;
+    z-index:2400;
+  }
+  .cx-fab svg{width:25px;height:25px}
+  .cx-panel{
+    left:.75rem!important;
+    right:.75rem!important;
+    bottom:calc(5.4rem + env(safe-area-inset-bottom))!important;
+    width:auto!important;
+    max-height:calc(100dvh - 7rem)!important;
+  }
+}
+
+/* NARI'S LOOK FINDER — compact personal shopping innovation */
+.look-finder{
+  position:relative;
+  overflow:hidden;
+  display:grid;
+  grid-template-columns:1fr auto;
+  align-items:center;
+  gap:2rem;
+  max-width:1100px;
+  margin:0 auto 1.5rem;
+  padding:1.35rem 1.5rem;
+  border:1px solid rgba(201,161,90,.46);
+  border-radius:20px;
+  background:
+    radial-gradient(circle at 92% 20%,rgba(201,161,90,.2),transparent 28%),
+    linear-gradient(120deg,rgba(92,36,48,.34),rgba(201,161,90,.07) 54%,rgba(255,255,255,.025));
+  box-shadow:0 18px 44px rgba(0,0,0,.18);
+}
+.look-finder::before{
+  content:"N";
+  position:absolute;
+  inset-inline-end:8rem;
+  top:50%;
+  transform:translateY(-53%);
+  font:600 9rem/1 "Cormorant Garamond",serif;
+  color:rgba(234,210,157,.045);
+  pointer-events:none;
+}
+.look-finder-copy{position:relative;z-index:1}
+.look-finder-copy .eyebrow{font-size:.62rem}
+.look-finder-copy h3{
+  margin:.25rem 0 .2rem;
+  color:var(--gold-bright);
+  font-size:clamp(1.55rem,2.4vw,2.2rem);
+  line-height:1;
+}
+.look-finder-copy p{color:var(--muted);font-size:.82rem}
+.look-finder-open{
+  position:relative;
+  z-index:1;
+  min-width:180px;
+  min-height:50px;
+  border-radius:999px;
+}
+.look-finder-open svg{
+  width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;
+  stroke-linecap:round;stroke-linejoin:round;
+}
+.look-quiz{
+  position:fixed;
+  inset:0;
+  z-index:3400;
+  display:grid;
+  place-items:center;
+  padding:1rem;
+  background:rgba(8,7,6,.82);
+  backdrop-filter:blur(10px);
+  -webkit-backdrop-filter:blur(10px);
+  opacity:0;
+  visibility:hidden;
+  transition:.25s ease;
+}
+.look-quiz.active{opacity:1;visibility:visible}
+.look-quiz-card{
+  position:relative;
+  width:min(760px,96vw);
+  max-height:min(88dvh,760px);
+  overflow:auto;
+  padding:2rem;
+  border:1px solid var(--line);
+  border-radius:24px;
+  background:
+    radial-gradient(circle at 100% 0,rgba(201,161,90,.17),transparent 30%),
+    linear-gradient(180deg,var(--panel-soft),var(--panel));
+  box-shadow:0 30px 90px rgba(0,0,0,.48);
+}
+.look-quiz-close{
+  position:absolute;
+  top:1rem;
+  inset-inline-end:1rem;
+  width:40px;height:40px;
+  border:1px solid var(--line);
+  border-radius:50%;
+  background:rgba(0,0,0,.16);
+  color:var(--cream);
+  cursor:pointer;
+}
+.look-quiz-head{padding-inline-end:3rem;margin-bottom:1.4rem}
+.look-quiz-head h3{
+  margin:.35rem 0;
+  color:var(--gold-bright);
+  font-size:clamp(2rem,4vw,3.1rem);
+  line-height:.95;
+}
+.look-quiz-head p{color:var(--muted);font-size:.86rem}
+.look-question{margin-top:1rem}
+.look-question-title{
+  display:flex;
+  align-items:center;
+  gap:.55rem;
+  margin-bottom:.55rem;
+  color:var(--cream);
+  font-size:.72rem;
+  font-weight:600;
+  letter-spacing:.09em;
+  text-transform:uppercase;
+}
+.look-question-title span{
+  width:24px;height:24px;
+  display:grid;place-items:center;
+  border:1px solid var(--gold);
+  border-radius:50%;
+  color:var(--gold);
+  font-size:.62rem;
+}
+.look-options{display:flex;flex-wrap:wrap;gap:.55rem}
+.look-option{
+  min-height:42px;
+  padding:.65rem .9rem;
+  border:1px solid var(--line);
+  border-radius:999px;
+  background:rgba(255,255,255,.025);
+  color:var(--cream);
+  cursor:pointer;
+  transition:.2s ease;
+}
+.look-option:hover,.look-option.active{
+  border-color:var(--gold);
+  background:var(--gold);
+  color:var(--black);
+}
+.look-find-action{width:100%;min-height:50px;margin-top:1.3rem;border-radius:12px}
+.look-results{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:.7rem;
+  margin-top:1.2rem;
+}
+.look-result-title{grid-column:1/-1;color:var(--gold-bright);font-size:.8rem}
+.look-result-card{
+  overflow:hidden;
+  border:1px solid var(--line);
+  border-radius:14px;
+  background:rgba(255,255,255,.025);
+  color:var(--cream);
+  text-align:start;
+  cursor:pointer;
+  transition:.22s ease;
+}
+.look-result-card:hover{transform:translateY(-4px);border-color:var(--gold)}
+.look-result-card img{width:100%;aspect-ratio:3/4;object-fit:cover}
+.look-result-card div{padding:.7rem}
+.look-result-card strong{display:block;font-size:.82rem}
+.look-result-card span{display:block;color:var(--gold-bright);font-size:.74rem;margin-top:.2rem}
+body.light-theme .look-quiz-card{background:linear-gradient(180deg,#fffdf8,#f4e7d8)}
+body[dir="rtl"] .look-finder-copy,body[dir="rtl"] .look-quiz-card{text-align:right}
+@media(max-width:700px){
+  .look-finder{
+    grid-template-columns:1fr;
+    gap:1rem;
+    padding:1.2rem;
+    border-radius:18px;
+  }
+  .look-finder-open{width:100%}
+  .look-quiz{padding:.55rem;place-items:end center}
+  .look-quiz-card{
+    width:100%;
+    max-height:88dvh;
+    padding:1.35rem;
+    border-radius:22px 22px 14px 14px;
+  }
+  .look-results{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+</style>
+</head>
+
+<body>
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KTWNT69Q"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+<a href="#main" class="skip-link">Aller au contenu</a>
+
+<div class="announcement">
+  Livraison disponible dans les 58 wilayas · Paiement à la livraison
+</div>
+
+<header>
+  <div class="container nav-wrap">
+    <a href="#home" class="logo" aria-label="Nari's Wear — Accueil">
+      <span class="logo-mark">N</span>
+      <span>NARI<b>'</b>S WEAR</span>
+    </a>
+
+    <nav aria-label="Navigation principale">
+      <a href="#collection"><span data-i18n="collection">Collection</span></a>
+      <a href="./admin/"><span data-i18n="administration">Administration</span></a>
+      <a href="#contact"><span data-i18n="contact">Contact</span></a>
+    </nav>
+
+    <div class="nav-actions">
+      <div class="utility-controls">
+        <button class="utility-btn" id="themeToggle" aria-label="Changer le thème">☀</button>
+        <button class="utility-btn lang-label" id="langToggle" aria-label="Changer la langue">AR</button>
+        <button class="shop-action-btn" id="wishlistOpen" aria-label="Ouvrir les favoris"><svg class="modern-icon icon-heart" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78Z"/></svg><span class="shop-count" id="wishlistCount">0</span></button>
+        <button class="shop-action-btn" id="cartOpen" aria-label="Ouvrir le panier"><svg class="modern-icon icon-bag" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8h12l1 13H5L6 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg><span class="shop-count" id="cartCount">0</span></button>
+      </div>
+      <a class="nav-cta" href="#collection" data-i18n="shop">Acheter</a>
+      <button class="menu-btn" id="menuBtn" aria-label="Ouvrir le menu" aria-expanded="false">☰</button>
+    </div>
+  </div>
+  <div class="mobile-pref-bar" id="mobilePrefBar">
+    <button type="button" class="mobile-pref-btn" id="mobileBarTheme">
+      <span class="mobile-pref-icon" aria-hidden="true">☀</span>
+      <span data-i18n="themeLabel">Thème</span>
+    </button>
+    <span class="mobile-pref-sep" aria-hidden="true"></span>
+    <button type="button" class="mobile-pref-btn" id="mobileBarLang">
+      <span class="mobile-pref-icon" aria-hidden="true">AR</span>
+      <span data-i18n="langLabel">Langue</span>
+    </button>
+  </div>
+</header>
+
+<div class="mobile-panel" id="mobilePanel" aria-hidden="true">
+  <div class="mobile-drawer">
+    <div class="drawer-head">
+      <div class="logo"><span class="logo-mark">N</span><span>NARI'S WEAR</span></div>
+      <button class="icon-btn" id="closeMenu" aria-label="Fermer le menu">✕</button>
+    </div>
+    <div class="drawer-links">
+      <a href="#home">Accueil</a>
+      <a href="#collection"><span data-i18n="collection">Collection</span></a>
+      <a href="./admin/" class="drawer-admin-link"><span data-i18n="administration">Administration</span><small data-i18n="adminLogin">Connexion sécurisée</small></a>
+      <a href="#contact"><span data-i18n="contact">Contact</span></a>
+    </div>
+    <a href="https://wa.me/213552080462" target="_blank" rel="noopener" class="wa-btn" style="margin-top:1rem;width:100%">
+      WhatsApp
+    </a>
+  </div>
+</div>
+
+<main id="main">
+  <section class="hero" id="home">
+    <div class="container" style="display:contents">
+      <div class="hero-copy">
+        <div class="eyebrow">Alger · Prêt-à-porter féminin</div>
+        <h1>NARI'S<span>WEAR</span></h1>
+        <p>
+          Des pièces choisies pour la femme algérienne moderne — coupes élégantes,
+          confort au quotidien et détails qui font la différence.
+        </p>
+        <div class="hero-ctas">
+          <a class="btn-solid" href="#collection"><span data-i18n="discover">Découvrir la collection</span></a>
+          <a class="btn-outline" href="https://wa.me/213552080462" target="_blank" rel="noopener"><span data-i18n="whatsappOrder">Commander sur WhatsApp</span></a>
+        </div>
+        <div class="hero-note">
+          <span><span data-i18n="limited">Petites quantités</span></span>
+          <span><span data-i18n="delivery">Livraison nationale</span></span>
+          <span><span data-i18n="advice">Conseil personnalisé</span></span>
+        </div>
+      </div>
+
+      <div class="hero-visual" aria-label="Visuel principal de la collection">
+        <div class="fashion-frame"><img src="./assets/images/hero-naris.webp?v=3" alt="Nari’s Wear bridal and evening collection" width="900" height="1343" fetchpriority="high"></div>
+        <div class="visual-card one">
+          <strong>Nouvelle collection</strong>
+          <span>Édition limitée</span>
+        </div>
+        <div class="visual-card two">
+          <strong>Alger</strong>
+          <span>Style & caractère</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="marquee" aria-label="Informations boutique">
+    <div class="marquee-track">
+      <div class="marquee-group">
+        <span>Nouveautés chaque semaine</span>
+        <span>Élégance contemporaine</span>
+        <span>Livraison partout en Algérie</span>
+        <span>Conseil taille sur WhatsApp</span>
+      </div>
+      <div class="marquee-group">
+        <span>Nouveautés chaque semaine</span>
+        <span>Élégance contemporaine</span>
+        <span>Livraison partout en Algérie</span>
+        <span>Conseil taille sur WhatsApp</span>
+      </div>
+    </div>
+  </div>
+
+  <section id="collection">
+    <div class="container">
+      <div class="section-head reveal">
+        <div class="eyebrow"><span data-i18n="selection">La sélection</span></div>
+        <h2><span data-i18n="newThisWeek">Nouveautés de la semaine</span></h2>
+        <p><span data-i18n="collectionDesc">Des pièces élégantes en quantités limitées. Choisissez votre modèle, votre taille et commandez directement.</span></p>
+      </div>
+      <div class="look-finder reveal">
+        <div class="look-finder-copy">
+          <div class="eyebrow" data-i18n="finderEyebrow">Conseillère express</div>
+          <h3 data-i18n="finderTitle">Trouvez votre look en 30 secondes</h3>
+          <p data-i18n="finderDesc">Trois choix simples, puis une sélection personnalisée parmi nos pièces disponibles.</p>
+        </div>
+        <button class="btn-solid look-finder-open" id="lookFinderOpen" type="button">
+          <span data-i18n="finderCta">Trouver mon look</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"/><path d="M19 12v7H5V5h9"/></svg>
+        </button>
+      </div>
+
+      <div class="catalog-tools reveal">
+        <input id="productSearch" type="search" placeholder="Rechercher un article…" aria-label="Rechercher un article">
+        <select id="productSort" aria-label="Trier les produits">
+          <option value="newest">Plus récents</option>
+          <option value="price-asc">Prix croissant</option>
+          <option value="price-desc">Prix décroissant</option>
+          <option value="name">Nom A–Z</option>
+        </select>
+      </div>
+
+      <div class="smart-filter-panel reveal" aria-label="Filtres avancés">
+        <select id="visualColorFilter"><option value="">Toutes les couleurs</option></select>
+        <select id="visualSizeFilter"><option value="">Toutes les tailles</option></select>
+        <select id="visualStockFilter"><option value="">Toute disponibilité</option><option value="available">En stock</option><option value="low">Presque épuisé</option></select>
+        <input id="visualMaxPrice" type="number" min="0" step="100" placeholder="Prix maximum (DA)">
+      </div>
+      <div class="filters reveal" role="group" aria-label="Filtrer les produits" id="filterBar">
+        <button class="filter-btn active" data-filter="all">Tout</button>
+      </div>
+      <p class="result-count" id="resultCount" aria-live="polite"></p>
+
+      <div class="product-grid" id="productGrid">
+        <div class="skeleton-card"><div class="skeleton-media"></div><div class="skeleton-lines"><div class="skeleton-line w60"></div><div class="skeleton-line w40"></div></div></div>
+        <div class="skeleton-card"><div class="skeleton-media"></div><div class="skeleton-lines"><div class="skeleton-line w60"></div><div class="skeleton-line w40"></div></div></div>
+        <div class="skeleton-card"><div class="skeleton-media"></div><div class="skeleton-lines"><div class="skeleton-line w60"></div><div class="skeleton-line w40"></div></div></div>
+        <div class="skeleton-card"><div class="skeleton-media"></div><div class="skeleton-lines"><div class="skeleton-line w60"></div><div class="skeleton-line w40"></div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="featured-collections">
+    <div class="container">
+      <div class="section-head reveal">
+        <div class="eyebrow" data-i18n="featuredEyebrow">Collections vedettes</div>
+        <h2 data-i18n="featuredTitle">Une tenue pour chaque moment</h2>
+        <p data-i18n="featuredDesc">Découvrez nos univers bridal, soirée et nouveautés.</p>
+      </div>
+      <div class="featured-collections">
+        <article class="collection-card reveal">
+          <div class="collection-card-gallery" data-images="./assets/images/collection-bridal.jpg,./assets/images/collection-bridal-2.jpg,./assets/images/collection-bridal-3.jpg,./assets/images/collection-bridal-4.jpg" data-alt="Bridal"></div>
+          <div class="collection-card-dots"></div>
+          <div class="collection-card-content">
+            <div class="eyebrow">Bridal</div>
+            <h3 data-i18n="bridal">Bridal</h3>
+            <p data-i18n="bridalDesc">Des créations raffinées pour les cérémonies les plus précieuses.</p>
+            <a href="#collection" data-i18n="discoverCollection">Découvrir</a>
+          </div>
+        </article>
+        <article class="collection-card reveal">
+          <div class="collection-card-gallery" data-images="./assets/images/collection-evening-1.jpg,./assets/images/collection-evening-2.jpg,./assets/images/collection-evening-3.jpg,./assets/images/collection-evening-4.jpg" data-alt="Robes de soirée"></div>
+          <div class="collection-card-dots"></div>
+          <div class="collection-card-content">
+            <div class="eyebrow">Evening</div>
+            <h3 data-i18n="evening">Robes de soirée</h3>
+            <p data-i18n="eveningDesc">Des silhouettes élégantes pour vos soirées et événements.</p>
+            <a href="#collection" data-i18n="discoverCollection">Découvrir</a>
+          </div>
+        </article>
+        <article class="collection-card reveal">
+          <div class="collection-card-gallery" data-images="./assets/images/collection-new-1.jpg,./assets/images/collection-new-2.jpg,./assets/images/collection-new-3.jpg,./assets/images/collection-new-4.jpg" data-alt="Nouveautés"></div>
+          <div class="collection-card-dots"></div>
+          <div class="collection-card-content">
+            <div class="eyebrow">New</div>
+            <h3 data-i18n="newArrivals">Nouveautés</h3>
+            <p data-i18n="newArrivalsDesc">Les dernières pièces ajoutées à notre sélection.</p>
+            <a href="#collection" data-i18n="discoverCollection">Découvrir</a>
+          </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="why-naris">
+    <div class="container">
+      <div class="section-head reveal">
+        <div class="eyebrow" data-i18n="whyEyebrow">Pourquoi Nari’s Wear ?</div>
+        <h2 data-i18n="whyTitle">Une expérience pensée pour vous</h2>
+      </div>
+      <div class="why-grid reveal">
+        <div class="why-card">
+          <div class="why-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m12 3 1.6 4.4L18 9l-4.4 1.6L12 15l-1.6-4.4L6 9l4.4-1.6L12 3Z"/><path d="m18.5 15 .7 1.8 1.8.7-1.8.7-.7 1.8-.7-1.8-1.8-.7 1.8-.7.7-1.8Z"/></svg></div>
+          <h3 data-i18n="premiumQuality">Qualité premium</h3>
+          <p data-i18n="premiumQualityDesc">Des matières et finitions choisies avec exigence.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m12 3 8 7-8 11-8-11 8-7Z"/><path d="m4 10 8 3 8-3M12 13v8"/></svg></div>
+          <h3 data-i18n="elegantDesigns">Designs élégants</h3>
+          <p data-i18n="elegantDesignsDesc">Des pièces féminines, modernes et intemporelles.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 16h11l3-5h3l1 5v3H3v-3Z"/><circle cx="7" cy="19" r="2"/><circle cx="17" cy="19" r="2"/><path d="M5 12h8M7 8h7"/></svg></div>
+          <h3 data-i18n="fastDelivery">Livraison rapide</h3>
+          <p data-i18n="fastDeliveryDesc">Expédition disponible partout en Algérie.</p>
+        </div>
+        <div class="why-card">
+          <div class="why-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M20.8 5.6a5.2 5.2 0 0 0-7.4 0L12 7l-1.4-1.4a5.2 5.2 0 1 0-7.4 7.4L12 21l8.8-8a5.2 5.2 0 0 0 0-7.4Z"/></svg></div>
+          <h3 data-i18n="personalService">Service personnalisé</h3>
+          <p data-i18n="personalServiceDesc">Conseils de taille et assistance directe sur WhatsApp.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="reviews">
+    <div class="container">
+      <div class="section-head reveal">
+        <div class="eyebrow" data-i18n="reviewsEyebrow">Avis clientes</div>
+        <h2 data-i18n="reviewsTitle">Elles ont choisi Nari’s Wear</h2>
+      </div>
+      <div class="reviews-grid">
+        <article class="review-card reveal">
+          <div class="review-stars">★★★★★</div>
+          <p data-i18n="review1">La robe est encore plus belle en vrai. La coupe est parfaite et la livraison a été rapide.</p>
+          <div class="review-author"><div class="review-avatar">S</div><div><strong>Sarah</strong><span>Alger</span></div></div>
+        </article>
+        <article class="review-card reveal">
+          <div class="review-stars">★★★★★</div>
+          <p data-i18n="review2">Très bon service sur WhatsApp. On m’a aidée à choisir la bonne taille.</p>
+          <div class="review-author"><div class="review-avatar">L</div><div><strong>Lina</strong><span>Oran</span></div></div>
+        </article>
+        <article class="review-card reveal">
+          <div class="review-stars">★★★★★</div>
+          <p data-i18n="review3">Une belle qualité et un emballage soigné. Je commanderai encore.</p>
+          <div class="review-author"><div class="review-avatar">M</div><div><strong>Meriem</strong><span>Constantine</span></div></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="instagram">
+    <div class="container">
+      <div class="section-head reveal">
+        <div class="eyebrow">Instagram</div>
+        <h2 data-i18n="instagramTitle">Suivez nos dernières créations</h2>
+        <p data-i18n="instagramDesc">Découvrez l’univers Nari’s Wear et nos inspirations les plus récentes.</p>
+      </div>
+      <div class="instagram-studio reveal" data-instagram-studio>
+        <div class="instagram-phone">
+          <div class="instagram-stage">
+            <iframe id="instagramStage"
+              src="https://www.instagram.com/reel/DbJxLIIsvaj/embed"
+              title="Instagram Reel NARI’S WEAR"
+              loading="lazy"
+              allowtransparency="true"
+              allow="encrypted-media; picture-in-picture"
+              referrerpolicy="strict-origin-when-cross-origin"></iframe>
+          </div>
+        </div>
+        <div class="instagram-copy">
+          <span class="instagram-live" data-i18n="instagramLive">Dans les coulisses</span>
+          <h3 data-i18n="instagramStudioTitle">La mode prend vie, un Reel à la fois.</h3>
+          <p data-i18n="instagramStudioDesc">Explorez nos silhouettes, détails et nouveautés sans quitter votre expérience shopping.</p>
+          <div class="instagram-selector" role="tablist" aria-label="Choisir un Reel">
+            <button class="instagram-select active" type="button" role="tab" aria-selected="true" data-reel-id="DbJxLIIsvaj"><strong>01</strong><span data-i18n="reelLabel1">Inspiration</span></button>
+            <button class="instagram-select" type="button" role="tab" aria-selected="false" data-reel-id="DbMBuYTR_0V"><strong>02</strong><span data-i18n="reelLabel2">Nouveautés</span></button>
+            <button class="instagram-select" type="button" role="tab" aria-selected="false" data-reel-id="DbOwPT8xkXG"><strong>03</strong><span data-i18n="reelLabel3">Détails</span></button>
+            <button class="instagram-select" type="button" role="tab" aria-selected="false" data-reel-id="DbO_Y6FMPvI"><strong>04</strong><span data-i18n="reelLabel4">En boutique</span></button>
+            <button class="instagram-select" type="button" role="tab" aria-selected="false" data-reel-id="DbPBY_us8IH"><strong>05</strong><span data-i18n="reelLabel5">Sélection</span></button>
+            <button class="instagram-select" type="button" role="tab" aria-selected="false" data-reel-id="DbHGIOTRvAk"><strong>06</strong><span data-i18n="reelLabel6">Notre univers</span></button>
+          </div>
+          <div class="instagram-actions">
+            <a class="btn-outline" href="https://www.instagram.com/naris_wear" target="_blank" rel="noopener" data-i18n="followInstagram">Suivre @naris_wear</a>
+            <a class="instagram-current-link" id="instagramCurrentLink" href="https://www.instagram.com/reel/DbJxLIIsvaj/" target="_blank" rel="noopener">
+              <span data-i18n="openCurrentReel">Ouvrir ce Reel</span><span aria-hidden="true">↗</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="faq">
+    <div class="container faq-grid">
+      <div class="faq-intro reveal">
+        <div class="eyebrow">Informations utiles</div>
+        <h2>Questions fréquentes</h2>
+        <p>Tout ce qu’il faut savoir avant de commander chez NARI’S WEAR.</p>
+        <div class="store-map">
+          <iframe title="Localisation NARI'S WEAR" loading="lazy" src="https://www.google.com/maps?q=36.695965,2.971272&z=15&output=embed"></iframe>
+        </div>
+        <div class="map-actions"><a class="btn-outline" href="https://www.google.com/maps?q=36.695965,2.971272" target="_blank" rel="noopener">Ouvrir dans Google Maps</a></div>
+      </div>
+      <div class="faq-list reveal">
+        <article class="faq-item active"><button class="faq-question" type="button" aria-expanded="true"><strong>Livraison & délais</strong><span class="faq-plus">+</span></button><div class="faq-answer"><div><div class="faq-answer-content">Nous livrons dans les 58 wilayas grâce à nos partenaires de livraison. À Alger, la livraison peut prendre 24 à 48 heures. Pour les autres wilayas, comptez généralement 2 à 5 jours ouvrables. Chaque commande est confirmée sur WhatsApp avant l’expédition.</div></div></div></article>
+        <article class="faq-item"><button class="faq-question" type="button" aria-expanded="false"><strong>Paiement</strong><span class="faq-plus">+</span></button><div class="faq-answer"><div><div class="faq-answer-content">Le paiement s’effectue à la livraison. Aucun paiement bancaire n’est demandé sur le site.</div></div></div></article>
+        <article class="faq-item"><button class="faq-question" type="button" aria-expanded="false"><strong>Retours & échanges</strong><span class="faq-plus">+</span></button><div class="faq-answer"><div><div class="faq-answer-content">Toute demande d’échange doit être signalée dans les 24 heures suivant la réception. L’article doit être non porté, intact et conservé dans son emballage d’origine. En cas d’erreur de notre part, NARI’S WEAR prend en charge les frais liés à l’échange.</div></div></div></article>
+        <article class="faq-item"><button class="faq-question" type="button" aria-expanded="false"><strong>Où se trouve la boutique ?</strong><span class="faq-plus">+</span></button><div class="faq-answer"><div><div class="faq-answer-content">Notre boutique se trouve à Alger, aux coordonnées 36.695965, 2.971272. Utilisez la carte ou le bouton Google Maps pour obtenir l’itinéraire exact.</div></div></div></article>
+        <article class="faq-item"><button class="faq-question" type="button" aria-expanded="false"><strong>Besoin d’aide ?</strong><span class="faq-plus">+</span></button><div class="faq-answer"><div><div class="faq-answer-content">Notre équipe vous accompagne pour le choix de la taille, la disponibilité et la livraison. Contactez-nous directement sur WhatsApp.</div></div></div></article>
+      </div>
+    </div>
+  </section>
+
+  
+<section class="review-section" id="customerReviews">
+  <div class="container">
+    <div class="section-head"><div class="eyebrow">Avis vérifiés</div><h2>Vos looks, vos avis</h2><p>Découvrez les expériences de nos clientes et partagez la vôtre avec une photo.</p></div>
+    <div class="review-live-grid" id="reviewLiveGrid"><div class="grid-status">Chargement des avis…</div></div>
+    <form class="review-form" id="reviewForm">
+      <div class="review-form-grid"><input id="reviewName" required placeholder="Votre nom"><select id="reviewRating"><option value="5">★★★★★</option><option value="4">★★★★☆</option><option value="3">★★★☆☆</option></select></div>
+      <div class="review-form-grid" style="margin-top:.7rem"><select id="reviewProduct"><option value="">Choisir un produit</option></select><input id="reviewPhoto" type="file" accept="image/*"></div>
+      <textarea id="reviewText" required placeholder="Votre avis…" style="margin-top:.7rem"></textarea>
+      <button class="btn-solid" type="submit" style="margin-top:.7rem">Envoyer mon avis</button><div class="review-status" id="reviewStatus"></div>
+    </form>
+  </div>
+</section>
+
+<section class="order-cta" id="order">
+    <div class="container reveal">
+      <div class="eyebrow">Commande simple</div>
+      <h2>Votre prochain look vous attend.</h2>
+      <p>Choisissez votre article et envoyez-nous votre taille sur WhatsApp. Nous confirmons la disponibilité et la livraison avec vous.</p>
+      <a class="wa-btn" href="https://wa.me/213552080462?text=Bonjour%20Nari's%20Wear%2C%20je%20souhaite%20passer%20une%20commande." target="_blank" rel="noopener">
+        <span data-i18n="whatsappOrder">Commander sur WhatsApp</span>
+      </a>
+    </div>
+  </section>
+</main>
+
+
+<section class="newsletter-section" id="newsletter" aria-labelledby="newsletterTitle">
+  <div class="container newsletter-shell reveal">
+    <div class="newsletter-copy">
+      <span class="eyebrow">NARI'S WEAR CLUB</span>
+      <h2 id="newsletterTitle">Recevez nos nouveautés en avant-première</h2>
+      <p>Collections, offres privées et inspirations mode — directement dans votre boîte mail.</p>
+    </div>
+    <form class="newsletter-form" id="newsletterForm" novalidate>
+      <label class="sr-only" for="newsletterEmail">Adresse e-mail</label>
+      <div class="newsletter-input-wrap">
+        <svg class="newsletter-mail-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h18v14H3z"/><path d="m3 6 9 7 9-7"/></svg>
+        <input id="newsletterEmail" type="email" autocomplete="email" inputmode="email" placeholder="Votre adresse e-mail" required>
+        <button type="submit" id="newsletterSubmit">
+          <span>S'abonner</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+        </button>
+      </div>
+      <p class="newsletter-note">En vous inscrivant, vous acceptez de recevoir les actualités de NARI'S WEAR. Désinscription possible à tout moment.</p>
+      <div class="newsletter-status" id="newsletterStatus" role="status" aria-live="polite"></div>
+    </form>
+  </div>
+</section>
+
+<footer id="contact">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo"><span class="logo-mark">N</span><span>NARI'S WEAR</span></div>
+        <p>Prêt-à-porter féminin à Alger. Des pièces modernes, élégantes et faciles à porter.</p>
+      </div>
+
+      <div class="foot-block">
+        <h4>Contact</h4>
+        <a href="https://wa.me/213552080462" target="_blank" rel="noopener">WhatsApp</a>
+        <a href="https://www.instagram.com/naris_wear" target="_blank" rel="noopener">@naris_wear</a>
+        <p>Alger, Algérie</p>
+      </div>
+
+      <div class="foot-block">
+        <h4>Navigation</h4>
+        <a href="#collection"><span data-i18n="collection">Collection</span></a>
+        </div>
+
+      <div class="foot-block">
+        <h4>Horaires</h4>
+        <p>Samedi – Jeudi</p>
+        <p>10h00 – 19h00</p>
+        <p>Vendredi fermé</p>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© <span id="year"></span> Nari's Wear. Tous droits réservés.</span>
+      <span>Alger · Algérie</span>
+    </div>
+  </div>
+</footer>
+
+<a class="floating-wa" href="https://wa.me/213552080462" target="_blank" rel="noopener" aria-label="Contacter Nari's Wear sur WhatsApp" title="WhatsApp">
+  <span class="wa-attention" data-i18n="waAttention">Besoin d’aide ?</span>
+  <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M19.11 17.46c-.29-.15-1.71-.84-1.97-.94-.26-.1-.45-.15-.64.15-.19.29-.74.94-.91 1.13-.17.19-.34.22-.63.07-.29-.15-1.23-.45-2.34-1.44-.86-.77-1.45-1.72-1.62-2.01-.17-.29-.02-.45.13-.59.13-.13.29-.34.44-.51.15-.17.19-.29.29-.49.1-.19.05-.37-.02-.51-.07-.15-.64-1.55-.88-2.12-.23-.56-.47-.48-.64-.49h-.55c-.19 0-.51.07-.77.37-.26.29-1.01.99-1.01 2.41s1.04 2.8 1.18 2.99c.15.19 2.04 3.12 4.95 4.37.69.3 1.23.48 1.65.61.69.22 1.32.19 1.82.12.56-.08 1.71-.7 1.95-1.38.24-.68.24-1.26.17-1.38-.07-.12-.26-.19-.55-.34zM16.05 3.2c-7.06 0-12.8 5.73-12.8 12.79 0 2.25.59 4.45 1.71 6.38L3.14 29l6.79-1.78a12.75 12.75 0 0 0 6.11 1.56h.01c7.05 0 12.79-5.74 12.79-12.8 0-3.42-1.33-6.63-3.75-9.05A12.69 12.69 0 0 0 16.05 3.2zm0 23.42h-.01a10.6 10.6 0 0 1-5.4-1.48l-.39-.23-4.03 1.06 1.08-3.93-.25-.4a10.62 10.62 0 1 1 9 4.98z"/></svg>
+</a>
+<button class="to-top" id="toTop" aria-label="Revenir en haut">↑</button>
+
+<nav class="mobile-bottom-nav" aria-label="Navigation mobile">
+  <a href="#home">
+    <strong aria-hidden="true">⌂</strong>
+    <span>Accueil</span>
+  </a>
+  <a href="#collection">
+    <strong aria-hidden="true">◇</strong>
+    <span>Boutique</span>
+  </a>
+  <button type="button" id="mobileNavWishlist">
+    <strong aria-hidden="true">♡</strong>
+    <span>Favoris <span id="mobileNavWishlistCount">0</span></span>
+  </button>
+  <button type="button" id="mobileNavCart">
+    <strong aria-hidden="true">⛃</strong>
+    <span>Panier <span id="mobileNavCartCount">0</span></span>
+  </button>
+</nav>
+
+
+<div class="shop-drawer-layer" id="wishlistLayer" aria-hidden="true">
+  <div class="shop-drawer-backdrop" data-shop-close></div>
+  <aside class="shop-drawer" aria-label="Mes favoris">
+    <div class="shop-drawer-head"><h3>Favoris</h3><button class="shop-drawer-close" data-shop-close aria-label="Fermer">✕</button></div>
+    <div class="shop-drawer-body" id="wishlistBody"></div>
+  </aside>
+</div>
+<div class="shop-drawer-layer" id="cartLayer" aria-hidden="true">
+  <div class="shop-drawer-backdrop" data-shop-close></div>
+  <aside class="shop-drawer" aria-label="Mon panier">
+    <div class="shop-drawer-head"><h3>Panier</h3><button class="shop-drawer-close" data-shop-close aria-label="Fermer">✕</button></div>
+    <div class="shop-drawer-body" id="cartBody"></div>
+    <div class="shop-drawer-foot" id="cartFoot"></div>
+  </aside>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+
+<button class="cx-fab" id="cxFab" aria-label="Ouvrir la conseillère Nari’s Wear" title="Conseillère Nari’s Wear">
+  <svg viewBox="0 0 32 32" aria-hidden="true">
+    <path d="M10 11.5h12a4 4 0 0 1 4 4v6a4 4 0 0 1-4 4H10a4 4 0 0 1-4-4v-6a4 4 0 0 1 4-4Z"/>
+    <path d="M16 7v4.5M13.5 7a2.5 2.5 0 1 1 5 0"/>
+    <circle cx="12" cy="18" r="1.25"/><circle cx="20" cy="18" r="1.25"/>
+    <path d="M12 22h8M6 17H3.5M28.5 17H26"/>
+    <path class="bot-spark" d="m26 5 .7 1.8L28.5 7.5l-1.8.7L26 10l-.7-1.8-1.8-.7 1.8-.7L26 5Z"/>
+  </svg>
+</button>
+<aside class="cx-panel" id="cxPanel" aria-label="Assistant Nari's Wear">
+ <div class="cx-head"><strong>Conseillère Nari’s Wear</strong><button id="cxClose" class="icon-btn">✕</button></div>
+ <div class="cx-tabs"><button class="active" data-cx-tab="assistant">Assistant taille & style</button><button data-cx-tab="chat">Live chat</button></div>
+ <div class="cx-body" id="cxAssistant"><div class="cx-messages" id="cxMessages"><div class="cx-msg">Bonjour ✨ Dites-moi ce que vous cherchez ou demandez-moi une recommandation de taille.</div></div><div class="cx-quick"><button data-ai="robe">Je cherche une robe</button><button data-ai="size">Aide pour la taille</button><button data-ai="budget">Selon mon budget</button></div><div class="cx-input"><input id="cxQuestion" placeholder="Ex. robe noire, budget 6000 DA"><button class="btn-solid" id="cxSend">Envoyer</button></div></div>
+ <div class="cx-body" id="cxChat" hidden>
+   <div id="chatStartView"><form class="live-chat-form" id="liveChatForm"><input id="chatName" required placeholder="Votre nom"><input id="chatPhone" required placeholder="Téléphone / WhatsApp"><textarea id="chatMessage" required maxlength="1500" placeholder="Comment pouvons-nous vous aider ?"></textarea><button class="wa-btn" type="submit">Démarrer le Live Chat</button><div class="review-status" id="chatStatus"></div></form></div>
+   <div id="customerChatView" hidden><div class="customer-chat-head"><strong id="customerChatTitle">Live Chat</strong><button type="button" id="newChatBtn">Nouvelle conversation</button></div><div class="cx-messages customer-chat-thread" id="customerChatThread"></div><form class="cx-input" id="customerChatReplyForm"><input id="customerChatReply" required maxlength="1500" placeholder="Écrivez votre message…"><button class="btn-solid" type="submit">Envoyer</button></form><div class="review-status" id="customerChatStatus"></div></div>
+   <a class="btn-outline" href="https://wa.me/213552080462" target="_blank" rel="noopener" style="display:block;text-align:center;margin-top:.7rem">Continuer sur WhatsApp</a>
+  </div>
+</aside>
+
+<div class="look-quiz" id="lookQuiz" role="dialog" aria-modal="true" aria-labelledby="lookQuizTitle" aria-hidden="true">
+  <div class="look-quiz-card">
+    <button class="look-quiz-close" id="lookQuizClose" type="button" aria-label="Fermer">✕</button>
+    <div class="look-quiz-head">
+      <div class="eyebrow" data-i18n="finderEyebrow">Conseillère express</div>
+      <h3 id="lookQuizTitle" data-i18n="quizTitle">Quelle tenue vous ressemble ?</h3>
+      <p data-i18n="quizDesc">Choisissez vos préférences et découvrez immédiatement nos meilleures suggestions.</p>
+    </div>
+
+    <div class="look-question">
+      <div class="look-question-title"><span>1</span><b data-i18n="quizOccasion">Pour quelle occasion ?</b></div>
+      <div class="look-options" data-look-group="occasion">
+        <button class="look-option" type="button" data-value="evening" data-i18n="quizEvening">Soirée</button>
+        <button class="look-option" type="button" data-value="ceremony" data-i18n="quizCeremony">Cérémonie</button>
+        <button class="look-option" type="button" data-value="daily" data-i18n="quizDaily">Tous les jours</button>
+      </div>
+    </div>
+
+    <div class="look-question">
+      <div class="look-question-title"><span>2</span><b data-i18n="quizColor">Votre couleur préférée ?</b></div>
+      <div class="look-options" data-look-group="color">
+        <button class="look-option" type="button" data-value="" data-i18n="quizAny">Peu importe</button>
+        <button class="look-option" type="button" data-value="noir" data-i18n="quizBlack">Noir</button>
+        <button class="look-option" type="button" data-value="beige" data-i18n="quizBeige">Beige</button>
+        <button class="look-option" type="button" data-value="bordeaux" data-i18n="quizWine">Bordeaux</button>
+      </div>
+    </div>
+
+    <div class="look-question">
+      <div class="look-question-title"><span>3</span><b data-i18n="quizBudget">Votre budget maximum ?</b></div>
+      <div class="look-options" data-look-group="budget">
+        <button class="look-option" type="button" data-value="4000">4 000 DA</button>
+        <button class="look-option" type="button" data-value="6000">6 000 DA</button>
+        <button class="look-option" type="button" data-value="8000">8 000 DA</button>
+        <button class="look-option" type="button" data-value="0" data-i18n="quizAny">Peu importe</button>
+      </div>
+    </div>
+
+    <button class="btn-solid look-find-action" id="lookFindAction" type="button" data-i18n="quizShow">Voir ma sélection</button>
+    <div class="look-results" id="lookResults" aria-live="polite"></div>
+  </div>
+</div>
+
+<div class="modal" id="orderModal" role="dialog" aria-modal="true" aria-labelledby="modalProductTitle">
+  <div class="modal-card">
+    <div class="modal-grid">
+      <div class="modal-gallery">
+        <div class="modal-media" id="modalMedia">Photo du produit</div>
+        <div class="gallery-thumbs" id="galleryThumbs" aria-label="Photos du produit"></div>
+      </div>
+
+      <div class="modal-content">
+        <button class="modal-close" id="modalClose" aria-label="Fermer">✕</button>
+        <div class="eyebrow">Commande rapide</div>
+        <h3 id="modalProductTitle">Produit</h3>
+        <div class="modal-price" id="modalProductPrice">0 DA</div>
+
+        <div class="form-group">
+          <label>Taille</label>
+          <div class="option-row" id="sizeOptions">
+            <button class="option" data-value="S">S</button>
+            <button class="option active" data-value="M">M</button>
+            <button class="option" data-value="L">L</button>
+            <button class="option" data-value="XL">XL</button>
+          </div>
+          <div class="size-stock-note" id="sizeStockNote"></div>
+        </div>
+
+        <div class="form-group">
+          <label>Couleur</label>
+          <div class="option-row" id="colorOptions"></div>
+          <div class="variant-stock" id="variantStock"></div>
+          <button class="variant-favorite" id="variantFavorite" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78Z"/></svg>
+            <span id="variantFavoriteLabel">Ajouter cette couleur aux favoris</span>
+          </button>
+        </div>
+
+        <div class="form-group">
+          <label for="productQuantity">Quantité</label>
+          <div class="quantity-control">
+            <button id="quantityMinus" type="button" aria-label="Diminuer la quantité">−</button>
+            <input id="productQuantity" type="number" value="1" min="1" step="1" inputmode="numeric" aria-describedby="quantityNote">
+            <button id="quantityPlus" type="button" aria-label="Augmenter la quantité">+</button>
+          </div>
+          <small class="quantity-note" id="quantityNote"></small>
+        </div>
+
+        <div class="form-group">
+          <label for="customerName">Votre nom</label>
+          <input class="form-control" id="customerName" type="text" placeholder="Nom complet">
+        </div>
+
+        <div class="form-group">
+          <label for="customerPhone">Téléphone</label>
+          <input class="form-control" id="customerPhone" type="tel"
+            inputmode="tel" autocomplete="tel"
+            placeholder="0552080462 ou +213552080462"
+            aria-describedby="phoneHelp">
+          <small id="phoneHelp" class="small-note">Format accepté : 0552080462, 05 52 08 04 62, +213552080462 ou 00213552080462.</small>
+        </div>
+
+        <div class="form-group">
+          <label for="customerWilaya">Wilaya</label>
+          <select class="form-control" id="customerWilaya" required>
+            <option value="">Choisir une wilaya</option>
+          </select>
+        </div>
+
+        
+<div class="optional-delivery-note">
+  <strong>Informations facultatives</strong>
+  <span>Vous pouvez laisser la commune et l’adresse vides. Nous confirmerons les détails utiles avec vous sur WhatsApp.</span>
+</div>
+
+<div class="shipping-extra">
+          <div class="form-group">
+            <label for="customerCommune">Commune <span class="optional-field">(facultatif)</span></label>
+            <input class="form-control" id="customerCommune" type="text" placeholder="Votre commune (facultatif)" autocomplete="address-level2">
+          </div>
+          <div class="form-group" id="addressGroup">
+            <label for="customerAddress">Adresse complète <span class="optional-field">(facultatif)</span></label>
+            <input class="form-control" id="customerAddress" type="text" placeholder="Quartier, rue, numéro... (facultatif)" autocomplete="street-address">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Mode de livraison</label>
+          <div class="shipping-methods" id="shippingMethods">
+            <button class="shipping-choice active" type="button" data-method="home"><strong>Livraison avec Yalidine</strong><span>Livrée à votre adresse</span></button>
+          </div>
+          <div class="shipping-summary" aria-live="polite">
+            <div><span>Frais de livraison</span><strong id="shippingPrice">Choisissez une wilaya</strong></div>
+            <div><span>Total estimé</span><strong id="orderTotal">—</strong></div>
+          </div>
+          <small class="small-note" id="shippingNote">La commune et l’adresse sont facultatives. Les détails nécessaires seront confirmés avec vous sur WhatsApp.</small>
+        </div>
+
+
+        <div class="promo-box">
+          <label for="promoCode">Code promo</label>
+          <div class="promo-row"><input class="form-control" id="promoCode" placeholder="Ex. NARIS10"><button class="btn-outline" id="applyPromo" type="button">Appliquer</button></div>
+          <div class="promo-result" id="promoResult">Ajoutez un code valide pour obtenir une réduction.</div>
+        </div>
+        <div class="recommendations" id="recommendationsBox"><h4>Les clientes ont aussi aimé</h4><div class="recommendation-row" id="recommendationRow"></div></div>
+        <button class="btn-solid" id="addCartButton" type="button">Ajouter au panier</button>
+        <p class="small-note">La commande sera préparée sous forme de message WhatsApp. Aucun paiement n'est effectué sur cette page.</p>
+        <div class="modal-actions">
+          <button class="btn-outline" id="continueShopping">Continuer</button>
+          <button class="wa-btn" id="confirmWhatsApp">Commander</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const CONFIG = window.NARIS_CONFIG || {};
+  const WHATSAPP = String(CONFIG.whatsapp || '213552080462').replace(/\D/g,'');
+  const configured = /^https:\/\/.+\.supabase\.co$/i.test(CONFIG.supabaseUrl || '') &&
+    typeof CONFIG.supabaseAnonKey === 'string' && CONFIG.supabaseAnonKey.length > 40 &&
+    window.supabase;
+  const db = configured ? window.supabase.createClient(CONFIG.supabaseUrl, CONFIG.supabaseAnonKey) : null;
+
+  const WILAYAS = [
+    '01 Adrar','02 Chlef','03 Laghouat','04 Oum El Bouaghi','05 Batna','06 Béjaïa','07 Biskra','08 Béchar',
+    '09 Blida','10 Bouira','11 Tamanrasset','12 Tébessa','13 Tlemcen','14 Tiaret','15 Tizi Ouzou','16 Alger',
+    '17 Djelfa','18 Jijel','19 Sétif','20 Saïda','21 Skikda','22 Sidi Bel Abbès','23 Annaba','24 Guelma',
+    '25 Constantine','26 Médéa','27 Mostaganem','28 M’Sila','29 Mascara','30 Ouargla','31 Oran','32 El Bayadh',
+    '33 Illizi','34 Bordj Bou Arréridj','35 Boumerdès','36 El Tarf','37 Tindouf','38 Tissemsilt','39 El Oued',
+    '40 Khenchela','41 Souk Ahras','42 Tipaza','43 Mila','44 Aïn Defla','45 Naâma','46 Aïn Témouchent',
+    '47 Ghardaïa','48 Relizane','49 Timimoun','50 Bordj Badji Mokhtar','51 Ouled Djellal','52 Béni Abbès',
+    '53 In Salah','54 In Guezzam','55 Touggourt','56 Djanet','57 El M’Ghair','58 El Meniaa'
+  ];
+
+  const DELIVERY_PRICES = {
+    '01':{home:1050,stopdesk:750},'02':{home:900,stopdesk:550},'03':{home:1050,stopdesk:700},'04':{home:900,stopdesk:550},
+    '05':{home:900,stopdesk:550},'06':{home:900,stopdesk:550},'07':{home:1050,stopdesk:700},'08':{home:1050,stopdesk:750},
+    '09':{home:700,stopdesk:400},'10':{home:900,stopdesk:550},'11':{home:1450,stopdesk:1200},'12':{home:1050,stopdesk:700},
+    '13':{home:900,stopdesk:550},'14':{home:900,stopdesk:550},'15':{home:900,stopdesk:550},'16':{home:500,stopdesk:400},
+    '17':{home:1050,stopdesk:700},'18':{home:900,stopdesk:550},'19':{home:900,stopdesk:550},'20':{home:900,stopdesk:550},
+    '21':{home:900,stopdesk:550},'22':{home:900,stopdesk:550},'23':{home:900,stopdesk:550},'24':{home:900,stopdesk:550},
+    '25':{home:900,stopdesk:550},'26':{home:900,stopdesk:550},'27':{home:900,stopdesk:550},'28':{home:900,stopdesk:550},
+    '29':{home:900,stopdesk:550},'30':{home:1050,stopdesk:700},'31':{home:900,stopdesk:550},'32':{home:1050,stopdesk:750},
+    '33':{home:1050,stopdesk:1200},'34':{home:900,stopdesk:550},'35':{home:700,stopdesk:400},'36':{home:900,stopdesk:550},
+    '37':{home:1450,stopdesk:1200},'38':{home:900,stopdesk:550},'39':{home:1050,stopdesk:700},'40':{home:900,stopdesk:550},
+    '41':{home:900,stopdesk:550},'42':{home:700,stopdesk:400},'43':{home:900,stopdesk:550},'44':{home:900,stopdesk:550},
+    '45':{home:1050,stopdesk:750},'46':{home:900,stopdesk:550},'47':{home:1050,stopdesk:700},'48':{home:900,stopdesk:550},
+    '49':{home:1050,stopdesk:750},'51':{home:1050,stopdesk:700},'53':{home:1450,stopdesk:1200},'55':{home:1050,stopdesk:700},
+    '56':{home:1450,stopdesk:1200},'57':{home:1050,stopdesk:700},'58':{home:1050,stopdesk:700}
+  };
+  let deliveryMethod='home';
+
+  const DEMO = [
+    {id:'demo-1',name:'Robe Ambre',category:'robe',price:4500,sizes:['S','M','L'],colors:['Noir','Blanc','Jaune'],images:[],variants:[{name:'Noir',hex:'#000000',stock:4,images:[],is_default:true},{name:'Blanc',hex:'#ffffff',stock:2,images:[]},{name:'Jaune',hex:'#e9c94c',stock:2,images:[]}],featured:true,stock:8,created_at:'2026-07-20'},
+    {id:'demo-2',name:'Tailleur Nuit',category:'ensemble',price:6200,sizes:['S','M','L','XL'],colors:['Noir'],images:[],featured:false,stock:5,created_at:'2026-07-19'},
+    {id:'demo-3',name:'Abaya Lueur',category:'abaya',price:5800,sizes:['S','M','L','XL'],colors:['Noir','Bordeaux'],images:[],featured:true,stock:6,created_at:'2026-07-18'},
+    {id:'demo-4',name:'Soie Dorée',category:'chemisier',price:2900,sizes:['S','M','L'],colors:['Beige','Bordeaux'],images:[],featured:false,stock:10,created_at:'2026-07-17'},
+    {id:'demo-5',name:'Jupe Plissée',category:'jupe',price:3400,sizes:['S','M','L'],colors:['Noir','Beige'],images:[],featured:false,stock:7,created_at:'2026-07-16'},
+    {id:'demo-6',name:'Manteau Sable',category:'manteau',price:7500,sizes:['M','L','XL'],colors:['Beige'],images:[],featured:true,stock:4,created_at:'2026-07-15'}
+  ];
+
+  const CATEGORY = {robe:'Robes',ensemble:'Ensembles',abaya:'Abayas',chemisier:'Chemisiers',jupe:'Jupes',manteau:'Manteaux',haut:'Hauts'};
+  const SWATCH = {Noir:'black',Beige:'beige',Bordeaux:'wine',Blanc:'cream','Crème':'cream'};
+  const $ = s => document.querySelector(s);
+  const $$ = s => [...document.querySelectorAll(s)];
+  const esc = v => String(v ?? '').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
+  const money = v => Number(v || 0).toLocaleString('fr-FR') + ' DA';
+
+  let products = [], category = 'all', currentProduct = null, currentVariant = null, currentImageIndex = 0, toastTimer;
+  const WISHLIST_KEY='naris-wishlist-controlled-v1';
+  const CART_KEY='naris-cart-controlled-v1';
+  let wishlist=readLocal(WISHLIST_KEY,[]), cart=readLocal(CART_KEY,[]);
+  function readLocal(key,fallback){try{return JSON.parse(localStorage.getItem(key))||fallback}catch{return fallback}}
+  function writeShopState(){localStorage.setItem(WISHLIST_KEY,JSON.stringify(wishlist));localStorage.setItem(CART_KEY,JSON.stringify(cart));syncShopCounts()}
+  function wishlistItemKey(id,color=''){return `${id}|${color||'default'}`}
+  function wishlistHas(id,color){
+    if(color)return wishlist.some(x=>(x.wishlistKey||wishlistItemKey(x.id,x.selectedColor))===wishlistItemKey(id,color));
+    return wishlist.some(x=>String(x.id)===String(id));
+  }
+  function snapshotProduct(p,variant=null){
+    const selectedColor=variant?.name||'';
+    return {id:p.id,wishlistKey:wishlistItemKey(p.id,selectedColor),selectedColor,name:p.name,price:Number(p.price||0),category:p.category||'',images:Array.isArray(p.images)?p.images:[],variants:Array.isArray(p.variants)?p.variants:[],sizes:Array.isArray(p.sizes)?p.sizes:[],colors:Array.isArray(p.colors)?p.colors:[],stock:Number(p.stock||0),featured:!!p.featured,created_at:p.created_at||'',favoriteImage:variant?(variant.images||[]).find(Boolean)||'':''};
+  }
+  function shopImage(p){if(p?.favoriteImage)return p.favoriteImage;const vs=normalizeProductVariants(p),v=p?.selectedColor?vs.find(x=>x.name===p.selectedColor):(vs.find(x=>x.is_default)||vs[0]);return (v?.images||[]).find(Boolean)||(p.images||[]).find(Boolean)||'./assets/images/naris-brand-art.webp'}
+  function syncShopCounts(){
+    const wishCount=wishlist.length;
+    const bagCount=cart.reduce((s,x)=>s+Number(x.quantity||1),0);
+    const wishEl=$('#wishlistCount'),bagEl=$('#cartCount');
+    if(wishEl){
+      const changed=wishEl.textContent!==String(wishCount);
+      wishEl.textContent=wishCount;
+      $('#wishlistOpen')?.classList.toggle('has-items',wishCount>0);
+      if(changed){wishEl.classList.remove('bump');void wishEl.offsetWidth;wishEl.classList.add('bump')}
+    }
+    if(bagEl){
+      const changed=bagEl.textContent!==String(bagCount);
+      bagEl.textContent=bagCount;
+      $('#cartOpen')?.classList.toggle('has-items',bagCount>0);
+      if(changed){bagEl.classList.remove('bump');void bagEl.offsetWidth;bagEl.classList.add('bump')}
+    }
+    const mobileWishEl=$('#mobileNavWishlistCount'),mobileBagEl=$('#mobileNavCartCount');
+    if(mobileWishEl) mobileWishEl.textContent=wishCount;
+    if(mobileBagEl) mobileBagEl.textContent=bagCount;
+  }
+
+
+  function toast(message,type=''){
+    const el=$('#toast'); el.textContent=message; el.className=`toast show ${type}`.trim();
+    clearTimeout(toastTimer); toastTimer=setTimeout(()=>el.className='toast',3500);
+  }
+
+  function setMenu(open){
+    $('#mobilePanel').classList.toggle('active',open);
+    $('#mobilePanel').setAttribute('aria-hidden',String(!open));
+    $('#menuBtn').setAttribute('aria-expanded',String(open));
+    document.body.classList.toggle('modal-open',open || $('#orderModal').classList.contains('active'));
+  }
+  $('#menuBtn').addEventListener('click',()=>setMenu(true));
+  $('#closeMenu').addEventListener('click',()=>setMenu(false));
+  $('#mobilePanel').addEventListener('click',e=>{if(e.target===$('#mobilePanel'))setMenu(false)});
+  $$('.drawer-links a').forEach(a=>a.addEventListener('click',()=>setMenu(false)));
+
+  $('#customerWilaya').insertAdjacentHTML('beforeend',WILAYAS.map(w=>`<option value="${esc(w)}">${esc(w)}</option>`).join(''));
+
+  function renderFilters(){
+    const cats=[...new Set(products.map(p=>p.category).filter(Boolean))];
+    $('#filterBar').innerHTML='<button class="filter-btn active" data-filter="all">Tout</button>'+
+      cats.map(c=>`<button class="filter-btn" data-filter="${esc(c)}">${esc(CATEGORY[c]||c)}</button>`).join('');
+  }
+
+  function visibleProducts(){
+    const q=$('#productSearch').value.trim().toLocaleLowerCase('fr');
+    const sort=$('#productSort').value;
+    const list=products.filter(p=>(category==='all'||p.category===category) &&
+      (!q||`${p.name||''} ${p.category||''} ${p.description||''}`.toLocaleLowerCase('fr').includes(q)));
+    list.sort((a,b)=>{
+      if(sort==='price-asc')return Number(a.price)-Number(b.price);
+      if(sort==='price-desc')return Number(b.price)-Number(a.price);
+      if(sort==='name')return String(a.name).localeCompare(String(b.name),'fr');
+      return new Date(b.created_at||0)-new Date(a.created_at||0);
+    });
+    return list;
+  }
+
+  function renderProducts(){
+    const list=visibleProducts();
+    $('#resultCount').textContent=`${list.length} article${list.length>1?'s':''}`;
+    if(!list.length){$('#productGrid').innerHTML='<p class="grid-status">Aucun article ne correspond à votre recherche.</p>';return}
+    $('#productGrid').innerHTML=list.map(p=>{
+      const variants=normalizeProductVariants(p);
+      const defaultVariant=variants.find(v=>v.is_default)||variants[0];
+      const image=defaultVariant?.images?.[0]||(Array.isArray(p.images)?p.images[0]:'');
+      const safeImage=/^https?:\/\//i.test(image||'')?image:'';
+      const sold=Number(p.stock||0)<=0;
+      const stock=sold?'<p class="stock-note out">Rupture de stock</p>':
+        Number(p.stock)<=3?`<p class="stock-note low">Plus que ${Number(p.stock)} en stock</p>`:'<p class="stock-note">En stock</p>';
+      return `<article class="product-card reveal visible" data-id="${esc(p.id)}">
+        <div class="product-media${safeImage?' has-image':''}">
+          ${safeImage?`<img src="${esc(safeImage)}" alt="${esc(p.name)}" loading="lazy" decoding="async">`:''}
+          ${p.featured?'<span class="product-badge">Nouveau</span>':''}
+          <button class="favorite-btn${wishlistHas(p.id)?' active':''}" type="button" data-favorite="${esc(p.id)}" aria-label="${wishlistHas(p.id)?'Retirer des favoris':'Ajouter aux favoris'}"><svg class="modern-icon icon-heart" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78Z"/></svg></button>
+          <button class="quick-btn" ${sold?'disabled':''}>${sold?'Indisponible':'Commander rapidement'}</button>
+        </div>
+        <div class="product-info">
+          <div class="product-meta">${esc(CATEGORY[p.category]||p.category)}</div>
+          <h3>${esc(p.name)}</h3>
+          <div class="product-row"><span class="price">${money(p.price)}</span>
+            <div class="colors">${variants.map(v=>`<i class="swatch" style="background:${esc(v.hex||'#c9a15a')}" title="${esc(v.name)}"></i>`).join('')}</div>
+          </div>${stock}
+        </div></article>`;
+    }).join('');
+  }
+
+  async function loadProducts(){
+    if(!configured){
+      products=DEMO; renderFilters(); renderProducts(); renderWishlist(); renderCart(); syncShopCounts(); return;
+    }
+    const {data,error}=await db.from('products')
+      .select('id,name,category,price,description,sizes,colors,images,variants,stock,featured,created_at')
+      .eq('is_active',true).order('created_at',{ascending:false});
+    if(error){
+      console.error(error); products=DEMO;
+    }else products=data||[];
+    renderFilters(); renderProducts(); renderWishlist(); renderCart(); syncShopCounts();
+  }
+
+  $('#filterBar').addEventListener('click',e=>{
+    const b=e.target.closest('.filter-btn'); if(!b)return;
+    $$('.filter-btn').forEach(x=>x.classList.remove('active')); b.classList.add('active');
+    category=b.dataset.filter; renderProducts();
+  });
+  $('#productSearch').addEventListener('input',renderProducts);
+  $('#productSort').addEventListener('change',renderProducts);
+
+  function buildOptions(id,values,fallback){
+    const list=Array.isArray(values)&&values.length?values:fallback;
+    $(id).innerHTML=list.map((v,i)=>`<button type="button" class="option${i===0?' active':''}" data-value="${esc(v)}">${esc(v)}</button>`).join('');
+  }
+  function normalizeProductVariants(p){
+    if(Array.isArray(p?.variants)&&p.variants.length) return p.variants.map((v,i)=>({name:v.name||`Couleur ${i+1}`,hex:v.hex||'#c9a15a',stock:Number(v.stock)||0,images:Array.isArray(v.images)?v.images:[],sizes:Array.isArray(v.sizes)?v.sizes.map(x=>({name:x.name||'',stock:x.stock==null?null:Number(x.stock)||0})):[],is_default:!!v.is_default}));
+    const colors=Array.isArray(p?.colors)&&p.colors.length?p.colors:['Noir'];
+    return colors.map((name,i)=>({name,hex:({Noir:'#000000',Blanc:'#ffffff',Beige:'#d8c3a5',Bordeaux:'#6e1f31',Jaune:'#e9c94c'})[name]||'#c9a15a',stock:i===0?Number(p?.stock||0):0,images:i===0&&Array.isArray(p?.images)?p.images:[],sizes:[],is_default:i===0}));
+  }
+  function renderVariantSizes(){
+    const configuredSizes=Array.isArray(currentVariant?.sizes)&&currentVariant.sizes.length?currentVariant.sizes:[];
+    const list=configuredSizes.length?configuredSizes:(Array.isArray(currentProduct?.sizes)&&currentProduct.sizes.length?currentProduct.sizes.map(name=>({name,stock:null})):['S','M','L','XL'].map(name=>({name,stock:null})));
+    const firstAvailable=list.find(x=>x.stock==null||Number(x.stock)>0);
+    $('#sizeOptions').innerHTML=list.map(x=>`<button type="button" class="option${firstAvailable&&x.name===firstAvailable.name?' active':''}${x.stock!=null&&Number(x.stock)<=0?' disabled':''}" data-value="${esc(x.name)}" ${x.stock!=null&&Number(x.stock)<=0?'aria-disabled="true"':''}>${esc(x.name)}</button>`).join('');
+    const selected=firstAvailable;
+    $('#sizeStockNote').textContent=!selected?'Aucune taille disponible':selected.stock==null?'Stock géré par couleur':selected.stock<=3?`Plus que ${selected.stock} pour la taille ${selected.name}`:`${selected.stock} disponible${selected.stock>1?'s':''} en taille ${selected.name}`;
+    return !!firstAvailable;
+  }
+  function getCurrentGalleryImages(){
+    const variantImages=Array.isArray(currentVariant?.images)?currentVariant.images:[];
+    const productImages=Array.isArray(currentProduct?.images)?currentProduct.images:[];
+    const source=variantImages.length?variantImages:productImages;
+    return [...new Set(source.filter(url=>/^https?:\/\//i.test(url||'')))];
+  }
+  function currentMaxQuantity(){
+    const selected=$('#sizeOptions .option.active')?.dataset.value;
+    const sizeEntry=(currentVariant?.sizes||[]).find(x=>x.name===selected);
+    const sizeStock=sizeEntry?.stock;
+    const variantStock=Number(currentVariant?.stock||0);
+    return Math.max(0,sizeStock!=null?Math.min(Number(sizeStock)||0,variantStock||Number(sizeStock)||0):variantStock);
+  }
+  function selectedQuantity(){
+    const max=currentMaxQuantity();
+    return Math.max(1,Math.min(max||1,Number.parseInt($('#productQuantity')?.value,10)||1));
+  }
+  function updateQuantityControl(reset=false){
+    const input=$('#productQuantity');if(!input)return;
+    const max=currentMaxQuantity();
+    const value=reset?1:Math.max(1,Math.min(max||1,Number.parseInt(input.value,10)||1));
+    input.value=value;input.max=Math.max(1,max);
+    input.disabled=max<=0;
+    $('#quantityMinus').disabled=max<=0||value<=1;
+    $('#quantityPlus').disabled=max<=0||value>=max;
+    $('#quantityNote').textContent=max<=0?'Indisponible':`Maximum disponible : ${max}`;
+    refreshShipping();
+  }
+  function updateVariantFavoriteButton(){
+    const button=$('#variantFavorite');if(!button||!currentProduct||!currentVariant)return;
+    const active=wishlistHas(currentProduct.id,currentVariant.name);
+    button.classList.toggle('active',active);
+    button.setAttribute('aria-pressed',String(active));
+    $('#variantFavoriteLabel').textContent=active?'Retirer cette couleur des favoris':'Ajouter cette couleur aux favoris';
+  }
+  function renderVariantGallery(){
+    const images=getCurrentGalleryImages();
+    if(currentImageIndex>=images.length)currentImageIndex=0;
+    const image=images[currentImageIndex];
+    const arrows=images.length>1?`<div class="gallery-nav"><button type="button" id="galleryPrev" aria-label="Photo précédente">‹</button><button type="button" id="galleryNext" aria-label="Photo suivante">›</button></div>`:'';
+    $('#modalMedia').innerHTML=image?`<img src="${esc(image)}" alt="${esc(currentProduct.name)} — ${esc(currentVariant.name)}">${arrows}`:'Photo du produit';
+    $('#galleryThumbs').innerHTML=images.map((url,i)=>`<button type="button" class="gallery-thumb${i===currentImageIndex?' active':''}" data-image-index="${i}"><img src="${esc(url)}" alt=""></button>`).join('');
+    $('#galleryThumbs').style.display=images.length>1?'flex':'none';
+    const stock=Number(currentVariant?.stock||0),el=$('#variantStock');
+    el.textContent=stock<=0?'Cette couleur est épuisée':stock<=3?`Plus que ${stock} en stock pour cette couleur`:`${stock} article${stock>1?'s':''} disponible${stock>1?'s':''} dans cette couleur`;
+    el.className='variant-stock '+(stock<=0?'out':stock<=3?'low':'');
+    const hasSize=renderVariantSizes();
+    $('#confirmWhatsApp').disabled=stock<=0||!hasSize;
+    updateVariantFavoriteButton();
+    updateQuantityControl(true);
+  }
+  function selectVariant(name){
+    const variants=normalizeProductVariants(currentProduct);
+    currentVariant=variants.find(v=>v.name===name)||variants[0]; currentImageIndex=0;
+    $$('#colorOptions .option').forEach(b=>b.classList.toggle('active',b.dataset.value===currentVariant.name));
+    renderVariantGallery();
+    if($('#orderModal').classList.contains('active')){
+      const card=$('#orderModal .modal-card');
+      requestAnimationFrame(()=>card.scrollTo({top:0,behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'}));
+    }
+  }
+  function openModal(p){
+    currentProduct=p; $('#modalProductTitle').textContent=p.name; $('#modalProductPrice').textContent=money(p.price);
+    const variants=normalizeProductVariants(p),def=variants.find(v=>v.is_default)||variants[0];
+    $('#colorOptions').innerHTML=variants.map(v=>`<button type="button" class="option color-option${v.name===def.name?' active':''}${Number(v.stock)<=0?' disabled':''}" data-value="${esc(v.name)}" ${Number(v.stock)<=0?'aria-disabled="true"':''}><span class="color-dot" style="background:${esc(v.hex||'#c9a15a')}"></span>${esc(v.name)}</button>`).join('');
+    currentVariant=def;currentImageIndex=0;$('#productQuantity').value=1;renderVariantGallery();
+    $('#orderModal').classList.add('active'); document.body.classList.add('modal-open'); refreshShipping(); setTimeout(()=>$('#modalClose').focus(),50);
+  }
+  function closeModal(){$('#orderModal').classList.remove('active');document.body.classList.remove('modal-open')}
+  $('#productGrid').addEventListener('click',e=>{
+    const heart=e.target.closest('[data-favorite]');
+    if(heart){e.preventDefault();e.stopPropagation();toggleFavorite(heart.dataset.favorite);return}
+
+    const card=e.target.closest('.product-card[data-id]');
+    if(!card)return;
+    const quick=e.target.closest('.quick-btn');
+    if(quick?.disabled)return;
+
+    /* Open from the quick button or anywhere on the product card except interactive controls. */
+    const clickedControl=!!e.target.closest('button,a,input,select,textarea');
+    if(!quick && clickedControl)return;
+
+    const p=products.find(x=>String(x.id)===String(card.dataset.id));
+    if(p)openModal(p);
+  });
+  $('#modalClose').addEventListener('click',closeModal); $('#continueShopping').addEventListener('click',closeModal);
+  $('#orderModal').addEventListener('click',e=>{if(e.target===$('#orderModal'))closeModal()});
+  $$('.option-row').forEach(row=>row.addEventListener('click',e=>{
+    const o=e.target.closest('.option');if(!o||o.classList.contains('disabled'))return;
+    if(row.id==='colorOptions'){selectVariant(o.dataset.value);return}
+    row.querySelectorAll('.option').forEach(x=>x.classList.remove('active'));o.classList.add('active');
+    if(row.id==='sizeOptions'){const entry=(currentVariant?.sizes||[]).find(x=>x.name===o.dataset.value);$('#sizeStockNote').textContent=!entry||entry.stock==null?'Stock géré par couleur':entry.stock<=3?`Plus que ${entry.stock} pour la taille ${entry.name}`:`${entry.stock} disponible${entry.stock>1?'s':''} en taille ${entry.name}`;updateQuantityControl(true)}
+  }));
+  $('#galleryThumbs').addEventListener('click',e=>{const b=e.target.closest('[data-image-index]');if(!b)return;currentImageIndex=Number(b.dataset.imageIndex);renderVariantGallery()});
+  $('#modalMedia').addEventListener('click',e=>{
+    const prev=e.target.closest('#galleryPrev');
+    const next=e.target.closest('#galleryNext');
+    if(!prev&&!next)return;
+    e.preventDefault();e.stopPropagation();
+    const images=getCurrentGalleryImages();
+    if(images.length<2)return;
+    currentImageIndex=prev?(currentImageIndex-1+images.length)%images.length:(currentImageIndex+1)%images.length;
+    renderVariantGallery();
+  });
+
+
+  function toggleFavorite(id,color=''){
+    const key=wishlistItemKey(id,color);
+    const index=wishlist.findIndex(x=>(x.wishlistKey||wishlistItemKey(x.id,x.selectedColor))===key);
+    if(index>=0){wishlist.splice(index,1);toast(color?`${color} retiré des favoris`:'Retiré des favoris')}
+    else{
+      const p=products.find(x=>String(x.id)===String(id));
+      if(p){const variant=color?normalizeProductVariants(p).find(v=>v.name===color):null;wishlist.unshift(snapshotProduct(p,variant));toast(color?`${color} ajouté aux favoris`:'Ajouté aux favoris')}
+    }
+    writeShopState();renderProducts();renderWishlist();
+    updateVariantFavoriteButton();
+  }
+  function openShopLayer(id){
+    closeShopLayers();const layer=$(id);layer.classList.add('active');layer.setAttribute('aria-hidden','false');document.body.classList.add('modal-open');
+  }
+  function closeShopLayers(){
+    $$('.shop-drawer-layer').forEach(x=>{x.classList.remove('active');x.setAttribute('aria-hidden','true')});
+    if(!$('#orderModal').classList.contains('active')&&!$('#mobilePanel').classList.contains('active'))document.body.classList.remove('modal-open');
+  }
+  function renderWishlist(){
+    if(!$('#wishlistBody'))return;
+    $('#wishlistBody').innerHTML=wishlist.length?wishlist.map(p=>{const key=p.wishlistKey||wishlistItemKey(p.id,p.selectedColor);return `<article class="shop-item"><img src="${esc(shopImage(p))}" alt="${esc(p.name)}"><div><div class="shop-item-title">${esc(p.name)}</div><div class="shop-item-meta">${p.selectedColor?`Couleur : ${esc(p.selectedColor)}<br>`:''}${money(p.price)}</div><div class="shop-item-actions"><button class="shop-mini gold" data-wish-order="${esc(p.id)}" data-wish-color="${esc(p.selectedColor||'')}">Choisir</button><button class="shop-mini" data-wish-remove="${esc(key)}">Retirer</button></div></div></article>`}).join(''):'<div class="shop-empty"><div class="shop-empty-icon"><svg class="modern-icon icon-heart" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78Z"/></svg></div><strong>Votre wishlist est vide</strong>Appuyez sur le cœur d’un produit pour le sauvegarder.</div>';
+  }
+  function renderCart(){
+    if(!$('#cartBody'))return;
+    $('#cartBody').innerHTML=cart.length?cart.map(item=>`<article class="shop-item"><img src="${esc(item.image)}" alt="${esc(item.name)}"><div><div class="shop-item-title">${esc(item.name)}</div><div class="shop-item-meta">${esc(item.color)} · Taille ${esc(item.size)}<br>${money(item.price)} · Quantité ${item.quantity}</div><div class="shop-item-actions"><button class="shop-mini gold" data-cart-order="${esc(item.key)}">Commander</button><button class="shop-mini" data-cart-remove="${esc(item.key)}">Supprimer</button></div></div></article>`).join(''):'<div class="shop-empty"><div class="shop-empty-icon"><svg class="modern-icon icon-bag" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 8h12l1 13H5L6 8Z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg></div><strong>Votre panier est vide</strong>Choisissez une couleur et une taille, puis ajoutez l’article.</div>';
+    $('#cartFoot').innerHTML=cart.length?`<strong>${cart.reduce((s,x)=>s+Number(x.quantity||1),0)} article(s)</strong><div class="small-note" style="margin-top:.4rem">Chaque article utilise le formulaire de livraison existant. La wilaya reste nécessaire pour calculer le tarif; la commune et l’adresse sont facultatives.</div>`:'';
+  }
+  function selectedSize(){return $('#sizeOptions .option.active')?.dataset.value||''}
+  function addCurrentToCart(){
+    if(!currentProduct||!currentVariant)return;
+    const size=selectedSize();if(!size){toast('Veuillez choisir une taille disponible.','error');return}
+    const quantity=selectedQuantity(),max=currentMaxQuantity(),color=currentVariant.name,key=`${currentProduct.id}|${color}|${size}`,existing=cart.find(x=>x.key===key),already=Number(existing?.quantity||0);
+    if(already+quantity>max){toast(`Stock disponible : ${max}. Vous avez déjà ${already} dans le panier.`,'error');return}
+    if(existing)existing.quantity+=quantity;else cart.unshift({key,id:currentProduct.id,name:currentProduct.name,price:Number(currentProduct.price),color,size,quantity,image:shopImage({...currentProduct,variants:[currentVariant]})});
+    writeShopState();renderCart();toast(`${quantity} article${quantity>1?'s':''} ajouté${quantity>1?'s':''} au panier`);closeModal();openShopLayer('#cartLayer');
+  }
+  function openSavedProduct(id,color=''){
+    const p=products.find(x=>String(x.id)===String(id))||wishlist.find(x=>String(x.id)===String(id));if(!p)return;
+    closeShopLayers();openModal(p);if(color)setTimeout(()=>selectVariant(color),30);
+  }
+  $('#wishlistOpen').addEventListener('click',()=>{renderWishlist();openShopLayer('#wishlistLayer')});
+  $('#cartOpen').addEventListener('click',()=>{renderCart();openShopLayer('#cartLayer')});
+  $('#mobileNavWishlist')?.addEventListener('click',()=>$('#wishlistOpen').click());
+  $('#mobileNavCart')?.addEventListener('click',()=>$('#cartOpen').click());
+  document.addEventListener('click',e=>{if(e.target.closest('[data-shop-close]'))closeShopLayers()});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeShopLayers()});
+  $('#wishlistBody').addEventListener('click',e=>{const r=e.target.closest('[data-wish-remove]');if(r){wishlist=wishlist.filter(x=>(x.wishlistKey||wishlistItemKey(x.id,x.selectedColor))!==r.dataset.wishRemove);writeShopState();renderWishlist();renderProducts();updateVariantFavoriteButton();toast('Retiré des favoris');return}const o=e.target.closest('[data-wish-order]');if(o)openSavedProduct(o.dataset.wishOrder,o.dataset.wishColor)});
+  $('#cartBody').addEventListener('click',e=>{const r=e.target.closest('[data-cart-remove]');if(r){cart=cart.filter(x=>x.key!==r.dataset.cartRemove);writeShopState();renderCart();return}const o=e.target.closest('[data-cart-order]');if(o){const item=cart.find(x=>x.key===o.dataset.cartOrder);if(!item)return;const p=products.find(x=>String(x.id)===String(item.id));if(p){closeShopLayers();openModal(p);setTimeout(()=>{selectVariant(item.color);const size=$$('#sizeOptions .option').find(x=>x.dataset.value===item.size&&!x.classList.contains('disabled'));if(size)size.click()},30)}}});
+  $('#addCartButton').addEventListener('click',addCurrentToCart);
+  $('#variantFavorite').addEventListener('click',()=>{if(currentProduct&&currentVariant)toggleFavorite(currentProduct.id,currentVariant.name)});
+  $('#quantityMinus').addEventListener('click',()=>{$('#productQuantity').value=selectedQuantity()-1;updateQuantityControl()});
+  $('#quantityPlus').addEventListener('click',()=>{$('#productQuantity').value=selectedQuantity()+1;updateQuantityControl()});
+  $('#productQuantity').addEventListener('input',()=>updateQuantityControl());
+
+  const newsletterForm=$('#newsletterForm');
+  if(newsletterForm){
+    newsletterForm.addEventListener('submit',async e=>{
+      e.preventDefault();
+      const emailEl=$('#newsletterEmail');
+      const status=$('#newsletterStatus');
+      const submit=$('#newsletterSubmit');
+      const email=emailEl.value.trim().toLowerCase();
+      status.className='newsletter-status';
+      status.textContent='';
+      if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)){
+        status.classList.add('error');
+        status.textContent='Veuillez saisir une adresse e-mail valide.';
+        emailEl.focus();
+        return;
+      }
+      const saved=readLocal('naris-newsletter-subscribers',[]);
+      if(saved.includes(email)){
+        status.textContent='Vous êtes déjà inscrit(e) à notre newsletter.';
+        return;
+      }
+      submit.disabled=true;
+      submit.querySelector('span').textContent='Inscription…';
+      let storedOnline=false;
+      if(db){
+        try{
+          const result=await db.from('newsletter_subscribers').insert({email,source:'website'});
+          storedOnline=!result.error;
+        }catch(error){storedOnline=false}
+      }
+      saved.push(email);
+      localStorage.setItem('naris-newsletter-subscribers',JSON.stringify(saved));
+      emailEl.value='';
+      status.textContent=storedOnline
+        ? 'Merci ! Votre inscription est confirmée.'
+        : 'Merci ! Votre inscription a bien été enregistrée.';
+      submit.disabled=false;
+      submit.querySelector('span').textContent="S'abonner";
+      toast('Bienvenue dans le NARI’S WEAR Club');
+    });
+  }
+
+
+  syncShopCounts();renderWishlist();renderCart();
+
+  function normalizeAlgerianPhone(value){
+    let phone=String(value||'').replace(/[^\d+]/g,'').trim();
+
+    if(phone.startsWith('00213')) phone='+213'+phone.slice(5);
+    if(phone.startsWith('213')) phone='+'+phone;
+    if(/^0[567]\d{8}$/.test(phone)) phone='+213'+phone.slice(1);
+
+    return phone;
+  }
+
+  function validPhone(value){
+    const phone=normalizeAlgerianPhone(value);
+    return /^\+213[567]\d{8}$/.test(phone);
+  }
+  function selectedDeliveryPrice(){
+    const code=($('#customerWilaya').value||'').slice(0,2);
+    const row=DELIVERY_PRICES[code];
+    return row ? row[deliveryMethod] : null;
+  }
+  function refreshShipping(){
+    deliveryMethod='home';
+    const price=selectedDeliveryPrice();
+    const quantity=selectedQuantity();
+    $('#shippingPrice').textContent=price==null?'Tarif à confirmer':money(price);
+    $('#orderTotal').textContent=currentProduct&&price!=null?money(Number(currentProduct.price)*quantity+price):'—';
+    $('#shippingNote').textContent='Livraison avec Yalidine. La commune et l’adresse peuvent être précisées plus tard sur WhatsApp.';
+    $('#addressGroup').style.display='block';
+  }
+  $('#customerWilaya').addEventListener('change',refreshShipping);
+  $('#shippingMethods').addEventListener('click',e=>{
+    const choice=e.target.closest('.shipping-choice');if(!choice)return;
+    deliveryMethod=choice.dataset.method;
+    $$('#shippingMethods .shipping-choice').forEach(x=>x.classList.toggle('active',x===choice));
+    refreshShipping();
+  });
+  $$('.faq-question').forEach(button=>button.addEventListener('click',()=>{
+    const item=button.closest('.faq-item');
+    const open=item.classList.toggle('active');
+    button.setAttribute('aria-expanded',String(open));
+  }));
+
+  $('#confirmWhatsApp').addEventListener('click',async()=>{
+    if(!currentProduct)return;
+    const selectedSizeButton=$('#sizeOptions .option.active');
+    if(!selectedSizeButton){toast('Veuillez choisir une taille disponible.','error');return}
+    const btn=$('#confirmWhatsApp'),size=$('#sizeOptions .option.active')?.dataset.value||'Non précisée',quantity=selectedQuantity(),
+      color=currentVariant?.name||$('#colorOptions .option.active')?.dataset.value||'Non précisée',
+      name=$('#customerName').value.trim(),rawPhone=$('#customerPhone').value.trim(),
+      phone=normalizeAlgerianPhone(rawPhone),wilaya=$('#customerWilaya').value,
+      commune=$('#customerCommune').value.trim(),address=$('#customerAddress').value.trim(),
+      deliveryPrice=selectedDeliveryPrice(),deliveryLabel='Livraison avec Yalidine';
+    if(name.length<2){toast('Merci de renseigner votre nom complet.','error');$('#customerName').focus();return}
+    if(!validPhone(rawPhone)){
+      const message=currentLang==='ar'
+        ? 'أدخل رقم هاتف جزائري صحيحاً، مثال: 0552080462 أو +213552080462.'
+        : 'Entrez un numéro algérien valide, par exemple 0552080462 ou +213552080462.';
+      toast(message,'error');
+      $('#customerPhone').focus();
+      return;
+    }
+    $('#customerPhone').value=phone;
+    if(!wilaya){toast('Veuillez choisir votre wilaya.','error');$('#customerWilaya').focus();return}
+
+    btn.disabled=true;btn.textContent='Préparation…';
+    let saved=false;
+    let saveError=null;
+
+    if(db){
+      const orderPayload={
+        product_id:String(currentProduct.id).startsWith('demo-') ? null : currentProduct.id,
+        product_name:currentProduct.name,
+        price:Number(currentProduct.price),
+        size,
+        color,
+        quantity,
+        customer_name:name,
+        customer_phone:phone,
+        wilaya,
+        commune,
+        address,
+        delivery_method:'home',
+        shipping_price:deliveryPrice,
+        status:'nouvelle'
+      };
+
+      const {error}=await db
+        .from('orders')
+        .insert(orderPayload);
+
+      if(error){
+        saveError=error;
+        console.error('Order insert failed:',error);
+        toast(`Commande WhatsApp prête, mais Supabase a refusé l’enregistrement : ${error.message}`,'error');
+      }else{
+        saved=true;
+        console.log('Order saved successfully');
+        toast('Commande enregistrée avec succès.');
+      }
+    }else{
+      toast('Supabase n’est pas configuré : la commande sera envoyée uniquement sur WhatsApp.','error');
+    }
+    const message=`Bonjour Nari's Wear,
+
+Je souhaite commander :
+• Article : ${currentProduct.name}
+• Prix : ${money(currentProduct.price)}
+• Taille : ${size}
+• Couleur : ${color}
+• Quantité : ${quantity}
+
+Informations client :
+• Nom : ${name}
+• Téléphone : ${phone}
+• Wilaya : ${wilaya}
+• Commune : ${commune||'Non renseignée'}
+• Mode de livraison : ${deliveryLabel}
+• Adresse : ${address||'Non renseignée'}
+• Frais de livraison : ${deliveryPrice==null?'À confirmer':money(deliveryPrice)}
+• Total articles : ${money(Number(currentProduct.price)*quantity)}
+• Total estimé : ${deliveryPrice==null?'À confirmer':money(Number(currentProduct.price)*quantity+deliveryPrice)}
+
+${saved?'Commande enregistrée dans la boutique.':saveError?'Enregistrement Supabase non effectué.':''}
+Merci de confirmer la disponibilité et le tarif de livraison.`;
+    window.open(`https://wa.me/${WHATSAPP}?text=${encodeURIComponent(message)}`,'_blank','noopener');
+    btn.disabled=false;btn.textContent='Commander';closeModal();
+  });
+
+  const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{
+    if(entry.isIntersecting){entry.target.classList.add('visible');observer.unobserve(entry.target)}
+  }),{threshold:.12});
+  $$('.reveal').forEach(el=>observer.observe(el));
+  window.addEventListener('scroll',()=>$('#toTop').classList.toggle('visible',window.scrollY>700),{passive:true});
+  $('#toTop').addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeModal();setMenu(false);closeGalleryLightbox()}});
+
+  const translations = {
+    fr:{
+      featuredEyebrow:'Collections vedettes',featuredTitle:'Une tenue pour chaque moment',
+      featuredDesc:'Découvrez nos univers bridal, soirée et nouveautés.',
+      bridal:'Bridal',bridalDesc:'Des créations raffinées pour les cérémonies les plus précieuses.',
+      evening:'Robes de soirée',eveningDesc:'Des silhouettes élégantes pour vos soirées et événements.',
+      abayas:'Abayas',abayasDesc:'Des coupes modernes, fluides et sophistiquées.',
+      newArrivals:'Nouveautés',newArrivalsDesc:'Les dernières pièces ajoutées à notre sélection.',
+      discoverCollection:'Découvrir',
+      whyEyebrow:'Pourquoi Nari’s Wear ?',whyTitle:'Une expérience pensée pour vous',
+      premiumQuality:'Qualité premium',premiumQualityDesc:'Des matières et finitions choisies avec exigence.',
+      elegantDesigns:'Designs élégants',elegantDesignsDesc:'Des pièces féminines, modernes et intemporelles.',
+      fastDelivery:'Livraison rapide',fastDeliveryDesc:'Expédition disponible partout en Algérie.',
+      personalService:'Service personnalisé',personalServiceDesc:'Conseils de taille et assistance directe sur WhatsApp.',
+      reviewsEyebrow:'Avis clientes',reviewsTitle:'Elles ont choisi Nari’s Wear',
+      review1:'La robe est encore plus belle en vrai. La coupe est parfaite et la livraison a été rapide.',
+      review2:'Très bon service sur WhatsApp. On m’a aidée à choisir la bonne taille.',
+      review3:'Une belle qualité et un emballage soigné. Je commanderai encore.',
+      deliveryEyebrow:'Livraison & paiement',deliveryTitle:'Nous livrons dans les 58 wilayas',
+      deliveryDesc:'Votre commande est confirmée sur WhatsApp avant l’expédition.',
+      deliveryCoverage:'Couverture',allWilayas:'58 wilayas',deliveryTime:'Délai estimé',
+      deliveryDays:'2 à 5 jours ouvrables',paymentMethod:'Paiement',cashDelivery:'À la livraison',
+      orderConfirmation:'Confirmation',deliveryVisual:'Livraison nationale',
+      instagramTitle:'Suivez nos dernières créations',
+      instagramDesc:'Découvrez l’univers Nari’s Wear et nos inspirations les plus récentes.',
+      instagramLive:'Dans les coulisses',instagramStudioTitle:'La mode prend vie, un Reel à la fois.',
+      instagramStudioDesc:'Explorez nos silhouettes, détails et nouveautés sans quitter votre expérience shopping.',
+      reelLabel1:'Inspiration',reelLabel2:'Nouveautés',reelLabel3:'Détails',reelLabel4:'En boutique',reelLabel5:'Sélection',reelLabel6:'Notre univers',
+      openCurrentReel:'Ouvrir ce Reel',followInstagram:'Suivre @naris_wear',
+      shop:'Acheter',collection:'Collection',story:'Notre histoire',lookbook:'Lookbook',contact:'Contact',administration:'Administration',adminLogin:'Connexion sécurisée',waAttention:'Besoin d’aide ?',
+      heroEyebrow:'Alger · Bridal & Evening Boutique',
+      heroText:'Des créations pensées pour les cérémonies, les soirées et les moments inoubliables — élégance, raffinement et confiance.',
+      discover:'Découvrir la collection',whatsappOrder:'Commander sur WhatsApp',
+      limited:'Petites quantités',delivery:'Livraison nationale',advice:'Conseil personnalisé',
+      selection:'La sélection',newThisWeek:'Nouveautés de la semaine',
+      collectionDesc:'Des pièces élégantes en quantités limitées. Choisissez votre modèle, votre taille et commandez directement.',
+      madeInAlgiers:'Fait à Alger, pensé pour vous',readyOrder:'Prête à commander ?',
+      themeLabel:'Thème',langLabel:'Langue',
+      finderEyebrow:'Conseillère express',finderTitle:'Trouvez votre look en 30 secondes',
+      finderDesc:'Trois choix simples, puis une sélection personnalisée parmi nos pièces disponibles.',
+      finderCta:'Trouver mon look',quizTitle:'Quelle tenue vous ressemble ?',
+      quizDesc:'Choisissez vos préférences et découvrez immédiatement nos meilleures suggestions.',
+      quizOccasion:'Pour quelle occasion ?',quizEvening:'Soirée',quizCeremony:'Cérémonie',
+      quizDaily:'Tous les jours',quizColor:'Votre couleur préférée ?',quizAny:'Peu importe',
+      quizBlack:'Noir',quizBeige:'Beige',quizWine:'Bordeaux',
+      quizBudget:'Votre budget maximum ?',quizShow:'Voir ma sélection'
+    },
+    ar:{
+      featuredEyebrow:'المجموعات المميزة',featuredTitle:'إطلالة لكل مناسبة',
+      featuredDesc:'اكتشفي مجموعات الزفاف والسهرات والجديد.',
+      bridal:'فساتين الزفاف',bridalDesc:'تصاميم راقية لأجمل المناسبات واللحظات.',
+      evening:'فساتين السهرة',eveningDesc:'إطلالات أنيقة للسهرات والمناسبات.',
+      abayas:'عبايات',abayasDesc:'قصات عصرية وانسيابية وراقية.',
+      newArrivals:'وصل حديثاً',newArrivalsDesc:'أحدث القطع المضافة إلى مجموعتنا.',
+      discoverCollection:'اكتشفي',
+      whyEyebrow:'لماذا ناريز وير؟',whyTitle:'تجربة صُممت من أجلك',
+      premiumQuality:'جودة ممتازة',premiumQualityDesc:'خامات وتشطيبات مختارة بعناية.',
+      elegantDesigns:'تصاميم أنيقة',elegantDesignsDesc:'قطع أنثوية وعصرية وخالدة.',
+      fastDelivery:'توصيل سريع',fastDeliveryDesc:'التوصيل متاح في جميع أنحاء الجزائر.',
+      personalService:'خدمة شخصية',personalServiceDesc:'نصائح للمقاس ومساعدة مباشرة عبر واتساب.',
+      reviewsEyebrow:'آراء الزبونات',reviewsTitle:'زبونات اخترن ناريز وير',
+      review1:'الفستان أجمل في الحقيقة، القصة ممتازة والتوصيل كان سريعاً.',
+      review2:'خدمة ممتازة عبر واتساب وساعدوني في اختيار المقاس المناسب.',
+      review3:'جودة جميلة وتغليف مرتب. سأطلب مرة أخرى.',
+      deliveryEyebrow:'التوصيل والدفع',deliveryTitle:'نوصّل إلى جميع الولايات الـ58',
+      deliveryDesc:'يتم تأكيد طلبك عبر واتساب قبل الإرسال.',
+      deliveryCoverage:'التغطية',allWilayas:'58 ولاية',deliveryTime:'المدة المتوقعة',
+      deliveryDays:'من يومين إلى 5 أيام عمل',paymentMethod:'الدفع',cashDelivery:'عند الاستلام',
+      orderConfirmation:'التأكيد',deliveryVisual:'توصيل وطني',
+      instagramTitle:'تابعي أحدث تصاميمنا',
+      instagramDesc:'اكتشفي عالم ناريز وير وأحدث الإطلالات والإلهام.',
+      instagramLive:'خلف الكواليس',instagramStudioTitle:'الموضة تنبض بالحياة، ريل بعد ريل.',
+      instagramStudioDesc:'اكتشفي إطلالاتنا وتفاصيلنا وجديدنا دون مغادرة تجربة التسوق.',
+      reelLabel1:'إلهام',reelLabel2:'وصل حديثاً',reelLabel3:'التفاصيل',reelLabel4:'في المتجر',reelLabel5:'مختاراتنا',reelLabel6:'عالمنا',
+      openCurrentReel:'فتح هذا الريل',followInstagram:'تابعي @naris_wear',
+      shop:'تسوّقي',collection:'المجموعة',story:'قصتنا',lookbook:'إطلالات',contact:'اتصال',administration:'الإدارة',adminLogin:'دخول آمن',waAttention:'هل تحتاجين مساعدة؟',
+      heroEyebrow:'الجزائر · أزياء الزفاف والسهرات',
+      heroText:'تصاميم مختارة للحفلات والسهرات واللحظات التي لا تُنسى — أناقة، رقي وثقة.',
+      discover:'اكتشفي المجموعة',whatsappOrder:'اطلبي عبر واتساب',
+      limited:'كميات محدودة',delivery:'توصيل لكل الولايات',advice:'مرافقة ونصيحة شخصية',
+      selection:'مختاراتنا',newThisWeek:'جديد هذا الأسبوع',
+      collectionDesc:'قطع أنيقة بكميات محدودة. اختاري الموديل والمقاس واطلبي مباشرة.',
+      madeInAlgiers:'من الجزائر، صُممت من أجلك',readyOrder:'جاهزة للطلب؟',
+      themeLabel:'المظهر',langLabel:'اللغة',
+      finderEyebrow:'مستشارة سريعة',finderTitle:'اكتشفي إطلالتك في 30 ثانية',
+      finderDesc:'ثلاثة اختيارات بسيطة ثم اقتراحات شخصية من القطع المتوفرة.',
+      finderCta:'اختاري إطلالتي',quizTitle:'ما هي الإطلالة التي تشبهك؟',
+      quizDesc:'اختاري تفضيلاتك واكتشفي فوراً أفضل اقتراحاتنا.',
+      quizOccasion:'ما هي المناسبة؟',quizEvening:'سهرة',quizCeremony:'حفل',
+      quizDaily:'يومي',quizColor:'ما هو لونك المفضل؟',quizAny:'لا يهم',
+      quizBlack:'أسود',quizBeige:'بيج',quizWine:'خمري',
+      quizBudget:'ما هي ميزانيتك القصوى؟',quizShow:'عرض اقتراحاتي'
+    }
+  };
+
+  let currentLang = localStorage.getItem('naris-lang') || 'fr';
+  function applyLanguage(lang){
+    currentLang = lang;
+    document.documentElement.lang = lang;
+    document.body.dir = lang === 'ar' ? 'rtl' : 'ltr';
+    document.querySelectorAll('[data-i18n]').forEach(el=>{
+      const key = el.dataset.i18n;
+      if(translations[lang][key]) el.textContent = translations[lang][key];
+    });
+    $('#langToggle').textContent = lang === 'ar' ? 'FR' : 'AR';
+    const barLangIcon = $('#mobileBarLang .mobile-pref-icon');
+    if(barLangIcon) barLangIcon.textContent = lang === 'ar' ? 'FR' : 'AR';
+    localStorage.setItem('naris-lang',lang);
+  }
+
+  $('#langToggle').addEventListener('click',()=>applyLanguage(currentLang === 'ar' ? 'fr' : 'ar'));
+
+  const savedTheme = localStorage.getItem('naris-theme') || 'dark';
+  if(savedTheme === 'light') document.body.classList.add('light-theme');
+  $('#themeToggle').textContent = document.body.classList.contains('light-theme') ? '☾' : '☀';
+  const syncMobileThemeIcon = () => {
+    const barThemeIcon = $('#mobileBarTheme .mobile-pref-icon');
+    if(barThemeIcon) barThemeIcon.textContent = document.body.classList.contains('light-theme') ? '☾' : '☀';
+  };
+  syncMobileThemeIcon();
+  $('#themeToggle').addEventListener('click',()=>{
+    document.body.classList.toggle('light-theme');
+    const light = document.body.classList.contains('light-theme');
+    $('#themeToggle').textContent = light ? '☾' : '☀';
+    syncMobileThemeIcon();
+    localStorage.setItem('naris-theme', light ? 'light' : 'dark');
+  });
+
+  $('#mobileBarTheme')?.addEventListener('click',()=>$('#themeToggle').click());
+  $('#mobileBarLang')?.addEventListener('click',()=>$('#langToggle').click());
+
+
+  applyLanguage(currentLang);
+  const originalApplyLanguage=applyLanguage;
+  applyLanguage=function(lang){
+    originalApplyLanguage(lang);
+    const help=$('#phoneHelp');
+    if(help){
+      help.textContent=lang==='ar'
+        ? 'الصيغ المقبولة: 0552080462 أو 05 52 08 04 62 أو +213552080462 أو 00213552080462.'
+        : 'Format accepté : 0552080462, 05 52 08 04 62, +213552080462 ou 00213552080462.';
+    }
+  };
+  applyLanguage(currentLang);
+
+  $('#year').textContent=new Date().getFullYear();
+
+  function initCollectionGalleries(){
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    $$('.collection-card-gallery').forEach(gallery=>{
+      const urls=(gallery.dataset.images||'').split(',').map(s=>s.trim()).filter(Boolean);
+      if(!urls.length) return;
+      const alt=gallery.dataset.alt||'';
+      const dots=gallery.nextElementSibling?.classList.contains('collection-card-dots')?gallery.nextElementSibling:null;
+      let loaded=0;
+      urls.forEach((url,i)=>{
+        const img=document.createElement('img');
+        img.src=url; img.alt=alt; img.loading='lazy'; img.decoding='async';
+        if(i===0) img.classList.add('active');
+        img.addEventListener('error',()=>img.remove());
+        img.addEventListener('load',()=>{ loaded++; });
+        gallery.appendChild(img);
+        if(dots && urls.length>1){
+          const dot=document.createElement('span');
+          if(i===0) dot.classList.add('active');
+          dots.appendChild(dot);
+        }
+      });
+      if(urls.length<=1 || reduceMotion) return;
+      let current=0;
+      setInterval(()=>{
+        const imgs=[...gallery.querySelectorAll('img')];
+        if(imgs.length<2) return;
+        imgs[current].classList.remove('active');
+        if(dots) dots.children[current]?.classList.remove('active');
+        current=(current+1)%imgs.length;
+        imgs[current].classList.add('active');
+        if(dots) dots.children[current]?.classList.add('active');
+      }, 4200 + Math.random()*600);
+    });
+  }
+  initCollectionGalleries();
+
+  function initInstagramStudio(){
+    const stage=$('#instagramStage');
+    const currentLink=$('#instagramCurrentLink');
+    const buttons=$$('.instagram-select[data-reel-id]');
+    if(!stage||!currentLink||!buttons.length)return;
+    buttons.forEach(button=>button.addEventListener('click',()=>{
+      if(button.classList.contains('active'))return;
+      const reelId=button.dataset.reelId;
+      buttons.forEach(item=>{
+        const active=item===button;
+        item.classList.toggle('active',active);
+        item.setAttribute('aria-selected',String(active));
+      });
+      stage.style.opacity='.25';
+      window.setTimeout(()=>{
+        stage.src=`https://www.instagram.com/reel/${reelId}/embed`;
+        currentLink.href=`https://www.instagram.com/reel/${reelId}/`;
+        stage.onload=()=>{stage.style.opacity='1'};
+      },180);
+    }));
+    stage.style.transition='opacity .25s ease';
+  }
+  initInstagramStudio();
+
+
+  // ===== Customer experience suite =====
+  let activePromo=null;
+  const smartFilterIds=['visualColorFilter','visualSizeFilter','visualStockFilter','visualMaxPrice'];
+  function populateSmartFilters(){
+    const colors=[...new Set(products.flatMap(p=>normalizeProductVariants(p).map(v=>v.name)).filter(Boolean))].sort();
+    const sizes=[...new Set(products.flatMap(p=>normalizeProductVariants(p).flatMap(v=>(v.sizes||[]).map(s=>s.name)).concat(p.sizes||[])).filter(Boolean))].sort();
+    $('#visualColorFilter').innerHTML='<option value="">Toutes les couleurs</option>'+colors.map(x=>`<option>${esc(x)}</option>`).join('');
+    $('#visualSizeFilter').innerHTML='<option value="">Toutes les tailles</option>'+sizes.map(x=>`<option>${esc(x)}</option>`).join('');
+    $('#reviewProduct').innerHTML='<option value="">Choisir un produit</option>'+products.map(p=>`<option value="${esc(p.id)}">${esc(p.name)}</option>`).join('');
+  }
+  function cardMatchesSmart(p){
+    const color=$('#visualColorFilter')?.value||'',size=$('#visualSizeFilter')?.value||'',stock=$('#visualStockFilter')?.value||'',max=Number($('#visualMaxPrice')?.value||0);
+    const variants=normalizeProductVariants(p); const total=Number(p.stock||variants.reduce((s,v)=>s+Number(v.stock||0),0));
+    return (!color||variants.some(v=>v.name===color))&&(!size||variants.some(v=>(v.sizes||[]).some(s=>s.name===size)||(p.sizes||[]).includes(size)))&&(!stock||(stock==='available'?total>0:total>0&&total<=3))&&(!max||Number(p.price)<=max);
+  }
+  const originalRenderProducts=renderProducts;
+  renderProducts=function(){
+    originalRenderProducts();
+    $$('#productGrid .product-card').forEach(card=>{
+      const p=products.find(x=>String(x.id)===String(card.dataset.id)); if(!p)return;
+      if(!cardMatchesSmart(p)) card.style.display='none';
+      const media=card.querySelector('.product-media'); if(media&&!media.querySelector('.product-badge-stack')){
+        const days=(Date.now()-new Date(p.created_at||0).getTime())/86400000;
+        const stack=document.createElement('div'); stack.className='product-badge-stack';
+        if(p.featured) stack.innerHTML+='<span class="smart-badge">🔥 Best Seller</span>';
+        if(days<=21) stack.innerHTML+='<span class="smart-badge">Nouveau</span>';
+        if(Number(p.stock||0)>0&&Number(p.stock||0)<=3) stack.innerHTML+='<span class="smart-badge">Presque épuisé</span>';
+        media.appendChild(stack);
+      }
+      const info=card.querySelector('.product-info'); if(info&&!info.querySelector('.review-summary')) info.insertAdjacentHTML('afterbegin','<div class="review-summary" data-review-summary>★★★★★ <span>Nouveau</span></div>');
+    });
+  };
+  smartFilterIds.forEach(id=>$('#'+id)?.addEventListener(id==='visualMaxPrice'?'input':'change',renderProducts));
+
+  // NARI'S Look Finder — scores the real catalog without another database table.
+  const lookChoices={occasion:'',color:'',budget:0};
+  function setLookQuiz(open){
+    $('#lookQuiz').classList.toggle('active',open);
+    $('#lookQuiz').setAttribute('aria-hidden',String(!open));
+    document.body.classList.toggle('modal-open',open);
+    if(open)setTimeout(()=>$('#lookQuizClose').focus(),40);
+  }
+  $('#lookFinderOpen').addEventListener('click',()=>setLookQuiz(true));
+  $('#lookQuizClose').addEventListener('click',()=>setLookQuiz(false));
+  $('#lookQuiz').addEventListener('click',e=>{if(e.target===$('#lookQuiz'))setLookQuiz(false)});
+  $$('#lookQuiz [data-look-group]').forEach(group=>group.addEventListener('click',e=>{
+    const option=e.target.closest('.look-option');if(!option)return;
+    group.querySelectorAll('.look-option').forEach(x=>x.classList.toggle('active',x===option));
+    const key=group.dataset.lookGroup;
+    lookChoices[key]=key==='budget'?Number(option.dataset.value||0):option.dataset.value;
+  }));
+  function lookFinderScore(p){
+    const text=`${p.name||''} ${p.category||''} ${p.description||''}`.toLocaleLowerCase('fr');
+    const occasionWords={
+      evening:['robe','soirée','ensemble','tailleur'],
+      ceremony:['robe','cérémonie','bridal','abaya','ensemble'],
+      daily:['haut','chemis','jupe','ensemble','abaya']
+    };
+    let score=0;
+    if(lookChoices.occasion&&(occasionWords[lookChoices.occasion]||[]).some(word=>text.includes(word)))score+=4;
+    if(lookChoices.color&&normalizeProductVariants(p).some(v=>String(v.name||'').toLocaleLowerCase('fr').includes(lookChoices.color)))score+=3;
+    if(lookChoices.budget){
+      if(Number(p.price)<=lookChoices.budget)score+=2;
+      else score-=4;
+    }
+    if(p.featured)score+=1;
+    if(Number(p.stock||0)>0)score+=1;
+    return score;
+  }
+  $('#lookFindAction').addEventListener('click',()=>{
+    const available=products.filter(p=>Number(p.stock||0)>0);
+    const ranked=(available.length?available:products)
+      .map(p=>({p,score:lookFinderScore(p)}))
+      .sort((a,b)=>b.score-a.score||Number(a.p.price)-Number(b.p.price))
+      .slice(0,3)
+      .map(x=>x.p);
+    const title=currentLang==='ar'?'اختياراتنا المناسبة لك':'Notre sélection pour vous';
+    $('#lookResults').innerHTML=`<div class="look-result-title">${title}</div>`+
+      (ranked.length?ranked.map(p=>`<button class="look-result-card" type="button" data-look-product="${esc(p.id)}"><img src="${esc(shopImage(p))}" alt="${esc(p.name)}"><div><strong>${esc(p.name)}</strong><span>${money(p.price)}</span></div></button>`).join(''):`<div class="grid-status">${currentLang==='ar'?'لا توجد منتجات متوفرة حالياً.':'Aucun produit disponible actuellement.'}</div>`);
+  });
+  $('#lookResults').addEventListener('click',e=>{
+    const card=e.target.closest('[data-look-product]');if(!card)return;
+    const product=products.find(p=>String(p.id)===String(card.dataset.lookProduct));
+    if(product){setLookQuiz(false);openModal(product)}
+  });
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&$('#lookQuiz').classList.contains('active'))setLookQuiz(false)});
+
+  function renderRecommendations(){
+    if(!currentProduct)return; const same=products.filter(p=>String(p.id)!==String(currentProduct.id)&&p.category===currentProduct.category).slice(0,3);
+    const fallback=products.filter(p=>String(p.id)!==String(currentProduct.id)).slice(0,3); const list=same.length?same:fallback;
+    $('#recommendationRow').innerHTML=list.map(p=>`<button class="recommendation-card" data-rec-id="${esc(p.id)}"><img src="${esc(shopImage(p))}" alt="${esc(p.name)}"><div><strong>${esc(p.name)}</strong><span>${money(p.price)}</span></div></button>`).join('')||'<span class="small-note">D’autres suggestions arrivent bientôt.</span>';
+  }
+  const originalOpenModal=openModal; openModal=function(p){originalOpenModal(p);activePromo=null;$('#promoCode').value='';$('#promoResult').className='promo-result';$('#promoResult').textContent='Ajoutez un code valide pour obtenir une réduction.';renderRecommendations()};
+  $('#recommendationRow').addEventListener('click',e=>{const b=e.target.closest('[data-rec-id]');if(!b)return;const p=products.find(x=>String(x.id)===b.dataset.recId);if(p)openModal(p)});
+
+  async function fetchPromo(code){
+    if(!code)return null;
+    if(db){try{const {data}=await db.from('promo_codes').select('*').eq('code',code.toUpperCase()).eq('is_active',true).maybeSingle();if(data&&(!data.expires_at||new Date(data.expires_at)>new Date()))return data}catch(e){}}
+    const builtins={NARIS10:{code:'NARIS10',discount_type:'percent',discount_value:10,min_order:0},WELCOME:{code:'WELCOME',discount_type:'fixed',discount_value:500,min_order:4000}};return builtins[code.toUpperCase()]||null;
+  }
+  $('#applyPromo').addEventListener('click',async()=>{const el=$('#promoResult'),code=$('#promoCode').value.trim();const promo=await fetchPromo(code);if(!promo){activePromo=null;el.className='promo-result error';el.textContent='Code invalide ou expiré.';refreshShipping();return}if(Number(currentProduct?.price||0)<Number(promo.min_order||0)){el.className='promo-result error';el.textContent=`Minimum requis : ${money(promo.min_order)}`;return}activePromo=promo;el.className='promo-result success';el.textContent=promo.discount_type==='percent'?`Réduction de ${promo.discount_value}% appliquée.`:`Réduction de ${money(promo.discount_value)} appliquée.`;refreshShipping()});
+  function promoDiscount(amount){if(!activePromo)return 0;return activePromo.discount_type==='percent'?Math.round(amount*Number(activePromo.discount_value)/100):Math.min(amount,Number(activePromo.discount_value||0))}
+  const originalRefreshShipping=refreshShipping;refreshShipping=function(){originalRefreshShipping();if(currentProduct&&activePromo){const code=$('#customerWilaya').value.slice(0,2),delivery=DELIVERY_PRICES[code]?.[deliveryMethod]||0,base=Number(currentProduct.price)*selectedQuantity(),discount=promoDiscount(base);$('#orderTotal').textContent=money(Math.max(0,base-discount)+delivery);$('#shippingNote').textContent=`Code ${activePromo.code} : -${money(discount)}. `+$('#shippingNote').textContent.replace(/^Code .*?\. /,'')}};
+
+  async function loadPublicReviews(){
+    let rows=[];if(db){try{const {data}=await db.from('product_reviews').select('*').eq('is_approved',true).order('created_at',{ascending:false}).limit(9);rows=data||[]}catch(e){}}
+    $('#reviewLiveGrid').innerHTML=rows.length?rows.map(r=>`<article class="review-live-card"><div class="review-stars">${'★'.repeat(Number(r.rating||5))}</div><p>${esc(r.comment)}</p><strong>${esc(r.customer_name)}</strong>${r.photo_url?`<img src="${esc(r.photo_url)}" alt="Photo avis cliente">`:''}</article>`).join(''):'<div class="grid-status">Soyez la première cliente à partager votre avis.</div>';
+    const counts={};rows.forEach(r=>{const k=String(r.product_id||'');(counts[k]??=[]).push(Number(r.rating||5))});$$('[data-review-summary]').forEach(el=>{const p=el.closest('.product-card');const a=counts[p?.dataset.id]||[];if(a.length)el.innerHTML=`★ ${ (a.reduce((s,x)=>s+x,0)/a.length).toFixed(1)} <span>(${a.length} avis)</span>`});
+  }
+  $('#reviewForm').addEventListener('submit',async e=>{e.preventDefault();const status=$('#reviewStatus');status.textContent='Envoi…';let photo_url=null;if(db&&$('#reviewPhoto').files[0]){const f=$('#reviewPhoto').files[0],path=`reviews/${Date.now()}-${f.name.replace(/[^a-z0-9._-]/gi,'-')}`;const up=await db.storage.from('review-images').upload(path,f);if(!up.error)photo_url=db.storage.from('review-images').getPublicUrl(path).data.publicUrl}const payload={customer_name:$('#reviewName').value.trim(),rating:Number($('#reviewRating').value),product_id:$('#reviewProduct').value||null,comment:$('#reviewText').value.trim(),photo_url,is_approved:false};if(db){const {error}=await db.from('product_reviews').insert(payload);if(error){status.textContent='Impossible d’envoyer : '+error.message;return}}else{const saved=JSON.parse(localStorage.getItem('naris-reviews')||'[]');saved.unshift(payload);localStorage.setItem('naris-reviews',JSON.stringify(saved))}status.textContent='Merci ! Votre avis sera publié après validation.';e.target.reset()});
+
+  // Smart assistant + support chat
+  const cxPanel=$('#cxPanel');$('#cxFab').onclick=()=>cxPanel.classList.toggle('active');$('#cxClose').onclick=()=>cxPanel.classList.remove('active');$$('[data-cx-tab]').forEach(b=>b.onclick=()=>{$$('[data-cx-tab]').forEach(x=>x.classList.toggle('active',x===b));$('#cxAssistant').hidden=b.dataset.cxTab!=='assistant';$('#cxChat').hidden=b.dataset.cxTab!=='chat'});
+  function aiReply(q){const text=q.toLowerCase();if(/taille|size|morph/.test(text))return 'Pour vous conseiller précisément, indiquez votre taille habituelle, votre hauteur et si vous préférez une coupe près du corps ou ample. Les tailles disponibles apparaissent sur chaque produit.';const budget=(text.match(/\d{4,6}/)||[])[0];let list=products.filter(p=>!budget||Number(p.price)<=Number(budget));if(/robe/.test(text))list=list.filter(p=>/robe/i.test(p.category+' '+p.name));if(/noir/.test(text))list=list.filter(p=>normalizeProductVariants(p).some(v=>/noir/i.test(v.name)));list=list.slice(0,3);return list.length?'Je vous recommande : '+list.map(p=>`${p.name} (${money(p.price)})`).join(', ')+'. Touchez le produit dans la collection pour voir les couleurs et tailles.':'Je n’ai pas trouvé une correspondance exacte. Essayez une catégorie, une couleur ou un budget différent.'}
+  function sendAi(q){if(!q.trim())return;$('#cxMessages').insertAdjacentHTML('beforeend',`<div class="cx-msg user">${esc(q)}</div><div class="cx-msg">${esc(aiReply(q))}</div>`);$('#cxMessages').scrollTop=$('#cxMessages').scrollHeight;$('#cxQuestion').value=''}
+  $('#cxSend').onclick=()=>sendAi($('#cxQuestion').value);$('#cxQuestion').addEventListener('keydown',e=>{if(e.key==='Enter')sendAi(e.target.value)});$$('[data-ai]').forEach(b=>b.onclick=()=>sendAi(b.textContent));
+  const CHAT_STORAGE_KEY='naris-live-chat-session';
+  let customerChatSession=null;
+  let customerChatPoll=null;
+  try{customerChatSession=JSON.parse(localStorage.getItem(CHAT_STORAGE_KEY)||'null')}catch(e){}
+  function customerChatTime(v){return new Date(v).toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'})}
+  function showCustomerChat(){const active=!!customerChatSession;$('#chatStartView').hidden=active;$('#customerChatView').hidden=!active;if(active){$('#customerChatTitle').textContent='Live Chat · '+(customerChatSession.name||'NARI’S WEAR');loadCustomerChat();clearInterval(customerChatPoll);customerChatPoll=setInterval(loadCustomerChat,5000)}}
+  async function loadCustomerChat(){if(!db||!customerChatSession)return;const {data,error}=await db.rpc('customer_get_chat',{p_conversation_id:customerChatSession.id,p_access_token:customerChatSession.token});if(error){$('#customerChatStatus').textContent='Connexion au chat impossible.';return}const thread=$('#customerChatThread');thread.innerHTML=(data||[]).map(m=>`<div class="cx-msg ${m.sender==='customer'?'user':'admin'}">${esc(m.message)}<time>${customerChatTime(m.created_at)}</time></div>`).join('')||'<div class="cx-msg">Votre conversation est prête.</div>';thread.scrollTop=thread.scrollHeight}
+  $('#liveChatForm').addEventListener('submit',async e=>{e.preventDefault();const status=$('#chatStatus'),name=$('#chatName').value.trim(),phone=$('#chatPhone').value.trim(),message=$('#chatMessage').value.trim();status.textContent='Connexion…';if(!db){status.textContent='Le Live Chat nécessite la configuration Supabase.';return}const {data,error}=await db.rpc('customer_start_chat',{p_customer_name:name,p_customer_phone:phone,p_message:message});if(error){status.textContent='Impossible de démarrer : '+error.message;return}const row=Array.isArray(data)?data[0]:data;customerChatSession={id:row.conversation_id,token:row.access_token,name};localStorage.setItem(CHAT_STORAGE_KEY,JSON.stringify(customerChatSession));status.textContent='';e.target.reset();showCustomerChat()});
+  $('#customerChatReplyForm').addEventListener('submit',async e=>{e.preventDefault();if(!customerChatSession)return;const input=$('#customerChatReply'),message=input.value.trim(),status=$('#customerChatStatus');if(!message)return;status.textContent='Envoi…';const {error}=await db.rpc('customer_send_chat',{p_conversation_id:customerChatSession.id,p_access_token:customerChatSession.token,p_message:message});if(error){status.textContent='Erreur : '+error.message;return}input.value='';status.textContent='';loadCustomerChat()});
+  $('#newChatBtn').addEventListener('click',()=>{if(!confirm('Démarrer une nouvelle conversation ?'))return;localStorage.removeItem(CHAT_STORAGE_KEY);customerChatSession=null;clearInterval(customerChatPoll);showCustomerChat()});
+  showCustomerChat();
+
+  const originalLoadProducts=loadProducts;loadProducts=async function(){await originalLoadProducts();populateSmartFilters();renderProducts();loadPublicReviews()};
+
+  loadProducts();
+});
+</script>
+</body>
+</html>
