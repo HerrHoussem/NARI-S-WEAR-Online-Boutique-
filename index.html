@@ -1078,9 +1078,10 @@
     .variant-stock{font-size:.75rem;color:var(--muted);margin-top:.55rem}
     .variant-stock.low{color:var(--gold-bright)}
     .variant-stock.out{color:#e87575}
-    .variant-favorite{width:100%;margin-top:.7rem;padding:.7rem .85rem;display:flex;align-items:center;justify-content:center;gap:.55rem;border:1px solid var(--line);background:rgba(255,255,255,.025);color:var(--cream);cursor:pointer;transition:.22s ease;font-size:.7rem;letter-spacing:.08em;text-transform:uppercase}
+    .modal-topline{display:flex;align-items:center;justify-content:space-between;gap:.75rem;padding-inline-end:2.6rem}
+    .variant-favorite{width:40px;height:40px;flex:0 0 40px;padding:0;display:grid;place-items:center;border:1px solid var(--line);border-radius:50%;background:rgba(255,255,255,.025);color:var(--cream);cursor:pointer;transition:.22s ease}
     .variant-favorite:hover,.variant-favorite.active{border-color:var(--gold);background:rgba(201,161,90,.12);color:var(--gold-bright)}
-    .variant-favorite svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8}
+    .variant-favorite svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.8}
     .variant-favorite.active svg{fill:currentColor}
     .quantity-control{display:grid;grid-template-columns:46px minmax(70px,1fr) 46px;width:min(210px,100%);border:1px solid var(--line);background:var(--black)}
     .quantity-control button{min-height:46px;background:transparent;color:var(--gold-bright);border-inline-end:1px solid var(--line);cursor:pointer;font-size:1.25rem}
@@ -2458,7 +2459,13 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
       <div class="modal-content">
         <button class="modal-close" id="modalClose" aria-label="Fermer">✕</button>
-        <div class="eyebrow">Commande rapide</div>
+        <div class="modal-topline">
+          <div class="eyebrow">Commande rapide</div>
+          <button class="variant-favorite" id="variantFavorite" type="button" aria-label="Ajouter cette couleur aux favoris" title="Ajouter cette couleur aux favoris">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78Z"/></svg>
+            <span class="sr-only" id="variantFavoriteLabel">Ajouter cette couleur aux favoris</span>
+          </button>
+        </div>
         <h3 id="modalProductTitle">Produit</h3>
         <div class="modal-price" id="modalProductPrice">0 DA</div>
 
@@ -2477,10 +2484,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
           <label>Couleur</label>
           <div class="option-row" id="colorOptions"></div>
           <div class="variant-stock" id="variantStock"></div>
-          <button class="variant-favorite" id="variantFavorite" type="button">
-            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78Z"/></svg>
-            <span id="variantFavoriteLabel">Ajouter cette couleur aux favoris</span>
-          </button>
         </div>
 
         <div class="form-group">
@@ -2766,11 +2769,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return [...new Set(source.filter(url=>/^https?:\/\//i.test(url||'')))];
   }
   function currentMaxQuantity(){
-    const selected=$('#sizeOptions .option.active')?.dataset.value;
-    const sizeEntry=(currentVariant?.sizes||[]).find(x=>x.name===selected);
-    const sizeStock=sizeEntry?.stock;
-    const variantStock=Number(currentVariant?.stock||0);
-    return Math.max(0,sizeStock!=null?Math.min(Number(sizeStock)||0,variantStock||Number(sizeStock)||0):variantStock);
+    return Math.max(0,Number(currentVariant?.stock||0));
   }
   function selectedQuantity(){
     const max=currentMaxQuantity();
@@ -2792,7 +2791,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const active=wishlistHas(currentProduct.id,currentVariant.name);
     button.classList.toggle('active',active);
     button.setAttribute('aria-pressed',String(active));
-    $('#variantFavoriteLabel').textContent=active?'Retirer cette couleur des favoris':'Ajouter cette couleur aux favoris';
+    const label=active?'Retirer cette couleur des favoris':'Ajouter cette couleur aux favoris';
+    $('#variantFavoriteLabel').textContent=label;
+    button.setAttribute('aria-label',label);button.title=label;
   }
   function renderVariantGallery(){
     const images=getCurrentGalleryImages();
